@@ -6,11 +6,11 @@ self.ATRIL_API = 'https://script.google.com/macros/s/AKfycbwyfnazNng7js-zRGE1qRF
 
 /* 2) Notificaciones (Firebase). Si se deja así, la app funciona igual, pero sin avisos. */
 self.ATRIL_FIREBASE = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
-  vapidKey: ''          // «Certificados web push» > «Par de claves»
+  apiKey: 'AIzaSyA89Ey_R8eC_jO5HAV9WVijYO9nOB3VEvg',
+  authDomain: 'atril-3506f.firebaseapp.com',
+  projectId: 'atril-3506f',
+  storageBucket: 'atril-3506f.firebasestorage.app',
+  messagingSenderId: '508160816178',
+  appId: '1:508160816178:web:49502ae8d4185741c4f82b',
+  vapidKey: 'BMeS5K8EuKUzmBlZGptcrslhTTjc48QZjATfrIhLcobp5Sf4ySmcNaqdPB7fT-5VT7t8Kne1ASWaaF9ydPfMAYY'          // «Certificados web push» > «Par de claves»
 };
