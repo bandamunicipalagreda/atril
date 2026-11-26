@@ -299,7 +299,7 @@ nav .badge{position:absolute;top:4px;right:calc(50% - 22px);min-width:17px;heigh
 .guia-sec .n{width:28px;height:28px;border-radius:9px;background:#26282b;color:#ebd8ac;display:grid;place-items:center;font-size:13px;flex:none}.guia-sec ol{margin:0;padding:0 18px 14px 44px;font-size:14.5px;line-height:1.5;color:#3a3c40}.guia-sec li{margin:6px 0}
 .guia-pie{text-align:center;color:#8a8e93;font-size:13px;margin:18px 0 8px}.guia-enlace{display:block;width:100%;margin-top:18px;background:none;border:0;color:#a8802a;font-weight:600;font-size:14px;cursor:pointer}
 .noti-grande{padding:4px 2px}.noti-grande .noti-et{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#a8802a;font-weight:700;margin-bottom:8px}.noti-grande.urgente .noti-et{color:#b3261e}.noti-grande h3{font-size:22px;margin:0 0 10px}.noti-grande p{font-size:17px;line-height:1.5;color:#26282b;margin:0;white-space:pre-line}
-.accesos{display:flex;gap:10px}.acceso{flex:1;min-width:0;background:#fff;border:1px solid #e4e5e7;border-radius:18px;padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 4px 14px rgba(0,0,0,.05);cursor:pointer}.acceso span{font-size:24px;line-height:26px;color:#a8802a}.acceso b{font-size:14px;color:#26282b}.acceso small{font-size:11.5px;color:#8a8e93;text-align:center}
+.accesos{display:grid;grid-template-columns:1fr 1fr;gap:10px}.acceso{flex:1;min-width:0;background:#fff;border:1px solid #e4e5e7;border-radius:18px;padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 4px 14px rgba(0,0,0,.05);cursor:pointer}.acceso span{font-size:24px;line-height:26px;color:#a8802a}.acceso b{font-size:14px;color:#26282b}.acceso small{font-size:11.5px;color:#8a8e93;text-align:center}
 .urg-mini{display:block;width:100%;text-align:left;margin-top:16px;background:#fbeae7;color:#8f2c20;border:1px solid #f0c4bc;border-radius:14px;padding:12px 14px;font-weight:600;font-size:14px}
 #lBanda{display:flex;align-items:center;justify-content:center;gap:10px}
 #lEscudo{height:34px;width:auto;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
@@ -650,7 +650,7 @@ function entrarApp() {
 }
 function irA(destino) {
   if (destino === 'noticias' && D) return ir('vNoticias');
-  if (destino === 'mensajes' && D) { ir('vInicio'); var sm = $('secMensajes'); if (sm) sm.scrollIntoView({ behavior: 'smooth' }); return; }
+  if (destino === 'mensajes' && D) { ir('vInicio'); var sm = $('secMensajes'); if (sm) sm.scrollIntoView({ behavior: 'smooth' }); else toast('No hay mensajes esta semana', 3000); return; }
   if (destino === 'sugerencias' && D && esAdmin()) { ir('vDir'); return cargarAdmin().then(function () { dirTab = 'avisos'; pintarDir(); var s = $('secSug'); if (s) s.scrollIntoView(); }); }
   var m = String(destino || '').match(/^(prog|obra|resp):(.+)$/); if (!m || !D) return;
   if (m[1] === 'resp' && esAdmin()) { ir('vDir'); return cargarAdmin().then(function () { dirTab = 'programas'; pintarDir(); if (A.programas.some(function (p) { return p.id === m[2]; })) verRespuestas(m[2]); }); }
@@ -1095,8 +1095,9 @@ function pintarPortada() {
     var obs = prox.obras.map(obra).filter(Boolean);
     if (obs.length) h += '<h2 class="sec">Para preparar <small>' + (prox.tipo === 'Ensayo' ? 'ensayo' : esc(prox.tipo.toLowerCase())) + ' del ' + fecha(prox.fecha).getDate() + ' ' + MESES[fecha(prox.fecha).getMonth()] + '</small></h2><div class="lista">' + obs.map(function (o) { return filaObra(o, prox.id); }).join('') + '</div>';
   }
-  var tile = function (ir, ic, t, sub) { return '<button class="acceso" data-ir="' + ir + '"><span>' + ic + '</span><b>' + t + '</b><small>' + sub + '</small></button>'; };
-  h += '<h2 class="sec">Accesos rápidos</h2><div class="accesos">' + tile('vAfin', '◎', 'Afinador', 'Afina antes de tocar') + tile('vBiblio', '♫', 'Repertorio', 'Todas las obras') + tile('vNoticias', '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="15" height="15" rx="2"/><path d="M18 8.5h2.5v9a2 2 0 0 1-2 2H5"/><path d="M6.5 8.5h8M6.5 12h8M6.5 15.5h5"/></svg>', 'Noticias', 'De la banda') + '</div>';
+  var tile = function (ir, ic, t, sub) { return '<button class="acceso" ' + (ir.charAt(0) === 'v' ? 'data-ir' : 'data-destino') + '="' + ir + '"><span>' + ic + '</span><b>' + t + '</b><small>' + sub + '</small></button>'; };
+  var nMen = (D.mensajes || []).length;
+  h += '<h2 class="sec">Accesos rápidos</h2><div class="accesos">' + tile('mensajes', '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4.5 3.5V17H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M7.5 9.5h9M7.5 12.5h6"/></svg>', 'Mensajes', nMen ? nMen + (nMen > 1 ? ' esta semana' : ' esta semana') : 'Del director y la junta') + tile('vAfin', '◎', 'Afinador', 'Afina antes de tocar') + tile('vBiblio', '♫', 'Repertorio', 'Todas las obras') + tile('vNoticias', '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="15" height="15" rx="2"/><path d="M18 8.5h2.5v9a2 2 0 0 1-2 2H5"/><path d="M6.5 8.5h8M6.5 12h8M6.5 15.5h5"/></svg>', 'Noticias', 'De la banda') + '</div>';
   h += bannerAvisos() + bannerInstalar() + '<button class="guia-enlace" data-ir="vGuia">📖 ¿Cómo funciona Atril? Ver la guía ›</button></main>';
   $('vHome').innerHTML = h;
 }
@@ -2067,6 +2068,7 @@ document.body.addEventListener('click', function (e) {
   }
   var o = t.closest('[data-obra]'); if (o && !t.closest('#vDir')) return abrirObra(o.dataset.obra, null, o.dataset.ctx || null);
   var p = t.closest('[data-prog]'); if (p) return abrirPrograma(p.dataset.prog);
+  var dz = t.closest('[data-destino]'); if (dz) return irA(dz.dataset.destino);
   var n = t.closest('[data-ir]'); if (n) return ir(n.dataset.ir);
   var v = t.closest('[data-volver]'); if (v) return ir(v.dataset.volver);
   if (t.id === 'bActualizar') { toast('Actualizando…'); return sincronizar(false); }
