@@ -298,6 +298,7 @@ nav .badge{position:absolute;top:4px;right:calc(50% - 22px);min-width:17px;heigh
 .guia-sec{background:#fff;border:1px solid #e4e5e7;border-radius:16px;margin-bottom:10px;overflow:hidden}.guia-sec summary{list-style:none;cursor:pointer;padding:15px 16px;font-weight:600;font-size:15.5px;display:flex;align-items:center;gap:12px}.guia-sec summary::-webkit-details-marker{display:none}.guia-sec summary::after{content:"›";margin-left:auto;color:#a8802a;font-size:22px;transition:transform .2s}.guia-sec[open] summary::after{transform:rotate(90deg)}
 .guia-sec .n{width:28px;height:28px;border-radius:9px;background:#26282b;color:#ebd8ac;display:grid;place-items:center;font-size:13px;flex:none}.guia-sec ol{margin:0;padding:0 18px 14px 44px;font-size:14.5px;line-height:1.5;color:#3a3c40}.guia-sec li{margin:6px 0}
 .guia-pie{text-align:center;color:#8a8e93;font-size:13px;margin:18px 0 8px}.guia-enlace{display:block;width:100%;margin-top:18px;background:none;border:0;color:#a8802a;font-weight:600;font-size:14px;cursor:pointer}
+.noti-grande{padding:4px 2px}.noti-grande .noti-et{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#a8802a;font-weight:700;margin-bottom:8px}.noti-grande.urgente .noti-et{color:#b3261e}.noti-grande h3{font-size:22px;margin:0 0 10px}.noti-grande p{font-size:17px;line-height:1.5;color:#26282b;margin:0;white-space:pre-line}
 .accesos{display:flex;gap:10px}.acceso{flex:1;min-width:0;background:#fff;border:1px solid #e4e5e7;border-radius:18px;padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 4px 14px rgba(0,0,0,.05);cursor:pointer}.acceso span{font-size:24px;line-height:26px;color:#a8802a}.acceso b{font-size:14px;color:#26282b}.acceso small{font-size:11.5px;color:#8a8e93;text-align:center}
 .urg-mini{display:block;width:100%;text-align:left;margin-top:16px;background:#fbeae7;color:#8f2c20;border:1px solid #f0c4bc;border-radius:14px;padding:12px 14px;font-weight:600;font-size:14px}
 #lBanda{display:flex;align-items:center;justify-content:center;gap:10px}
@@ -642,8 +643,10 @@ function entrarApp() {
   if (vista === 'vHome' && vistaAnterior === '') ir('vHome');
   if (localStorage.getItem('atril_privacidad') !== VERSION_PRIV && !window.DIALOGO_AUTO) return avisoPrivacidad(true).then(function () { if (!misPapeles().length) elegirPapeles(true); });
   if (!misPapeles().length) return elegirPapeles(true);
-  var ir_ = new URLSearchParams(location.search).get('ir');
-  if (ir_) { history.replaceState(null, '', location.pathname); irA(ir_); }
+  var qs = new URLSearchParams(location.search), ir_ = qs.get('ir'), nt = qs.get('nt'), nc = qs.get('nc');
+  if (ir_ || nt || nc) history.replaceState(null, '', location.pathname);
+  if (nt || nc) mostrarNotificacion({ titulo: nt, cuerpo: nc, ir: ir_, tipo: qs.get('np') });
+  else if (ir_) irA(ir_);
 }
 function irA(destino) {
   if (destino === 'noticias' && D) return ir('vNoticias');
@@ -654,7 +657,23 @@ function irA(destino) {
   if (m[1] === 'prog' && D.programas.some(function (p) { return p.id === m[2]; })) abrirPrograma(m[2]);
   if (m[1] === 'obra' && obra(m[2])) abrirObra(m[2]);
 }
-if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', function (e) { if (e.data && e.data.ir) sincronizar(false).then(function () { irA(e.data.ir); }); });
+if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', function (e) {
+  var d = e.data || {};
+  if (d.titulo || d.cuerpo) { mostrarNotificacion(d); sincronizar(false); }
+  else if (d.ir) sincronizar(false).then(function () { irA(d.ir); });
+});
+// Al abrir desde una notificación, lo primero es leerla: en grande, sin tener que buscarla
+function mostrarNotificacion(n) {
+  var ir_ = n.ir || '', m = String(ir_).match(/^(prog|obra|resp):/), urgente = n.tipo === 'urgente';
+  var ver = ir_ === 'mensajes' ? 'Ver todos los mensajes' : ir_ === 'noticias' ? 'Ver las noticias' : ir_ === 'sugerencias' ? 'Ver las sugerencias' :
+    m && m[1] === 'prog' ? 'Ver el ensayo o actuación' : m && m[1] === 'obra' ? 'Abrir la partitura' : m && m[1] === 'resp' ? 'Ver quién viene' : '';
+  panel('<div class="noti-grande' + (urgente ? ' urgente' : '') + '"><div class="noti-et">' + (urgente ? '⚠ Aviso urgente' : '🔔 Notificación') + '</div>' +
+    '<h3>' + esc(n.titulo || 'Atril') + '</h3>' + (n.cuerpo ? '<p>' + enlazar(n.cuerpo) + '</p>' : '') + '</div>' +
+    '<button class="btn negro ancho" id="bNotiOk" style="margin-top:16px">Entendido</button>' +
+    (ver ? '<button class="btn linea ancho" id="bNotiVer" style="margin-top:8px">' + ver + '</button>' : ''));
+  $('bNotiOk').onclick = function () { cerrarPanel(); if (ir_ === 'mensajes') sincronizar(false).then(marcarAvisosVistos).then(marcarNav); };
+  if ($('bNotiVer')) $('bNotiVer').onclick = function () { cerrarPanel(); sincronizar(false).then(function () { irA(ir_); }); };
+}
 
 /* =================== Avisos (notificaciones) =================== */
 var FB = self.ATRIL_FIREBASE || {};

@@ -1,5 +1,5 @@
 /* Atril · funcionamiento sin conexión */
-const VERSION = 'atril-v5';
+const VERSION = 'atril-v6';
 const BASE = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 const EXTERNOS = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
@@ -69,10 +69,12 @@ self.addEventListener('notificationclick', e => {
     })).catch(() => self.registration.showNotification('Sin conexión', { body: 'Contesta en Atril cuando tengas internet.', tag: d.tag, icon: 'icon-192.png', data: d }))));
     return;
   }
-  const destino = './' + (d.ir ? '?ir=' + encodeURIComponent(d.ir) : '');
+  // Al abrir, la app enseña primero el contenido de la notificación
+  const q = new URLSearchParams(); if (d.ir) q.set('ir', d.ir); if (d.titulo) q.set('nt', d.titulo); if (d.cuerpo) q.set('nc', d.cuerpo); if (d.tipo) q.set('np', d.tipo);
+  const destino = './' + (String(q) ? '?' + q : '');
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(l => {
     const c = l.find(x => 'focus' in x);
-    if (c) { c.postMessage({ ir: d.ir }); return c.focus(); }
+    if (c) { c.postMessage({ ir: d.ir, titulo: d.titulo, cuerpo: d.cuerpo, tipo: d.tipo }); return c.focus(); }
     return self.clients.openWindow(destino);
   }));
 });
