@@ -1285,7 +1285,8 @@ function pintarPerfil() {
     '<h2 class="sec">Correo</h2><div class="tarjeta"><div class="campo"><label>Tu correo</label><input id="pCorreo" type="email" placeholder="tucorreo@ejemplo.com" value="' + esc(u.correo) + '"></div>' +
     '<div class="interruptor" id="pRecibir"><div>Enviarme las obras nuevas por correo<br><span style="font-size:12.5px;color:var(--gris)">Para quien prefiere imprimirlas</span></div><div class="sw ' + (u.recibirCorreo ? 'on' : '') + '"></div></div>' +
     '<button class="btn negro ancho" id="bGuardarPerfil" style="margin-top:8px">Guardar</button></div>' +
-    (!FB.apiKey ? '' : '<h2 class="sec">Avisos</h2><div class="tarjeta">' + (avisosActivos() ? '<div class="dato"><b>🔔 Activados en este aparato</b><span>ensayos, cambios y obras nuevas</span></div>' :
+    (!FB.apiKey ? '' : '<h2 class="sec">Avisos</h2><div class="tarjeta">' + (avisosActivos() ? '<div class="dato"><b>🔔 Activados en este aparato</b><span>ensayos, cambios y obras nuevas</span></div>' +
+      '<button class="btn linea ancho" id="pProbarAvisos" style="margin-top:10px">Probar: enviarme un aviso</button><button class="btn linea ancho" id="pQuitarAvisos" style="margin-top:8px">Desactivar en este aparato</button>' :
       '<p>Te avisamos el día del ensayo, si cambia algo y cuando hay obras nuevas, aunque no tengas Atril abierto.</p><button class="btn negro ancho" id="pActAvisos" style="margin-top:12px">🔔 Activar avisos</button>') + '</div>') +
     '<h2 class="sec">Ayuda</h2><button class="noticia vacia" data-ir="vGuia" style="text-align:left;border-style:solid;color:var(--texto)"><b>📖 Guía de uso</b><br><small style="color:#8a8e93">Todo lo que puedes hacer con Atril, paso a paso, y el vídeo</small></button>' +
     '<h2 class="sec">Sugerencias</h2><div class="tarjeta"><p>¿Algo no funciona o se te ocurre una mejora? Cuéntaselo a la dirección.</p><button class="btn linea ancho" id="bSugerir" style="margin-top:12px">Enviar una sugerencia</button></div>' +
@@ -1297,6 +1298,24 @@ function pintarPerfil() {
   $('bPapeles').onclick = function () { elegirPapeles(false); };
   $('bSugerir').onclick = abrirSugerencia;
   $('bPriv').onclick = function () { avisoPrivacidad(false); };
+  if ($('pProbarAvisos')) $('pProbarAvisos').onclick = function () {
+    navigator.serviceWorker.ready.then(function (reg) {
+      return reg.showNotification('Prueba de Atril', { body: 'Si ves esto, los avisos funcionan en este aparato. Tócalo para abrirlo.', tag: 'prueba', icon: 'icon-192.png', badge: 'icon-192.png', vibrate: [200, 100, 200],
+        data: { titulo: 'Prueba de Atril', cuerpo: 'Así se ven los avisos al tocarlos: primero el mensaje, en grande.', ir: '' } });
+    }).then(function () { toast('Aviso de prueba enviado: mira arriba en el móvil', 4000); })
+      .catch(function () { toast('El móvil no deja mostrar avisos: revisa los permisos de notificaciones de Atril/Chrome', 6000); });
+  };
+  if ($('pQuitarAvisos')) $('pQuitarAvisos').onclick = function () {
+    preguntar('¿Desactivar los avisos en este aparato?', 'Dejarás de recibir los avisos de ensayos, cambios y obras nuevas en este móvil. Puedes volver a activarlos cuando quieras.', 'Desactivar').then(function (si) {
+      if (!si) return;
+      var tk = localStorage.getItem('atril_aviso_token');
+      (tk ? api('quitarAviso', { token: tk }) : Promise.resolve()).catch(function () {}).then(function () {
+        localStorage.removeItem('atril_aviso_token');
+        try { if (window.firebase && firebase.messaging) firebase.messaging().deleteToken().catch(function () {}); } catch (e) {}
+        toast('Avisos desactivados en este aparato'); pintarPerfil(); pintarInicio();
+      });
+    });
+  };
   $('bGuardarPerfil').onclick = function () { guardarPerfil(misPapeles()); };
   $('bSalir').onclick = function () { preguntar('¿Cerrar sesión en este aparato?', 'Se borrarán las partituras guardadas en él.', 'Cerrar sesión').then(function (ok) { if (!ok) return;
     var tk = localStorage.getItem('atril_aviso_token'); if (tk) api('quitarAviso', { token: tk }).catch(function () {});
