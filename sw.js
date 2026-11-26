@@ -1,5 +1,5 @@
 /* Atril · funcionamiento sin conexión */
-const VERSION = 'atril-v6';
+const VERSION = 'atril-v7';
 const BASE = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 const EXTERNOS = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
