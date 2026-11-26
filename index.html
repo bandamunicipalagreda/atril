@@ -43,7 +43,7 @@ input,textarea,select{font-family:var(--sans);font-size:16px;color:var(--texto)}
 
 /* Cabecera */
 .cab{background:linear-gradient(170deg,var(--negro),var(--oscuro2));color:var(--oro2);padding:calc(18px + env(safe-area-inset-top)) 22px 26px;border-radius:0 0 28px 28px;position:relative;overflow:hidden}
-.cab::before{content:"";position:absolute;right:-40px;top:-30px;width:220px;height:220px;background:url(icon-512.png) no-repeat center/contain;opacity:.06}
+.cab::before{content:"";position:absolute;right:-40px;top:-30px;width:220px;height:220px;background:var(--marca) no-repeat center/contain;opacity:.06}
 .fila{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative}
 .marca{display:flex;align-items:center;gap:10px}
 .marca img{height:34px}
@@ -137,6 +137,12 @@ h2.sec small{font-family:var(--sans);font-size:13px;color:var(--gris);font-weigh
 .ytmini{position:relative;padding-top:56.25%;border-radius:10px;overflow:hidden;background:#000;margin-top:10px}
 .ytmini iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .repro.peq .ytmini{width:58%;padding-top:32.6%;margin-left:auto}
+/* YouTube en miniatura: ventanita en la esquina que casi no tapa la partitura */
+.repro.yt.peq{left:calc(100% - min(46vw,240px) - 10px)!important;right:auto!important;margin:0!important;width:min(46vw,240px);max-width:none;padding:6px;border-radius:14px}
+.repro.yt.peq .rt,.repro.yt.peq .ytenlace{display:none}
+.repro.yt.peq .r1{justify-content:flex-end;gap:4px}
+.repro.yt.peq .cerrar{width:26px;height:26px;font-size:14px}
+.repro.yt.peq .ytmini{width:100%;padding-top:56.25%;margin:4px 0 0;border-radius:9px}
 .visor.noche,.visor.noche .hojas{background:#000}
 .visor.noche .hoja{background:#000;box-shadow:none}
 .visor.noche .hoja canvas{filter:invert(1) hue-rotate(180deg) brightness(.85)}
@@ -288,6 +294,11 @@ nav .badge{position:absolute;top:4px;right:calc(50% - 22px);min-width:17px;heigh
 .cab.com h1{color:#ffffff}
 .cab.com .sub,.cab.com .marca span{color:#d8dadb;x:#f0e2c0}
 .cab.com::before{opacity:.05;filter:grayscale(1) brightness(2)}
+.guia-video{background:#1b1c1e;border-radius:18px;padding:10px;margin:4px 0 16px;text-align:center}.guia-video video{width:auto;max-width:100%;height:38vh;margin:0 auto;border-radius:12px;background:#000;display:block}.guia-video small{display:block;color:#aaaeb3;font-size:12px;margin-top:6px}
+.guia-sec{background:#fff;border:1px solid #e4e5e7;border-radius:16px;margin-bottom:10px;overflow:hidden}.guia-sec summary{list-style:none;cursor:pointer;padding:15px 16px;font-weight:600;font-size:15.5px;display:flex;align-items:center;gap:12px}.guia-sec summary::-webkit-details-marker{display:none}.guia-sec summary::after{content:"›";margin-left:auto;color:#a8802a;font-size:22px;transition:transform .2s}.guia-sec[open] summary::after{transform:rotate(90deg)}
+.guia-sec .n{width:28px;height:28px;border-radius:9px;background:#26282b;color:#ebd8ac;display:grid;place-items:center;font-size:13px;flex:none}.guia-sec ol{margin:0;padding:0 18px 14px 44px;font-size:14.5px;line-height:1.5;color:#3a3c40}.guia-sec li{margin:6px 0}
+.guia-pie{text-align:center;color:#8a8e93;font-size:13px;margin:18px 0 8px}.guia-enlace{display:block;width:100%;margin-top:18px;background:none;border:0;color:#a8802a;font-weight:600;font-size:14px;cursor:pointer}
+.accesos{display:flex;gap:10px}.acceso{flex:1;min-width:0;background:#fff;border:1px solid #e4e5e7;border-radius:18px;padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;box-shadow:0 4px 14px rgba(0,0,0,.05);cursor:pointer}.acceso span{font-size:24px;line-height:26px;color:#a8802a}.acceso b{font-size:14px;color:#26282b}.acceso small{font-size:11.5px;color:#8a8e93;text-align:center}
 .urg-mini{display:block;width:100%;text-align:left;margin-top:16px;background:#fbeae7;color:#8f2c20;border:1px solid #f0c4bc;border-radius:14px;padding:12px 14px;font-weight:600;font-size:14px}
 #lBanda{display:flex;align-items:center;justify-content:center;gap:10px}
 #lEscudo{height:34px;width:auto;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
@@ -297,6 +308,8 @@ nav .badge{position:absolute;top:4px;right:calc(50% - 22px);min-width:17px;heigh
 #splash{position:fixed;inset:0;z-index:200;background:radial-gradient(120% 80% at 50% 30%,#3f4246 0%,#212325 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity 1.2s ease}
 #splash img{width:min(62vw,260px);height:auto;animation:sp-entra 1.1s ease both}
 #splash .sp-atril{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:.32em;color:#ebd8ac;opacity:0;animation:sp-entra .9s .5s ease both;padding-left:.32em}
+.pie-asoc{position:absolute;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom));text-align:center;font-size:11px;letter-spacing:.08em;color:rgba(235,216,172,.55)}
+.login{position:relative}
 #splash.fuera{opacity:0;pointer-events:none}
 #splash.fuera img,#splash.fuera .sp-atril{transform:scale(1.04);filter:blur(2px);transition:transform 1.2s ease,filter 1.2s ease}
 @keyframes sp-entra{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
@@ -304,6 +317,11 @@ nav .badge{position:absolute;top:4px;right:calc(50% - 22px);min-width:17px;heigh
 .otro{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 12px 0;background:#f8f1e0;color:#d0a236;border-radius:12px;padding:8px 8px 8px 14px;font-size:14px;font-weight:600}
 .otro button{background:#d0a236;color:#fff;border-radius:9px;padding:8px 12px;font-size:13.5px;font-weight:600;flex:none}
 .visor.actuacion #vOtro{display:none!important}
+.fila-pdf{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--linea);border-radius:14px;padding:10px 12px;margin-top:8px}
+.fila-pdf .nom{flex:1;min-width:0}.fila-pdf .nom b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fila-pdf .nom small{color:var(--gris);font-size:12px}
+.fila-pdf button{flex:none;max-width:52%;padding:8px 11px;border-radius:10px;font-size:13px;font-weight:600;background:#f3eedf;color:#3a3420;text-align:left}
+.fila-pdf button.sin{background:#fbe3df;color:#8f2c20}.fila-pdf button.ign{background:#eee;color:#888}
+.estampar{display:flex;gap:10px;align-items:flex-start;margin:12px 2px 0;font-size:13.5px;color:#3a3c40;line-height:1.4}.estampar input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:#a8802a}
 .orden-lista{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding:10px;border:1px dashed var(--linea);border-radius:12px;min-height:46px}
 .orden-lista button{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:10px;background:var(--oscuro);color:var(--oro2);font-size:13px;font-weight:600}
 .orden-lista i{font-style:normal;background:var(--oro);color:var(--negro);border-radius:6px;padding:0 5px;font-size:11.5px}
@@ -395,6 +413,7 @@ h2.sec{color:#303335}
 .seg button.on{background:#fff;color:var(--turq2);box-shadow:0 2px 8px rgba(33,35,37,.12)}
 nav .bar{background:rgba(38,40,41,.9);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-radius:26px;box-shadow:0 14px 34px rgba(33,35,37,.3);border:1px solid rgba(255,255,255,.06)}
 nav button{border-radius:18px}
+@media (max-width:380px){nav button{font-size:10px;letter-spacing:-.2px}}
 nav button.on{background:rgba(212,170,72,.22);color:#efe0bc}
 nav button.com.on{background:linear-gradient(135deg,#4f5458,#3d4044);color:#f3dfa6;x:linear-gradient(135deg,#d4aa48,#d0a236);color:#fff}
 .urgente{border-radius:20px}
@@ -404,7 +423,7 @@ nav button.com.on{background:linear-gradient(135deg,#4f5458,#3d4044);color:#f3df
 <body>
 
 <!-- ACCESO -->
-<div id="splash"><img src="data:image/png;base64,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" alt="Banda Municipal de Ágreda"><div class="sp-atril">Atril</div></div>
+<div id="splash"><img src="data:image/png;base64,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" alt="Banda Municipal de Ágreda"><div class="sp-atril">Atril</div><div class="pie-asoc">Asociación Músico-Cultural de Ágreda</div></div>
 <section class="login oculto" id="vLogin">
   <img src="icon-512.png" alt="">
   <div class="eti" id="lBanda"><img id="lEscudo" alt="">Banda Municipal de Ágreda</div>
@@ -415,10 +434,13 @@ nav button.com.on{background:linear-gradient(135deg,#4f5458,#3d4044);color:#f3df
   <div class="error" id="lError"></div>
   <button class="btn-oro" id="bEntrar">Entrar</button>
   <small>Te lo da el director. Solo se pide la primera vez.</small>
+  <div class="pie-asoc">Asociación Músico-Cultural de Ágreda</div>
 </section>
 
 <div class="app oculto" id="app">
-  <section id="vInicio"></section>
+  <section id="vHome" class="oculto"></section>
+  <section id="vGuia" class="oculto"></section>
+  <section id="vInicio" class="oculto"></section>
   <section id="vPrograma" class="oculto"></section>
   <section id="vBiblio" class="oculto"></section>
   <section id="vNoticias" class="oculto"></section>
@@ -531,6 +553,7 @@ function pedirTexto(titulo, valor, ayuda) { return dialogo(titulo, ayuda, { valo
 
 // Logotipo de la banda (la lira), el mismo de la pantalla de inicio
 var LOGO_BANDA = document.querySelector('#splash img').getAttribute('src');
+try { document.documentElement.style.setProperty('--marca', 'url(' + LOGO_BANDA + ')'); } catch (e) {}
 // Pantalla de bienvenida con el logo de la banda: 3 segundos al abrir y se difumina
 (function () {
   var s = document.getElementById('splash'), t0 = Date.now();
@@ -559,9 +582,11 @@ function api(accion, datos) {
 /* =================== Estado =================== */
 var D = null;            // datos del músico
 var A = null;            // datos de dirección
-var vista = 'vInicio', obraActual = null, parteActual = null, descargando = false, sinConexion = false;
+var vista = 'vHome', obraActual = null, parteActual = null, descargando = false, sinConexion = false;
 var vistas = {};
 function yo() { return D && D.usuario; }
+// El director (cargo «Dirección musical») y los administradores tienen los mismos permisos; solo cambia el nombre de la pestaña
+function esDirector() { return esAdmin() && yo().cargo === 'Dirección musical'; }
 function esAdmin() { return yo() && yo().rol === 'Administrador'; }
 function esJunta() { return yo() && yo().rol === 'Junta directiva'; }
 function puedeComunicar() { return esAdmin() || esJunta(); }
@@ -607,14 +632,14 @@ function arrancar() {
 }
 function mostrarLogin(msg) {
   $('vLogin').classList.remove('oculto'); $('app').classList.add('oculto'); $('nav').classList.add('oculto');
-  $('lError').textContent = msg || ''; vista = 'vInicio'; vistaAnterior = '';
-  ['vPrograma', 'vNoticias', 'vBiblio', 'vAfin', 'vPerfil', 'vDir'].forEach(function (x) { $(x).classList.add('oculto'); }); $('vInicio').classList.remove('oculto');
+  $('lError').textContent = msg || ''; vista = 'vHome'; vistaAnterior = '';
+  ['vGuia', 'vInicio', 'vPrograma', 'vNoticias', 'vBiblio', 'vAfin', 'vPerfil', 'vDir'].forEach(function (x) { $(x).classList.add('oculto'); }); $('vHome').classList.remove('oculto');
   var ins = document.querySelectorAll('#pin input'); ins.forEach(function (i) { i.value = ''; }); setTimeout(function () { ins[0].focus(); }, 100);
 }
 function entrarApp() {
   $('vLogin').classList.add('oculto'); $('app').classList.remove('oculto'); $('nav').classList.remove('oculto');
   pintarNav(); pintarTodo();
-  if (vista === 'vInicio' && vistaAnterior === '') ir('vBiblio');
+  if (vista === 'vHome' && vistaAnterior === '') ir('vHome');
   if (localStorage.getItem('atril_privacidad') !== VERSION_PRIV && !window.DIALOGO_AUTO) return avisoPrivacidad(true).then(function () { if (!misPapeles().length) elegirPapeles(true); });
   if (!misPapeles().length) return elegirPapeles(true);
   var ir_ = new URLSearchParams(location.search).get('ir');
@@ -622,6 +647,7 @@ function entrarApp() {
 }
 function irA(destino) {
   if (destino === 'noticias' && D) return ir('vNoticias');
+  if (destino === 'mensajes' && D) { ir('vInicio'); var sm = $('secMensajes'); if (sm) sm.scrollIntoView({ behavior: 'smooth' }); return; }
   if (destino === 'sugerencias' && D && esAdmin()) { ir('vDir'); return cargarAdmin().then(function () { dirTab = 'avisos'; pintarDir(); var s = $('secSug'); if (s) s.scrollIntoView(); }); }
   var m = String(destino || '').match(/^(prog|obra|resp):(.+)$/); if (!m || !D) return;
   if (m[1] === 'resp' && esAdmin()) { ir('vDir'); return cargarAdmin().then(function () { dirTab = 'programas'; pintarDir(); if (A.programas.some(function (p) { return p.id === m[2]; })) verRespuestas(m[2]); }); }
@@ -657,6 +683,16 @@ function activarAvisos() {
   }).then(function () { cargando(false); toast('🔔 Avisos activados'); pintarPerfil(); pintarInicio(); })
     .catch(function (e) { cargando(false); toast(e.message === 'Sin permiso' ? 'No has dado permiso para los avisos' : 'No se han podido activar: ' + e.message, 5000); });
 }
+function bloqueMensajes() {
+  var l = D.mensajes || [];
+  if (!l.length) return '';
+  return '<h2 class="sec" id="secMensajes">Mensajes <small>últimos 7 días</small></h2>' + l.map(function (m) {
+    var d = new Date(m.fecha), cuando = fechaNoticia(m.fecha) + (Date.now() - d.getTime() < 86400000 ? '' : ' · ' + hora24(m.fecha));
+    return '<div class="noticia"><div class="n-et"><span>' + cuando + ' · ' + esc(m.de) + '</span>' + (m.instrumento ? '<span class="pin">Solo ' + esc(m.instrumento) + '</span>' : '') + '</div>' +
+      '<div class="n-tx" style="margin-top:4px">' + enlazar(m.texto) + '</div>' +
+      (esAdmin() ? '<div class="n-acc"><button class="mini" data-bmen="' + esc(m.id) + '">Borrar</button></div>' : '') + '</div>';
+  }).join('');
+}
 function bannerAvisos() {
   if (!avisosPosibles() && !(esIOS() && !instalada() && FB.apiKey)) return '';
   if (avisosActivos() || localStorage.getItem('atril_no_avisos') || (window.Notification && Notification.permission === 'denied')) return '';
@@ -666,7 +702,7 @@ function sincronizar(primeraVez) {
   if (primeraVez) cargando(true, 'Cargando tus partituras…');
   return api('datos').then(function (r) {
     sinConexion = false;
-    D = { usuario: r.usuario, banda: r.banda, papeles: r.papeles, obras: r.obras, programas: r.programas, noticias: r.noticias || [], anotaciones: r.anotaciones || {}, equipo: r.equipo || [] };
+    D = { usuario: r.usuario, banda: r.banda, papeles: r.papeles, obras: r.obras, programas: r.programas, noticias: r.noticias || [], mensajes: r.mensajes || [], anotaciones: r.anotaciones || {}, equipo: r.equipo || [] };
     return guardado.put('datos', D).then(function () {
       cargando(false);
       if (primeraVez) entrarApp(); else pintarTodo();
@@ -750,12 +786,18 @@ function entrar() {
 $('bEntrar').onclick = entrar;
 
 /* =================== Navegación =================== */
+var ICO_BANDA = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M6.5 19.5c0-3.2 2.5-5.5 5.5-5.5s5.5 2.3 5.5 5.5"/><circle cx="5.5" cy="9.5" r="2.2"/><path d="M2 18c0-2.3 1.5-4 3.6-4.3"/><circle cx="18.5" cy="9.5" r="2.2"/><path d="M22 18c0-2.3-1.5-4-3.6-4.3"/></svg>';
+var ICO_PERFIL = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5"/></svg>';
+var ICO_DIR = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2.4"/><path d="M8.7 13.2c.4-1.8 1.7-2.9 3.3-2.9s2.9 1.1 3.3 2.9"/><path d="M8.9 11.3L5.3 8.1 4.5 4.6"/><path d="M15.1 11.3l3.1-3.4"/><path d="M18.2 7.9l3.1-5.6" stroke-width="1.3"/><path d="M5.5 14h13l-1.8 3.2H7.3z"/><path d="M12 17.2v3.8M9 21h6"/></svg>';
+var ICO_ADMIN = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>';
+var ICO_INICIO = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></svg>';
+var ICO_JUNTA = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2.2"/><circle cx="4.5" cy="9" r="2"/><circle cx="19.5" cy="9" r="2"/><path d="M2.5 14.5h19"/><path d="M5 14.5V21M19 14.5V21"/><path d="M9 12.2c.6-1.6 1.7-2.5 3-2.5s2.4.9 3 2.5"/></svg>';
 function pintarNav() {
   // Música (dorado) | Banda y comunicación (azul) | Yo
-  var b = [['vBiblio', '♫', 'Partituras', 'mus'], ['vAfin', '◎', 'Afinador', 'mus'], ['vInicio', '⚑', 'Banda', 'com sep']];
-  if (esJunta()) b.push(['vDir', '✉', 'Junta', 'com']);
-  b.push(['vPerfil', '◉', 'Perfil', 'yo sep']);
-  if (esAdmin()) b.push(['vDir', '⤒', 'Dirección', 'yo']);
+  var b = [['vHome', ICO_INICIO, 'Inicio', 'mus'], ['vBiblio', '♫', 'Partituras', 'mus'], ['vInicio', ICO_BANDA, 'Banda', 'com sep']];
+  if (esJunta()) b.push(['vDir', ICO_JUNTA, 'Junta', 'com']);
+  b.push(['vPerfil', ICO_PERFIL, 'Perfil', 'yo sep']);
+  if (esAdmin()) b.push(esDirector() ? ['vDir', ICO_DIR, 'Director', 'yo'] : ['vDir', ICO_ADMIN, 'Administrador', 'yo']);
   $('navbar').innerHTML = b.map(function (x) { return '<button data-ir="' + x[0] + '" class="' + x[3] + '"><span>' + x[1] + '</span>' + x[2] + (x[0] === 'vInicio' ? '<i class="badge" id="navBadge"></i>' : '') + '</button>'; }).join('');
   marcarNav();
 }
@@ -767,18 +809,21 @@ var vistaAnterior = '';
 function ir(v) {
   vistaAnterior = vista;
   vista = v;
+  if (v === 'vInicio') marcarAvisosVistos();
   if (v !== 'vAfin' && typeof pararAfinador === 'function') { pararAfinador(); pararTono(); }
-  ['vInicio', 'vPrograma', 'vNoticias', 'vBiblio', 'vAfin', 'vPerfil', 'vDir'].forEach(function (x) { $(x).classList.toggle('oculto', x !== v); });
+  ['vHome', 'vGuia', 'vInicio', 'vPrograma', 'vNoticias', 'vBiblio', 'vAfin', 'vPerfil', 'vDir'].forEach(function (x) { $(x).classList.toggle('oculto', x !== v); });
+  if (v === 'vGuia') pintarGuia();
+  if (v === 'vHome') pintarPortada();
   marcarNav(); window.scrollTo(0, 0);
   if (v === 'vDir') abrirDireccion();
   if (v === 'vAfin') pintarAfinador();
   if (v === 'vNoticias') pintarNoticias();
   if (v === 'vInicio' && D && vistaAnterior === 'vNoticias') pintarInicio();
 }
-function pintarTodo() { pintarInicio(); pintarBiblio(); pintarPerfil(); pintarNav(); if (vista === 'vNoticias') pintarNoticias(); }
+function pintarTodo() { pintarPortada(); pintarInicio(); pintarBiblio(); pintarPerfil(); pintarNav(); if (vista === 'vNoticias') pintarNoticias(); }
 
 function cab(titulo, sub, conVolver, extra) {
-  return '<div class="cab"><div class="fila">' + (conVolver ? '<button class="volver" data-volver="' + conVolver + '">‹</button>' : '<div class="marca"><img src="icon-192.png" alt=""><span>Atril</span></div>') +
+  return '<div class="cab"><div class="fila">' + (conVolver ? '<button class="volver" data-volver="' + conVolver + '">‹</button>' : '<div class="marca"><img src="' + LOGO_BANDA + '" alt=""><span>Atril</span></div>') +
     (extra || '') + '</div><h1>' + esc(titulo) + '</h1>' + (sub ? '<div class="sub">' + sub + '</div>' : '') + '</div>';
 }
 // Cabecera azul: todo lo que es comunicación (banda, programas, noticias, junta) se distingue de lo musical (dorado)
@@ -786,9 +831,25 @@ function cabCom(titulo, sub, conVolver, extra) { return cab(titulo, sub, conVolv
 function pendientesBanda() {
   if (!D) return 0;
   var hoy = hoyIso(), n = 0;
-  D.programas.forEach(function (p) { if (p.fecha >= hoy && ((p.pedirConfirmacion && !p.miRespuesta && !(p.limite && p.limite < hoy)) || p.urgente)) n++; });
+  var vistos = avisosVistos();
+  D.programas.forEach(function (p) {
+    if (p.fecha < hoy) return;
+    if (p.pedirConfirmacion && !p.miRespuesta && !(p.limite && p.limite < hoy)) n++;
+    (p.urgentes || (p.urgente ? [p.urgente] : [])).forEach(function (a) { if (vistos.indexOf(claveAviso(p, a)) < 0) n++; });
+  });
+  (D.mensajes || []).forEach(function (m) { if (vistos.indexOf('m|' + m.id) < 0) n++; });
   (D.noticias || []).forEach(function (x) { if (!noticiaVista(x)) n++; });
   return n;
+}
+// Avisos urgentes y mensajes ya vistos: dejan de contar en el número de la pestaña Banda
+function avisosVistos() { try { return JSON.parse(localStorage.getItem('atril_avisos_vistos') || '[]'); } catch (e) { return []; } }
+function claveAviso(p, a) { return 'u|' + p.id + '|' + (a.id || '') + '|' + (a.fecha || ''); }
+function marcarAvisosVistos() {
+  if (!D) return;
+  var v = avisosVistos(), hoy = hoyIso();
+  D.programas.forEach(function (p) { if (p.fecha >= hoy) (p.urgentes || (p.urgente ? [p.urgente] : [])).forEach(function (a) { var k = claveAviso(p, a); if (v.indexOf(k) < 0) v.push(k); }); });
+  (D.mensajes || []).forEach(function (m) { if (v.indexOf('m|' + m.id) < 0) v.push('m|' + m.id); });
+  try { localStorage.setItem('atril_avisos_vistos', JSON.stringify(v.slice(-300))); } catch (e) {}
 }
 function vistosPapel() { try { return JSON.parse(localStorage.getItem('atril_papeles_vistos') || '{}'); } catch (e) { return {}; } }
 function clavePapel(o, p) { return o.id + '|' + p.papeles.join(','); }
@@ -806,7 +867,7 @@ function filaObra(o, ctx) {
 
 /* =================== Inicio =================== */
 var promptInstalar = null;
-window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); promptInstalar = e; pintarInicio(); });
+window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); promptInstalar = e; pintarInicio(); pintarPortada(); });
 function bannerInstalar() {
   var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
   if (standalone) return '';
@@ -827,7 +888,7 @@ function pintarInicio() {
       (esAdmin() && p.fecha >= hoyIso() ? '<div class="vienes" style="padding:10px 20px"><button class="btn urg ancho" data-urgente="' + p.id + '" style="padding:10px">⚠ Aviso urgente a la banda</button></div>' : '') +
       (p.obras.map(function (id) { return obra(id); }).filter(Boolean).map(function (o) { return filaObra(o, p.id); }).join('') || '<div class="obra" style="cursor:default"><div class="s">Aún sin obras</div></div>') + '</div>';
   } else h += '<div class="proximo"><div class="top"><div><div class="eti">Sin programas próximos</div><h3>Nada a la vista</h3><div class="hora">Cuando el director publique, aparecerá aquí.</div></div></div></div>';
-  h += bannerAvisos();
+  h += bannerAvisos() + bloqueMensajes();
   var nots = D.noticias || [];
   if (nots.length) {
     var sinLeer = nots.filter(function (n) { return !noticiaVista(n); }).length;
@@ -842,6 +903,10 @@ function pintarInicio() {
   h += '<button class="noticia vacia" data-ir="vNoticias" style="margin-top:6px">Quién es quién: director y junta directiva ›</button>';
   h += '<div style="text-align:center;margin-top:20px"><button class="btn linea" id="bActualizar">↻ Actualizar</button></div></main>';
   $('vInicio').innerHTML = h;
+  if (vista === 'vInicio') marcarAvisosVistos();
+  $('vInicio').querySelectorAll('[data-bmen]').forEach(function (b) { b.onclick = function () {
+    preguntar('¿Borrar este mensaje?', 'Desaparecerá de la app para todos.', 'Borrar', true).then(function (si) { if (!si) return;
+      cargando(true); api('borrarMensaje', { id: b.dataset.bmen }).then(function () { return sincronizar(false); }).then(function () { cargando(false); toast('Mensaje borrado'); }).catch(function (e) { cargando(false); toast(e.message); }); }); }; });
   marcarNav();
 }
 function abrirPrograma(id) {
@@ -870,13 +935,13 @@ function textoUrgente(p) { return '⚠️ *AVISO URGENTE · ' + p.titulo + '*\n'
 
 
 /* =================== Privacidad y sugerencias =================== */
-var VERSION_PRIV = '1';
+var VERSION_PRIV = '2';   // al cambiar el aviso, todos lo vuelven a ver una vez
 function textoPrivacidad() {
-  return '<div class="priv"><h3>Tus datos en Atril</h3><p>Atril es de la <b>' + esc(D && D.banda || 'Banda Municipal de Ágreda') + '</b> y solo la usa la banda.</p>' +
+  return '<div class="priv"><h3>Aviso de privacidad</h3><p>El responsable de tus datos es la <b>Asociación Músico-Cultural de Ágreda</b>, que gestiona la ' + esc(D && D.banda || 'Banda Municipal de Ágreda') + '. Atril solo la usa la banda, para organizar ensayos, actuaciones y partituras.</p>' +
     '<p><b>Qué se guarda:</b></p><ul><li>Tu nombre, instrumento y papeles.</li><li>Tu correo, solo si lo pones.</li><li>Tus respuestas a «¿Vienes?».</li><li>Tus anotaciones en las partituras.</li><li>Si activas los avisos, un identificador de tu aparato para poder enviarlos.</li></ul>' +
     '<p><b>Quién lo ve:</b> la dirección ve las respuestas y los correos; la junta, la lista de músicos; tus anotaciones, solo tú.</p>' +
     '<p>Se guarda en la cuenta de Google de la banda. No se comparte con nadie de fuera ni se usa para publicidad.</p>' +
-    '<p>Para consultar, corregir o borrar tus datos, díselo al director o a la junta directiva.</p></div>';
+    '<p>Para consultar, corregir o borrar tus datos, díselo al director o a la junta directiva de la asociación.</p></div>';
 }
 function avisoPrivacidad(primeraVez) {
   return new Promise(function (fin) {
@@ -898,6 +963,124 @@ function abrirSugerencia() {
   };
 }
 
+/* =================== Guía de uso =================== */
+var GUIA = [
+  { t: 'Instalar y entrar', p: [
+    'Abre el enlace de Atril en <b>Chrome</b> (en iPhone, en <b>Safari</b>).',
+    'Menú de los tres puntos → <b>Instalar aplicación</b>. En iPhone: Compartir → <b>Añadir a pantalla de inicio</b>.',
+    'Ábrela desde su icono y escribe tu <b>código de 4 cifras</b>. Te lo da el director y solo se pide la primera vez.',
+    'Si cambias de móvil o se borra la app, vuelve a instalarla y entra con tu código: lo tendrás todo igual.'] },
+  { t: 'Inicio', p: [
+    'Es lo primero que ves al abrir: el saludo, los <b>avisos</b> que no has visto y <b>lo próximo</b> (ensayo o actuación).',
+    'Contesta <b>«¿Vienes?»</b> con <b>Sí, voy</b> o <b>No puedo</b> ahí mismo.',
+    'En <b>Para preparar</b> están las obras del próximo programa: tócalas para abrir tu papel.',
+    'En <b>Accesos rápidos</b> tienes el Afinador, todo el Repertorio y las Noticias.'] },
+  { t: 'Partituras', p: [
+    'Arriba, las obras del próximo ensayo o concierto; después, las <b>nuevas o cambiadas</b>; y abajo, <b>todo el repertorio</b> con buscador.',
+    'Solo te salen <b>tus papeles</b> (los eliges en Perfil).',
+    'Si en una obra hay varios papeles para ti, Atril te pregunta cuál vas a tocar y lo recuerda. Lo cambias con el botón <b>Papel</b>.'] },
+  { t: 'Leer y pasar página', p: [
+    '<b>Desliza</b> hacia el lado para pasar de página. En tableta y en horizontal ves dos páginas a la vez.',
+    'Botón de <b>pantalla completa</b> (arriba): toca a los lados para pasar página y en el centro para el lápiz.',
+    'La <b>luna</b> pone el modo noche, para leer con poca luz.',
+    'Con un <b>pedal</b> o teclado bluetooth también pasas página (flechas).',
+    'La pantalla no se apaga mientras tienes una partitura abierta.'] },
+  { t: 'Anotar la partitura', p: [
+    'Pulsa <b>Anotar</b>: tienes <b>bolígrafo</b> (varios colores y grosores), <b>subrayador</b> y <b>goma</b>.',
+    'El subrayador se endereza solo si trazas casi recto. La flecha <b>deshace</b> lo último.',
+    'Pulsa <b>Hecho</b> al terminar. Tus anotaciones son solo tuyas y te salen en todos tus aparatos.'] },
+  { t: 'Metrónomo', p: [
+    '<b>Con los tempos del director:</b> salen por tramos (por ejemplo, «c.1 · 60 · Introducción»). Empieza a tocar a la vez que el metrónomo: cuenta los compases y <b>cambia de tempo solo</b> al llegar al tramo siguiente. Avisa unos compases antes.',
+    '¿Te paras? Toca el tramo para volver a empezar desde ahí, o elige <b>«Solo este tramo»</b> para quedarte en un tempo fijo.',
+    '<b>Libre:</b> si la obra no tiene tempos, pon tú la velocidad con <b>−5 / +5</b> y los pulsos por compás.',
+    'Para estudiar, bájalo con <b>−5 %</b> y ve subiendo hasta el <b>tempo original</b>.'] },
+  { t: 'Escuchar audios y vídeos', p: [
+    'Pulsa <b>Escuchar</b> para oír la grabación que haya puesto el director mientras lees.',
+    'Puedes ponerla <b>más lenta</b>, retroceder 5 segundos o <b>repetir un trozo</b> (marcas el principio y el final).',
+    'Los <b>vídeos de YouTube</b> se ven en una <b>ventanita en la esquina</b> para no tapar la partitura. Con el botón de las flechitas la haces más grande. Necesitan internet.',
+    'En <b>Sobre la obra</b> tienes las indicaciones del director, las notas para tu sección y todas las grabaciones.'] },
+  { t: 'Imprimir', p: [
+    'Con <b>Imprimir</b> sacas tu papel en papel o en PDF.',
+    'Si prefieres recibir las obras nuevas por correo, ponlo en <b>Perfil → Correo</b>.'] },
+  { t: 'Afinador', p: [
+    'Está en <b>Inicio → Accesos rápidos</b>.',
+    'Pulsa <b>Empezar</b> y toca una nota larga y estable. La aguja en el centro y en verde = afinado.',
+    'Elige tu instrumento (<b>Do, Si♭, Mi♭ o Fa</b>) para ver la nota como la lees en tu papel.'] },
+  { t: 'Banda: ensayos, avisos y noticias', p: [
+    'Día, hora, lugar, <b>citación</b> y <b>uniforme</b> de cada ensayo y actuación.',
+    'Contesta <b>«¿Vienes?»</b> y, si quieres, añade una explicación para el director («llego tarde», «tengo turno»…).',
+    'Los <b>avisos urgentes</b> salen en rojo y se quitan solos al día siguiente.',
+    'Los <b>mensajes</b> del director o la junta se quedan una semana.',
+    'En <b>Noticias</b> está lo que se cuece en la banda y <b>quién es quién</b> (dirección y junta).',
+    'El número rojo de la pestaña Banda indica lo que aún no has visto.'] },
+  { t: 'Perfil y avisos', p: [
+    '<b>Mis papeles:</b> elige qué papeles tocas.',
+    '<b>Correo:</b> si quieres recibir las obras nuevas para imprimirlas.',
+    '<b>Avisos:</b> pulsa <b>Activar avisos</b> para que te lleguen al momento los ensayos, cambios y avisos urgentes. Hazlo en cada aparato que uses.',
+    '<b>Sugerencias:</b> cuéntale a la dirección si algo falla o se te ocurre una mejora.'] },
+  { t: 'Sin internet', p: [
+    'Abre Atril con WiFi antes del ensayo: se descargan tus partituras.',
+    'En el ensayo funciona <b>sin conexión</b>: tus partituras, tus anotaciones y los audios de estudio que ya hayas escuchado.',
+    'Si anotas sin internet, se guarda y se sube solo cuando vuelvas a tener conexión.',
+    'Los vídeos de YouTube sí necesitan internet.'] }
+];
+var GUIA_JUNTA = { t: 'Para la junta directiva', p: [
+  'En la pestaña <b>Junta</b> publicas <b>noticias</b> (se pueden fijar arriba) y mandas <b>mensajes</b> a toda la banda o solo a un instrumento.',
+  'Los mensajes llegan como aviso al móvil y se quedan una semana en la pestaña Banda.'] };
+var GUIA_DIR = { t: 'Para el director y los administradores', p: [
+  '<b>Subir una obra:</b> Director → Obras → <b>＋ Nueva obra</b>. Pon el título, elige la <b>carpeta</b> (Procesiones, Pasodobles… o <b>＋ Nueva carpeta</b>) y pulsa <b>Guardar datos</b> → <b>Subir PDF</b> → <b>Detectar instrumentos</b>. Revisa los papeles, pulsa <b>Subir</b> y luego <b>Publicar</b>.',
+  '¿Los papeles vienen ya separados, un PDF por instrumento? Usa <b>📁 Subir varios PDF a la vez</b> (o <b>📂 Subir una carpeta</b> en el ordenador): el instrumento se saca del nombre de cada archivo.',
+  '<b>Manuscritos:</b> si no reconoce los nombres, endereza las páginas que estén de lado, busca dónde empieza cada papel y te pide el <b>listado de instrumentos en orden</b> (se puede pegar). Marca «Escribir el instrumento arriba» para que se lea bien.',
+  'En Drive todo queda ordenado: <b>Atril - Partituras › carpeta › obra</b>. Si cambias la carpeta de una obra, se mueve sola.',
+  'En la obra puedes añadir <b>tempos para el metrónomo</b> (por tramos), audios de estudio, vídeos de YouTube e indicaciones.',
+  '<b>Ensayos y actuaciones:</b> Programas → <b>＋ Nuevo programa</b>. Fecha, hora, lugar, citación, uniforme, obras y si quieres <b>preguntar «¿Vienes?»</b>. Al publicar, les llega el aviso.',
+  'Con <b>Ver quién viene</b> ves las respuestas. Puedes recordar solo a quien no ha contestado.',
+  '<b>Aviso urgente:</b> desde el próximo programa, botón <b>⚠ Aviso urgente</b>. Puedes poner varios; se borran solos al día siguiente.',
+  '<b>Músicos:</b> se dan de alta en la hoja de Google (pestaña Usuarios) y luego menú <b>🎼 Atril → Preparar la hoja</b>. En la app les mandas el código por WhatsApp, les asignas papeles y cambias su rol o cargo.',
+  'Quien tenga el cargo <b>Dirección musical</b> ve la pestaña «Director»; los demás administradores, «Administrador». Pueden hacer lo mismo.'] };
+function pintarGuia() {
+  var l = GUIA.slice(); if (esJunta() || esAdmin()) l.push(GUIA_JUNTA); if (esAdmin()) l.push(GUIA_DIR);
+  $('vGuia').innerHTML = cab('Guía de uso', 'Todo lo que puedes hacer con Atril', 'vPerfil') + '<main>' +
+    '<div class="guia-video"><video src="guia-atril.mp4" poster="guia-atril.jpg" controls playsinline preload="none"></video><small>Vídeo guía (4 min) · necesita internet</small></div>' +
+    l.map(function (s, i) { return '<details class="guia-sec"><summary><span class="n">' + (i + 1) + '</span>' + s.t + '</summary><ol>' + s.p.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol></details>'; }).join('') +
+    '<p class="guia-pie">¿Dudas? Pregunta al director o usa «Enviar una sugerencia» en tu perfil.</p></main>';
+}
+/* =================== Inicio (portada) =================== */
+var MESES_L = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+function avisosSinVer() {
+  var v = avisosVistos(), hoy = hoyIso(), n = 0;
+  D.programas.forEach(function (p) { if (p.fecha >= hoy) (p.urgentes || (p.urgente ? [p.urgente] : [])).forEach(function (a) { if (v.indexOf(claveAviso(p, a)) < 0) n++; }); });
+  var m = (D.mensajes || []).filter(function (x) { return v.indexOf('m|' + x.id) < 0; }).length;
+  return { urgentes: n, mensajes: m };
+}
+function pintarPortada() {
+  if (!D || !$('vHome')) return;
+  var u = yo(), hoy = hoyIso(), ahora = new Date(), hr = ahora.getHours();
+  var saludo = hr >= 6 && hr < 14 ? 'Buenos días' : hr >= 14 && hr < 21 ? 'Buenas tardes' : 'Buenas noches';
+  var nombre = u.nombre.split(' ')[0].toLowerCase().replace(/^./, function (c) { return c.toUpperCase(); });
+  var futuros = D.programas.filter(function (p) { return p.fecha >= hoy; });
+  var h = cabCom(saludo + ', ' + nombre, DIAS[ahora.getDay()].replace(/^./, function (c) { return c.toUpperCase(); }) + ' ' + ahora.getDate() + ' de ' + MESES_L[ahora.getMonth()]) + '<main>';
+  var sv = avisosSinVer();
+  if (sv.urgentes || sv.mensajes) {
+    var partes = [];
+    if (sv.urgentes) partes.push(sv.urgentes + ' aviso' + (sv.urgentes > 1 ? 's' : '') + ' urgente' + (sv.urgentes > 1 ? 's' : ''));
+    if (sv.mensajes) partes.push(sv.mensajes + ' mensaje' + (sv.mensajes > 1 ? 's' : '') + ' nuevo' + (sv.mensajes > 1 ? 's' : ''));
+    h += '<button class="urg-mini" data-ir="vInicio"' + (sv.urgentes ? '' : ' style="background:#f6f0e1;color:#7a5a17;border-color:#ead9b0"') + '>' + (sv.urgentes ? '⚠' : '✉') + ' Tienes ' + partes.join(' y ') + ' · ver ›</button>';
+  }
+  if (futuros.length) {
+    var p = futuros[0], d = fecha(p.fecha);
+    h += '<div class="proximo" style="margin-top:16px"><div class="top" data-prog="' + p.id + '" style="cursor:pointer"><div class="fechab ' + (p.tipo === 'Ensayo' ? 'ensayo' : '') + '"><b>' + d.getDate() + '</b><span>' + MESES[d.getMonth()] + '</span></div><div><div class="eti">Lo próximo · ' + esc(p.tipo) + '</div><h3>' + esc(p.titulo) + '</h3><div class="hora">' + esc(cuando(p)) + '</div></div></div>' + bloqueVienes(p) + '</div>';
+  } else h += '<div class="proximo" style="margin-top:16px"><div class="top"><div><div class="eti">Sin ensayos ni actuaciones</div><h3>Nada a la vista</h3><div class="hora">Cuando el director publique, aparecerá aquí.</div></div></div></div>';
+  var prox = futuros.filter(function (x) { return x.obras.length; })[0];
+  if (prox) {
+    var obs = prox.obras.map(obra).filter(Boolean);
+    if (obs.length) h += '<h2 class="sec">Para preparar <small>' + (prox.tipo === 'Ensayo' ? 'ensayo' : esc(prox.tipo.toLowerCase())) + ' del ' + fecha(prox.fecha).getDate() + ' ' + MESES[fecha(prox.fecha).getMonth()] + '</small></h2><div class="lista">' + obs.map(function (o) { return filaObra(o, prox.id); }).join('') + '</div>';
+  }
+  var tile = function (ir, ic, t, sub) { return '<button class="acceso" data-ir="' + ir + '"><span>' + ic + '</span><b>' + t + '</b><small>' + sub + '</small></button>'; };
+  h += '<h2 class="sec">Accesos rápidos</h2><div class="accesos">' + tile('vAfin', '◎', 'Afinador', 'Afina antes de tocar') + tile('vBiblio', '♫', 'Repertorio', 'Todas las obras') + tile('vNoticias', '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="15" height="15" rx="2"/><path d="M18 8.5h2.5v9a2 2 0 0 1-2 2H5"/><path d="M6.5 8.5h8M6.5 12h8M6.5 15.5h5"/></svg>', 'Noticias', 'De la banda') + '</div>';
+  h += bannerAvisos() + bannerInstalar() + '<button class="guia-enlace" data-ir="vGuia">📖 ¿Cómo funciona Atril? Ver la guía ›</button></main>';
+  $('vHome').innerHTML = h;
+}
 /* =================== Noticias =================== */
 function tarjetaEquipo() {
   var e = D.equipo || []; if (!e.length) return '';
@@ -1085,6 +1268,7 @@ function pintarPerfil() {
     '<button class="btn negro ancho" id="bGuardarPerfil" style="margin-top:8px">Guardar</button></div>' +
     (!FB.apiKey ? '' : '<h2 class="sec">Avisos</h2><div class="tarjeta">' + (avisosActivos() ? '<div class="dato"><b>🔔 Activados en este aparato</b><span>ensayos, cambios y obras nuevas</span></div>' :
       '<p>Te avisamos el día del ensayo, si cambia algo y cuando hay obras nuevas, aunque no tengas Atril abierto.</p><button class="btn negro ancho" id="pActAvisos" style="margin-top:12px">🔔 Activar avisos</button>') + '</div>') +
+    '<h2 class="sec">Ayuda</h2><button class="noticia vacia" data-ir="vGuia" style="text-align:left;border-style:solid;color:var(--texto)"><b>📖 Guía de uso</b><br><small style="color:#8a8e93">Todo lo que puedes hacer con Atril, paso a paso, y el vídeo</small></button>' +
     '<h2 class="sec">Sugerencias</h2><div class="tarjeta"><p>¿Algo no funciona o se te ocurre una mejora? Cuéntaselo a la dirección.</p><button class="btn linea ancho" id="bSugerir" style="margin-top:12px">Enviar una sugerencia</button></div>' +
     '<h2 class="sec">Este aparato</h2><div class="tarjeta"><div class="dato"><span>Partituras guardadas</span><b id="pAlm">…</b></div>' +
     '<button class="btn linea ancho" style="margin-top:12px" id="bSalir">Cerrar sesión</button></div>' +
@@ -1146,7 +1330,7 @@ document.addEventListener('visibilitychange', function () {
 var NOTAS = ['Do', 'Do♯', 'Re', 'Mi♭', 'Mi', 'Fa', 'Fa♯', 'Sol', 'La♭', 'La', 'Si♭', 'Si'];
 var TRANSP = [['Do', 0, 'Flauta, oboe, trombón, tuba…'], ['Si♭', 2, 'Clarinete, trompeta, saxo tenor…'], ['Mi♭', 9, 'Saxo alto y barítono, requinto'], ['Fa', 7, 'Trompa']];
 var AF = { on: false, la: 442, tr: 0, ctx: null, stream: null, an: null, buf: null, timer: null, hist: [], ultima: null, tono: null };
-try { AF.la = +localStorage.getItem('atril_afin_la') || 442; } catch (e) {}
+// La banda afina a La = 442 Hz
 
 function transpDefecto() {
   var t = misPapeles().join(' ');
@@ -1205,13 +1389,7 @@ function pintarAfinador() {
     '</div>' +
     '<h2 class="sec">Tu instrumento</h2><div class="tarjeta">' +
       '<div class="seg" style="margin-top:0" id="afTr">' + TRANSP.map(function (x) { return '<button data-tr="' + x[1] + '" class="' + (x[1] === AF.tr ? 'on' : '') + '">' + x[0] + '</button>'; }).join('') + '</div>' +
-      '<p class="afin-nota-p" id="afTrTxt"></p></div>' +
-    '<h2 class="sec">Nota de referencia</h2><div class="tarjeta">' +
-      '<div class="afin-refs">' + refs.map(function (x) { return '<button class="btn linea" data-ref="' + x[1] + '" data-oct="' + x[2] + '">♪ ' + x[0] + ' de afinar</button>'; }).join('') + '</div>' +
-      '<p class="afin-nota-p" id="afRefTxt"></p></div>' +
-    '<h2 class="sec">Diapasón</h2><div class="tarjeta"><div class="dato" style="border:0;padding:0"><span>La de referencia</span>' +
-      '<div class="afin-la"><button id="afLaMenos" aria-label="Bajar">−</button><b id="afLa">' + AF.la + ' Hz</b><button id="afLaMas" aria-label="Subir">+</button></div></div>' +
-      '<p class="afin-nota-p">Las bandas suelen afinar a 442. Cámbialo solo si el director lo indica.</p></div></main>';
+      '<p class="afin-nota-p" id="afTrTxt"></p></div></main>';
   textosTransp();
   $('afBoton').onclick = function () { AF.on ? pararAfinador() : empezarAfinador(); };
   $('afTr').onclick = function (e) {
@@ -1220,18 +1398,10 @@ function pintarAfinador() {
     [].forEach.call(this.children, function (x) { x.classList.toggle('on', x === b); }); textosTransp();
     if (AF.ultima) pintarLectura(AF.ultima);
   };
-  document.querySelectorAll('[data-ref]').forEach(function (b) { b.onclick = function () { tonoReferencia(b); }; });
-  $('afLaMenos').onclick = function () { cambiarLa(-1); }; $('afLaMas').onclick = function () { cambiarLa(1); };
 }
 function textosTransp() {
   var t = TRANSP.filter(function (x) { return x[1] === AF.tr; })[0];
   $('afTrTxt').textContent = AF.tr ? 'Instrumento en ' + t[0] + ' (' + t[2].toLowerCase() + '). Ves la nota tal como está escrita en tu papel.' : 'Instrumento en Do (' + t[2].toLowerCase() + '). Ves la nota real, la que suena.';
-  $('afRefTxt').textContent = AF.tr ? 'En tu papel, el Si♭ de afinar es ' + NOTAS[(10 + AF.tr) % 12] + ' y el La es ' + NOTAS[(9 + AF.tr) % 12] + '.' : 'Suena la nota real para afinar de oído con la banda.';
-}
-function cambiarLa(d) {
-  AF.la = Math.min(446, Math.max(436, AF.la + d)); localStorage.setItem('atril_afin_la', AF.la);
-  $('afLa').textContent = AF.la + ' Hz'; if (AF.ultima) pintarLectura(AF.ultima);
-  if (AF.tono) { var b = document.querySelector('[data-ref].on'); pararTono(); if (b) tonoReferencia(b); }
 }
 function ctxAfin() { AF.ctx = AF.ctx || new (window.AudioContext || window.webkitAudioContext)(); if (AF.ctx.state === 'suspended') AF.ctx.resume(); return AF.ctx; }
 function empezarAfinador() {
@@ -1748,11 +1918,11 @@ function reproducir(f) {
   if (f.tipo === 'yt') {
     if (!f.yt) { window.open(f.url, '_blank'); return; }
     if (!navigator.onLine) return toast('Los vídeos de YouTube necesitan internet');
-    $('repro').className = 'repro peq';
+    $('repro').className = 'repro yt peq';
     $('repro').innerHTML = '<div class="r1"><div class="rt"><b>▶ ' + esc(f.titulo) + '</b><span>YouTube · se para si bloqueas la pantalla</span></div>' +
       '<button class="cerrar" id="rTam" aria-label="Tamaño">⤢</button><button class="cerrar" id="rCerrar" aria-label="Cerrar">✕</button></div>' +
       '<div class="ytmini"><iframe src="https://www.youtube-nocookie.com/embed/' + f.yt + '?autoplay=1&playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>' +
-      '<div style="text-align:right;margin-top:6px"><a href="' + esc(f.url) + '" target="_blank" rel="noopener" style="font-size:12px;color:#aaaeb3">¿No se ve? Abrir en YouTube ›</a></div>';
+      '<div class="ytenlace" style="text-align:right;margin-top:6px"><a href="' + esc(f.url) + '" target="_blank" rel="noopener" style="font-size:12px;color:#aaaeb3">¿No se ve? Abrir en YouTube ›</a></div>';
     mostrarRepro(true);
     $('rCerrar').onclick = cerrarRepro;
     $('rTam').onclick = function () { $('repro').classList.toggle('peq'); };
@@ -1878,7 +2048,7 @@ function cargarAdmin() {
 function abrirDireccion() {
   if (esJunta()) return abrirJunta();
   if (!esAdmin()) return;
-  $('vDir').innerHTML = cab('Dirección', 'Obras, programas y músicos') + '<main><div class="seg"><button data-dt="obras">Obras</button><button data-dt="programas">Programas</button><button data-dt="musicos">Músicos</button><button data-dt="avisos">Avisos</button></div><div id="dirCont"><div class="vacio" style="margin-top:16px">Cargando…</div></div></main>';
+  $('vDir').innerHTML = cab(esDirector() ? 'Director' : 'Administración', 'Obras, programas y músicos') + '<main><div class="seg"><button data-dt="obras">Obras</button><button data-dt="programas">Programas</button><button data-dt="musicos">Músicos</button><button data-dt="avisos">Avisos</button></div><div id="dirCont"><div class="vacio" style="margin-top:16px">Cargando…</div></div></main>';
   $('vDir').querySelectorAll('[data-dt]').forEach(function (b) { b.onclick = function () { dirTab = b.dataset.dt; pintarDir(); }; });
   cargarAdmin().then(pintarDir).catch(function (e) { $('dirCont').innerHTML = '<div class="vacio" style="margin-top:16px">' + (e.message === 'Failed to fetch' ? 'La dirección necesita conexión a internet.' : esc(e.message)) + '</div>'; });
 }
@@ -1915,10 +2085,16 @@ function editarObra(id) {
   var vids = o.videos.length ? o.videos.slice() : [{ titulo: '', url: '' }];
   var tps = (o.tempos || []).map(function (t) { return { desde: t.desde, ppm: t.ppm, pulsos: t.pulsos, nombre: t.nombre }; });
   function campo(k, et, ph) { return '<div class="campo"><label>' + et + '</label><input data-k="' + k + '" value="' + esc(o[k]) + '" placeholder="' + (ph || '') + '"></div>'; }
+  function campoCarpeta(v) {
+    var l = (A.carpetas || ['Procesiones', 'Pasodobles', 'Marchas', 'Villancicos', 'Obras de concierto', 'Himnos']).slice();
+    if (v && l.indexOf(v) < 0) l.push(v);
+    return '<div class="campo"><label>Carpeta / género</label><select data-k="genero" id="oCarpeta"><option value="">Elige carpeta…</option>' +
+      l.map(function (x) { return '<option' + (x === v ? ' selected' : '') + '>' + esc(x) + '</option>'; }).join('') + '<option value="__nueva">＋ Nueva carpeta…</option></select></div>';
+  }
   $('dirCont').innerHTML = '<div style="margin-top:16px"><button class="btn linea" id="bVolverObras">‹ Obras</button></div>' +
     '<h2 class="sec">' + (id ? esc(o.titulo) : 'Nueva obra') + (id ? '<small><span class="pillita ' + (o.publicada ? 'ok' : 'oro') + '">' + (o.publicada ? 'Publicada' : 'Borrador') + '</span></small>' : '') + '</h2>' +
     '<div class="tarjeta">' + campo('titulo', 'Título', 'El Danubio Azul') + '<div class="dos">' + campo('compositor', 'Compositor', 'Johann Strauss (hijo)') + campo('arreglista', 'Arreglista', '') + '</div>' +
-    '<div class="dos">' + campo('genero', 'Género', 'Vals, marcha, pasodoble…') + campo('duracion', 'Duración', '≈ 9 min') + '</div>' +
+    campoCarpeta(o.genero) + campo('duracion', 'Duración', '≈ 9 min') +
     '<div class="campo"><label>Indicaciones del director</label><textarea data-k="indicaciones" placeholder="Tempo, carácter, repeticiones…">' + esc(o.indicaciones) + '</textarea></div>' +
     '<div class="campo"><label>Notas por sección (una por línea)</label><textarea data-k="notasSeccion" placeholder="Trompetas: el solo del trío, piano.&#10;Percusión: el bombo solo en los fuertes.&#10;Todos: atentos al rit. final.">' + esc(o.notasSeccion) + '</textarea></div>' +
     '<div class="campo"><label>Vídeos de referencia</label><div id="vids"></div><button class="btn linea" id="bMasVid" style="margin-top:6px;padding:9px 12px">＋ Otro vídeo</button></div>' +
@@ -1928,7 +2104,12 @@ function editarObra(id) {
       (o.partes.slice().sort(function (a, b) { return a.papeles[0].localeCompare(b.papeles[0], 'es'); }).map(function (p) {
         return '<div class="dato"><b>' + esc(p.papeles.join(', ')) + '</b><span>' + (p.paginas || '?') + ' pág. · ' + p.kb + ' KB <button class="mini" data-borrar-parte="' + p.id + '" style="margin-left:6px">Quitar</button></span></div>';
       }).join('') || '<p>Todavía no hay partituras.</p>') +
-      '<label class="btn oro ancho" style="margin-top:14px;cursor:pointer">📄 Subir PDF y repartir por instrumentos<input type="file" accept="application/pdf" id="fPdf" style="display:none"></label></div>' +
+      '<p style="font-size:13px;color:var(--gris);margin:12px 2px 0">¿Todos los instrumentos en un solo PDF? Atril los separa:</p>' +
+      '<label class="estampar" style="margin-top:8px"><input type="checkbox" id="cManu"><span><b>Es un manuscrito</b> (escrito a mano)<br>Pon abajo los instrumentos en el orden en que vienen y Atril los reparte y les escribe el nombre arriba.</span></label>' +
+      '<div class="campo oculto" id="manuLista" style="margin-top:8px"><label>Orden de los instrumentos en el PDF (uno por línea)</label><textarea id="tManu" style="min-height:150px" placeholder="Flauta&#10;Requinto&#10;Clarinete principal&#10;Clarinete 1&#10;Clarinete 2…"></textarea></div>' +
+      '<label class="btn oro ancho" style="margin-top:8px;cursor:pointer">📄 Subir PDF y repartir por instrumentos<input type="file" accept="application/pdf" id="fPdf" style="display:none"></label>' +
+      '<p style="font-size:13px;color:var(--gris);margin:12px 2px 0">¿Ya vienen separados, un PDF por instrumento?</p><label class="btn linea ancho" style="margin-top:6px;cursor:pointer">📁 Subir varios PDF a la vez<input type="file" accept="application/pdf" multiple id="fPdfs" style="display:none"></label>' +
+      (puedeCarpeta() ? '<label class="btn linea ancho" style="margin-top:6px;cursor:pointer">📂 Subir una carpeta entera<input type="file" webkitdirectory multiple id="fCarpeta" style="display:none"></label>' : '') + '<span style="display:none"></label></div>' +
       '<h2 class="sec">Audio de estudio <small>' + (o.audios || []).length + '</small></h2><div class="tarjeta">' +
       ((o.audios || []).map(function (a) { return '<div class="dato"><b>🎧 ' + esc(a.titulo) + '</b><span>' + (Math.round(a.kb / 102.4) / 10) + ' MB <button class="mini" data-borrar-audio="' + a.id + '" style="margin-left:6px">Quitar</button></span></div>'; }).join('') ||
         '<p>Un MP3 para que los músicos ensayen en casa: pueden bajarle la velocidad y repetir trozos, incluso sin internet. Mejor grabaciones vuestras o el audio que da la editorial.</p>') +
@@ -1952,6 +2133,14 @@ function editarObra(id) {
   pintarTps();
   $('bMasTempo').onclick = function () { var u = tps[tps.length - 1]; tps.push({ desde: '', ppm: u ? u.ppm : '', pulsos: u ? u.pulsos : 4, nombre: '' }); pintarTps(); };
   $('bMasVid').onclick = function () { vids.push({ titulo: '', url: '' }); pintarVids(); };
+  $('oCarpeta').onchange = function () {
+    var sel = this; if (sel.value !== '__nueva') return;
+    pedirTexto('Nueva carpeta', '', 'Por ejemplo: Guardia Civil, Bandas sonoras… Se crea dentro de «Atril - Partituras» en Drive.').then(function (n) {
+      n = (n || '').trim(); if (!n) { sel.value = o.genero || ''; return; }
+      var op = document.createElement('option'); op.textContent = n; sel.insertBefore(op, sel.lastElementChild); sel.value = n;
+      A.carpetas = (A.carpetas || []).concat([n]);
+    });
+  };
   $('bVolverObras').onclick = function () { dirObras(); };
   $('bGuardarObra').onclick = function () {
     var datos = { id: id || '' };
@@ -1964,7 +2153,16 @@ function editarObra(id) {
       .catch(function (e) { cargando(false); toast(e.message, 4000); });
   };
   if (!id) return;
-  $('fPdf').onchange = function () { if (this.files[0]) asistente(o, this.files[0]); };
+  try { $('tManu').value = localStorage.getItem('atril_lista_manu') || ''; } catch (e) {}
+  $('cManu').onchange = function () { $('manuLista').classList.toggle('oculto', !this.checked); if (this.checked) $('tManu').focus(); };
+  $('fPdf').onchange = function () {
+    if (!this.files[0]) return;
+    var manu = $('cManu').checked, lista = $('tManu').value.trim();
+    if (manu) try { localStorage.setItem('atril_lista_manu', lista); } catch (e) {}
+    asistente(o, this.files[0], manu ? { lista: lista } : null);
+  };
+  $('fPdfs').onchange = function () { if (this.files.length) variosPdf(o, this.files); };
+  if ($('fCarpeta')) $('fCarpeta').onchange = function () { if (this.files.length) variosPdf(o, this.files); };
   $('fAudio').onchange = function () {
     var f = this.files[0]; if (!f) return;
     if (f.size > 25 * 1024 * 1024) return toast('Demasiado grande (máx. 25 MB). Pásalo a MP3.', 4500);
@@ -2012,7 +2210,7 @@ var INSTRUMENTOS = [
   ['saxtenor', /SAX\S*\s*TENOR|TENOR\s*SAX/],
   ['saxbar', /SAX\S*\s*BARITON|BARITON\S*\s*SAX/],
   ['flis', /F?L[IU1]SCORNO|FISCORNO|FLUGEL/],
-  ['trompeta', /TROMPETA|TRUMPET|CORNET\b|\bTROMBA\b/],
+  ['trompeta', /TROMPETA|TRUMPET|CORNET\b|CORNETIN|\bTROMBA\b/],
   ['trombon', /TROMBON/],
   ['bombardino', /BOMBARDINO|EUPHONIUM|BARITONE?\b|BARITONO\b/],
   ['trompa', /TROMPA|HORN\b|HOM\b|\bCORNO\b/],
@@ -2068,7 +2266,7 @@ function detectarPapeles(texto) {
   res.familia = k;
   return res;
 }
-function asistente(o, archivo) {
+function asistente(o, archivo, opc) {
   var lector = new FileReader();
   cargando(true, 'Abriendo PDF…');
   lector.onload = function () {
@@ -2079,6 +2277,7 @@ function asistente(o, archivo) {
       var S = { o: o, bytes: bytes, pdf: pdf, P: P, nombre: archivo.name };
       pintarAsistente(S);
       miniaturas(S);
+      if (opc) detectarCortes(S, false, opc.lista);     // manuscrito: directamente a cortes + lista
     }).catch(function () { cargando(false); toast('No se ha podido leer el PDF', 4000); });
   };
   lector.readAsArrayBuffer(archivo);
@@ -2094,7 +2293,7 @@ function rangos(S) {
 function pintarAsistente(S) {
   var R = rangos(S), sin = R.filter(function (r) { return !r.ignorar && !r.papeles.length; }).length, buenos = Object.keys(R.filter(function (r) { return !r.ignorar && r.papeles.length; }).reduce(function (o, r) { o[r.papeles.slice().sort().join('|')] = 1; return o; }, {})).length;
   var actual = null;
-  $('dirCont').innerHTML = '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn linea" id="bCancelarA">‹ Cancelar</button><button class="btn oro" id="bOcr">✨ Detectar instrumentos</button><button class="btn linea" id="bOrden">🔢 Repartir por orden</button></div>' +
+  $('dirCont').innerHTML = '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn linea" id="bCancelarA">‹ Cancelar</button><button class="btn oro" id="bOcr">✨ Detectar instrumentos</button><button class="btn linea" id="bOrden">🔢 Repartir por orden</button><button class="btn linea" id="bCortes">📐 Manuscrito: buscar cortes</button>' + (S.P.some(function (p) { return p.giro; }) ? '<button class="btn linea" id="bGirarTodas">🔄 Las veo al revés: girar todas</button>' : '') + '</div>' +
     '<h2 class="sec">' + esc(S.o.titulo) + '<small>' + S.P.length + ' páginas</small></h2>' +
     '<p style="font-size:14px;color:var(--gris);margin:0 4px 6px;line-height:1.5">Toca la <b>primera página de cada papel</b> para decir de qué instrumento es. Las páginas siguientes se le suman solas. Marca como «Ignorar» portadas y anuncios.</p>' +
     '<div class="rejilla">' + S.P.map(function (p) {
@@ -2103,27 +2302,34 @@ function pintarAsistente(S) {
       return '<div class="pag' + (p.inicio ? ' inicio' : '') + (actual.ignorar ? ' ignorar' : '') + '" data-pag="' + p.n + '"><canvas id="th' + p.n + '"></canvas><span class="n">' + p.n + '</span>' +
         (p.inicio ? '<div class="lab' + (!p.ignorar && !p.papeles.length ? ' sin' : '') + '">' + esc(lab) + '</div>' : '<div class="cont">↳ sigue ' + esc(actual.ignorar ? 'ignorada' : (actual.papeles.join(', ') || 'sin asignar')) + '</div>') + '</div>';
     }).join('') + '</div>' +
+    '<label class="estampar"><input type="checkbox" id="cEstA"' + (S.estampar ? ' checked' : '') + '><span><b>Escribir el instrumento arriba de cada página</b><br>Recomendado en manuscritos, donde el nombre no se lee bien.</span></label>' +
     '<div class="resumen" id="resumen"><div><b>' + buenos + '</b> papeles' + (sin ? ' · <span style="color:#f0a493">' + sin + ' sin asignar</span>' : '') + '<div class="barra-prog oculto" id="prog"><i></i></div></div><button class="btn oro" id="bSubirA" ' + (buenos && !sin ? '' : 'disabled') + '>Subir ' + buenos + '</button></div>';
-  S.P.forEach(function (p) { if (S.th && S.th[p.n]) { var c = $('th' + p.n); c.width = S.th[p.n].width; c.height = S.th[p.n].height; c.getContext('2d').drawImage(S.th[p.n], 0, 0); } });
+  S.P.forEach(function (p) { if (S.th && S.th[p.n]) pintarMini(p.n, girarCanvas(S.th[p.n], p.giro)); });
   $('bCancelarA').onclick = function () { S.cancelado = true; editarObra(S.o.id); };
   $('bOcr').onclick = function () { ocr(S); };
   $('bOrden').onclick = function () { repartirPorOrden(S); };
+  $('bCortes').onclick = function () { detectarCortes(S, false); };
+  if ($('bGirarTodas')) $('bGirarTodas').onclick = function () { S.P.forEach(function (p) { if (p.giro) p.giro = (p.giro + 180) % 360; }); pintarAsistente(S); };
+  if ($('cEstA')) $('cEstA').onchange = function () { S.estampar = this.checked; };
   $('dirCont').querySelectorAll('[data-pag]').forEach(function (d) { d.onclick = function () { menuPagina(S, Number(d.dataset.pag)); }; });
   $('bSubirA').onclick = function () { subirRangos(S); };
 }
+// Las páginas del PDF se dibujan de una en una: a la vez, algunos visores se atascan
+function enCola(S, fn) { var r = (S.cola || Promise.resolve()).then(fn, fn); S.cola = r.catch(function () {}); return r; }
+function pintarMini(n, c) { var dst = $('th' + n); if (!dst) return; dst.width = c.width; dst.height = c.height; dst.style.aspectRatio = c.width + ' / ' + c.height; dst.getContext('2d').drawImage(c, 0, 0); }
 function miniaturas(S) {
   S.th = S.th || {};
   var i = 1;
   function sig() {
     if (S.cancelado || i > S.P.length) return;
     var k = i++;
-    return S.pdf.getPage(k).then(function (pg) {
+    return enCola(S, function () { return S.pdf.getPage(k); }).then(function (pg) { return enCola(S, function () {
       var v = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: 260 / v.width });
       var c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
       return pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise.then(function () {
-        S.th[k] = c; var dst = $('th' + k); if (dst) { dst.width = c.width; dst.height = c.height; dst.getContext('2d').drawImage(c, 0, 0); }
+        S.th[k] = c; pintarMini(k, girarCanvas(c, (S.P[k - 1] || {}).giro));
       });
-    }).then(sig);
+    }); }).then(sig);
   }
   sig();
 }
@@ -2135,6 +2341,7 @@ function menuPagina(S, n) {
       (n > 1 ? '<button class="opcion' + (!p.inicio ? ' on' : '') + '" data-m="sigue"><div class="ic">↳</div><div><b>Sigue el papel anterior</b><span>Es la 2ª, 3ª… página del mismo instrumento</span></div></button>' : '') +
       '<button class="opcion' + (p.inicio && !p.ignorar && !p.papeles.length ? ' on' : '') + '" data-m="empieza"><div class="ic">▸</div><div><b>Empieza un papel aquí</b><span>Aún sin decir de qué instrumento (luego «Repartir por orden»)</span></div></button>' +
       '<button class="opcion' + (p.inicio && p.ignorar ? ' on' : '') + '" data-m="ignorar"><div class="ic">⊘</div><div><b>Ignorar</b><span>Portada, anuncios, página en blanco…</span></div></button>' +
+      '<button class="opcion" data-m="girar"><div class="ic">↻</div><div><b>Girar esta página</b><span>Si se ve de lado o al revés (un cuarto de vuelta cada vez)</span></div></button>' +
       '<div class="grupo-papel" style="margin-top:16px">Empieza el papel de… (puedes marcar varios)</div>' +
       Object.keys(fam).map(function (f) {
         return '<div class="grupo-papel">' + esc(f) + '</div>' + fam[f].map(function (x) { var on = sel.indexOf(x) > -1; return '<button class="opcion' + (on ? ' on' : '') + '" data-pp="' + esc(x) + '"><div class="ic">' + (on ? '✓' : '♪') + '</div><div><b>' + esc(x) + '</b></div></button>'; }).join('');
@@ -2142,6 +2349,7 @@ function menuPagina(S, n) {
       '<div style="position:sticky;bottom:-22px;background:var(--papel);padding:12px 0 4px"><button class="btn negro ancho" id="bOkPag">Aceptar' + (sel.length ? ' (' + sel.length + ')' : '') + '</button></div>');
     $('panel').querySelectorAll('[data-pp]').forEach(function (b) { b.onclick = function () { var x = b.dataset.pp, i = sel.indexOf(x); if (i > -1) sel.splice(i, 1); else sel.push(x); var top = $('panel').scrollTop; pintar(); $('panel').scrollTop = top; }; });
     $('panel').querySelectorAll('[data-m]').forEach(function (b) { b.onclick = function () {
+      if (b.dataset.m === 'girar') { p.giro = ((p.giro || 0) + 90) % 360; cerrarPanel(); pintarAsistente(S); return; }
       if (b.dataset.m === 'sigue') { p.inicio = false; p.papeles = []; p.ignorar = false; }
       else if (b.dataset.m === 'empieza') { p.inicio = true; p.ignorar = false; p.papeles = []; }
       else { p.inicio = true; p.ignorar = true; p.papeles = []; }
@@ -2165,17 +2373,19 @@ function ocr(S) {
     function sig() {
       if (k >= S.P.length || S.cancelado) return w.terminate().then(function () {
         var hallados = decidirPapeles(S);
-        cargando(false); pintarAsistente(S);
+        cargando(false);
+        if (!hallados) return detectarCortes(S, true);    // no ha leído ningún instrumento: probablemente manuscrito
+        pintarAsistente(S);
         var sin = S.P.filter(function (p) { return p.inicio && !p.ignorar && !p.papeles.length; }).length;
         toast(hallados ? 'Detectados ' + hallados + ' papeles' + (sin ? ' · ' + sin + ' sin asignar: tócalos o usa «Repartir por orden»' : '. Revisa y sube.') : 'No he reconocido instrumentos. Usa «Repartir por orden» o márcalos a mano.', 6000);
       });
       var p = S.P[k++], seg = k > 3 ? Math.round((Date.now() - t0) / (k - 1) * (S.P.length - k + 1) / 1000) : 0;
       cargando(true, 'Leyendo página ' + p.n + ' de ' + S.P.length + (seg > 5 ? ' · quedan unos ' + (seg > 90 ? Math.round(seg / 60) + ' min' : seg + ' s') : '') + '…');
-      return S.pdf.getPage(p.n).then(function (pg) {
+      return enCola(S, function () { return S.pdf.getPage(p.n).then(function (pg) {
         var v = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: 1600 / v.width });
         var c = document.createElement('canvas'); c.width = vp.width; c.height = Math.round(vp.height * 0.24);
-        return pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise.then(function () { return w.recognize(c); });
-      }).then(function (r) { S.textos[p.n] = r.data.text || ''; }).then(sig);
+        return pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise.then(function () { return c; });
+      }); }).then(function (c) { return w.recognize(c); }).then(function (r) { S.textos[p.n] = r.data.text || ''; }).then(sig);
     }
     return sig();
   }).catch(function () { cargando(false); toast('No se ha podido cargar el lector. Márcalos a mano.', 4500); });
@@ -2208,6 +2418,212 @@ function decidirPapeles(S) {
   if (primero > 1) S.P.forEach(function (q) { if (q.n < primero) { q.ignorar = true; q.inicio = q.n === 1; q.papeles = []; } });
   return Object.keys(distintos).length;
 }
+
+/* ---- Varios PDF (uno por instrumento): el instrumento sale del nombre del archivo ---- */
+function puedeCarpeta() { var i = document.createElement('input'); return 'webkitdirectory' in i && window.matchMedia && matchMedia('(pointer:fine)').matches; }
+function papelesDeNombre(nombre, o) {
+  var t = String(nombre).replace(/^.*[\/\\]/, '').replace(/\.pdf$/i, '').replace(/[_]+/g, ' ').replace(/^\s*\d{1,3}\s*[-._)]*\s+/, '');
+  var tit = norm(o && o.titulo); if (tit.length > 3) t = norm(t).split(tit).join(' ');
+  var r = detectarPapeles(t);
+  return r && r.length ? r.slice() : [];
+}
+function variosPdf(o, files) {
+  var L = [].slice.call(files).filter(function (f) { return /\.pdf$/i.test(f.name); })
+    .sort(function (a, b) { return (a.webkitRelativePath || a.name).localeCompare(b.webkitRelativePath || b.name, 'es', { numeric: true }); });
+  if (!L.length) return toast('No hay ningún PDF', 3500);
+  cargando(true, 'Leyendo ' + L.length + ' PDF…');
+  var V = { o: o, estampar: false, items: L.map(function (f) { return { f: f, nombre: f.name, papeles: papelesDeNombre(f.name, o), paginas: 0, ignorar: false }; }) };
+  Promise.all(V.items.map(function (it) {
+    return it.f.arrayBuffer().then(function (b) { it.bytes = new Uint8Array(b); return pdfjsLib.getDocument({ data: it.bytes.slice(0) }).promise; })
+      .then(function (d) { it.paginas = d.numPages; }).catch(function () { it.error = true; it.ignorar = true; });
+  })).then(function () { cargando(false); pintarVarios(V); });
+}
+function pintarVarios(V) {
+  var ok = V.items.filter(function (x) { return !x.ignorar && x.papeles.length; }), sin = V.items.filter(function (x) { return !x.ignorar && !x.papeles.length; });
+  $('dirCont').innerHTML = '<div style="margin-top:16px"><button class="btn linea" id="bCancelarV">‹ Cancelar</button></div>' +
+    '<h2 class="sec">' + esc(V.o.titulo) + '<small>' + V.items.length + ' PDF</small></h2>' +
+    '<p style="font-size:14px;color:var(--gris);margin:0 4px 6px;line-height:1.5">El instrumento se saca del <b>nombre de cada archivo</b>. Revísalo y toca para cambiarlo. Si un PDF trae varios papeles dentro, elige «Separar».</p>' +
+    V.items.map(function (it, i) {
+      var et = it.error ? 'No se puede leer' : it.ignorar ? 'No subir' : (it.papeles.join(', ') || 'Elegir instrumento');
+      return '<div class="fila-pdf"><div class="nom"><b>' + esc(it.nombre) + '</b><small>' + (it.paginas ? it.paginas + ' pág.' : '') + '</small></div><button data-vp="' + i + '" class="' + (it.ignorar ? 'ign' : it.papeles.length ? '' : 'sin') + '">' + esc(et) + '</button></div>';
+    }).join('') +
+    '<label class="estampar"><input type="checkbox" id="cEstV"' + (V.estampar ? ' checked' : '') + '><span><b>Escribir el instrumento arriba de cada página</b><br>Útil si en el original no se lee bien (manuscritos).</span></label>' +
+    '<div class="resumen" id="resumen"><div><b>' + ok.length + '</b> papeles' + (sin.length ? ' · <span style="color:#f0a493">' + sin.length + ' sin instrumento</span>' : '') + '<div class="barra-prog oculto" id="prog"><i></i></div></div><button class="btn oro" id="bSubirV" ' + (ok.length && !sin.length ? '' : 'disabled') + '>Subir ' + ok.length + '</button></div>';
+  $('bCancelarV').onclick = function () { editarObra(V.o.id); };
+  $('cEstV').onchange = function () { V.estampar = this.checked; };
+  $('dirCont').querySelectorAll('[data-vp]').forEach(function (b) { b.onclick = function () { elegirPapelPdf(V, V.items[+b.dataset.vp]); }; });
+  $('bSubirV').onclick = function () { subirVarios(V); };
+}
+function elegirPapelPdf(V, it) {
+  var sel = it.papeles.slice(), fam = {}; A.papeles.forEach(function (x) { (fam[x.familia] = fam[x.familia] || []).push(x.papel); });
+  function pintar() {
+    panel('<h3>' + esc(it.nombre) + '</h3><p class="s">¿De qué instrumento es este PDF? (puedes marcar varios)</p>' +
+      '<button class="opcion" data-m="separar"><div class="ic">✂</div><div><b>Separar: trae varios papeles dentro</b><span>Se abre el divisor con este PDF</span></div></button>' +
+      '<button class="opcion' + (it.ignorar ? ' on' : '') + '" data-m="ignorar"><div class="ic">⊘</div><div><b>No subir este archivo</b><span>Portada, guion repetido…</span></div></button>' +
+      Object.keys(fam).map(function (f) {
+        return '<div class="grupo-papel">' + esc(f) + '</div>' + fam[f].map(function (x) { var on = sel.indexOf(x) > -1; return '<button class="opcion' + (on ? ' on' : '') + '" data-pp="' + esc(x) + '"><div class="ic">' + (on ? '✓' : '♪') + '</div><div><b>' + esc(x) + '</b></div></button>'; }).join('');
+      }).join('') +
+      '<div style="position:sticky;bottom:-22px;background:var(--papel);padding:12px 0 4px"><button class="btn negro ancho" id="bOkPdf">Aceptar' + (sel.length ? ' (' + sel.length + ')' : '') + '</button></div>');
+    $('panel').querySelectorAll('[data-pp]').forEach(function (b) { b.onclick = function () { var x = b.dataset.pp, i = sel.indexOf(x); if (i > -1) sel.splice(i, 1); else sel.push(x); var top = $('panel').scrollTop; pintar(); $('panel').scrollTop = top; }; });
+    $('panel').querySelector('[data-m="ignorar"]').onclick = function () { it.ignorar = !it.ignorar; cerrarPanel(); pintarVarios(V); };
+    $('panel').querySelector('[data-m="separar"]').onclick = function () { cerrarPanel(); asistente(V.o, it.f); };
+    $('bOkPdf').onclick = function () { it.papeles = sel; if (sel.length) it.ignorar = false; cerrarPanel(); pintarVarios(V); };
+  }
+  pintar();
+}
+// Escribe el nombre del instrumento arriba de cada página (grande en la primera)
+function estamparPapel(doc, texto) {
+  return doc.embedFont(PDFLib.StandardFonts.HelveticaBold).then(function (font) {
+    doc.getPages().forEach(function (pg, i) {
+      var W = pg.getWidth(), H = pg.getHeight(), a = ((pg.getRotation().angle || 0) % 360 + 360) % 360;
+      var vw = a % 180 ? H : W, vh = a % 180 ? W : H;           // tamaño tal como se ve
+      function aPagina(vx, vy) { return a === 90 ? [W - vy, vx] : a === 180 ? [W - vx, H - vy] : a === 270 ? [vy, H - vx] : [vx, vy]; }
+      var size = i ? 10 : 15, t = i ? texto + ' · pág. ' + (i + 1) : texto.toUpperCase();
+      var tw = font.widthOfTextAtSize(t, size), vx = i ? vw - tw - 26 : (vw - tw) / 2, vy = vh - size - 12;
+      var rot = PDFLib.degrees(a), r0 = aPagina(vx - 8, vy - 5), t0 = aPagina(vx, vy);
+      pg.drawRectangle({ x: r0[0], y: r0[1], width: tw + 16, height: size + 10, rotate: rot, color: PDFLib.rgb(1, 1, 1), opacity: 0.94, borderColor: PDFLib.rgb(0.15, 0.15, 0.15), borderWidth: i ? 0 : 1 });
+      pg.drawText(t, { x: t0[0], y: t0[1], size: size, font: font, rotate: rot, color: PDFLib.rgb(0.05, 0.05, 0.05) });
+    });
+  });
+}
+function subirVarios(V) {
+  var grupos = [], porClave = {};
+  V.items.filter(function (it) { return !it.ignorar && it.papeles.length; }).forEach(function (it) {
+    var k = it.papeles.slice().sort().join('|');
+    if (porClave[k]) porClave[k].items.push(it); else { porClave[k] = { papeles: it.papeles, items: [it] }; grupos.push(porClave[k]); }
+  });
+  var hechos = 0;
+  $('bSubirV').setAttribute('disabled', ''); $('prog').classList.remove('oculto');
+  cargarPdfLib().then(function () {
+    function sig() {
+      if (hechos >= grupos.length) return cargarAdmin().then(function () { toast('Subidos ' + grupos.length + ' papeles ✓'); editarObra(V.o.id); });
+      var g = grupos[hechos];
+      $('resumen').querySelector('b').textContent = 'Subiendo ' + (hechos + 1) + ' de ' + grupos.length;
+      var nuevo, paginas = 0;
+      return PDFLib.PDFDocument.create().then(function (d) {
+        nuevo = d;
+        return g.items.reduce(function (pr, it) {
+          return pr.then(function () { return PDFLib.PDFDocument.load(it.bytes, { ignoreEncryption: true }); })
+            .then(function (src) { return nuevo.copyPages(src, src.getPageIndices()); }).then(function (ps) { ps.forEach(function (pg) { nuevo.addPage(pg); }); paginas += ps.length; });
+        }, Promise.resolve());
+      }).then(function () { return V.estampar ? estamparPapel(nuevo, g.papeles.join(', ')) : null; })
+        .then(function () { return nuevo.save(); })
+        .then(function (bytes) { return api('subirParte', { obra: V.o.id, papeles: g.papeles, paginas: paginas, base64: bytesAb64(new Uint8Array(bytes)) }); })
+        .then(function () { hechos++; $('prog').querySelector('i').style.width = (hechos / grupos.length * 100) + '%'; return sig(); });
+    }
+    return sig();
+  }).catch(function (e) {
+    toast('Error al subir: ' + (e.message === 'Failed to fetch' ? 'sin conexión' : e.message) + '. Se subieron ' + hechos + ' de ' + grupos.length + '.', 6000);
+    cargarAdmin().then(function () { editarObra(V.o.id); });
+  });
+}
+
+/* ---- Manuscritos: enderezar páginas y ver dónde empieza cada papel por la forma de la página ---- */
+function girarCanvas(c, giro) {   // giro en grados, sentido de las agujas del reloj (como en el PDF)
+  giro = ((giro || 0) % 360 + 360) % 360; if (!giro) return c;
+  var o = document.createElement('canvas'), x = o.getContext('2d');
+  o.width = giro === 180 ? c.width : c.height; o.height = giro === 180 ? c.height : c.width;
+  x.translate(o.width / 2, o.height / 2); x.rotate(giro * Math.PI / 180); x.drawImage(c, -c.width / 2, -c.height / 2);
+  return o;
+}
+function oscuro(c) {
+  var w = c.width, h = c.height, d = c.getContext('2d').getImageData(0, 0, w, h).data, m = new Uint8Array(w * h);
+  for (var i = 0, k = 0; i < m.length; i++, k += 4) m[i] = d[k] * 0.3 + d[k + 1] * 0.59 + d[k + 2] * 0.11 < 170 ? 1 : 0;
+  return { m: m, w: w, h: h };
+}
+function lineasLargas(o, horiz, umbral) {   // filas (o columnas) con una raya casi de lado a lado
+  var L = [], n = horiz ? o.h : o.w, a = horiz ? o.w : o.h, a0 = Math.round(a * 0.08), a1 = Math.round(a * 0.92);
+  for (var i = 0; i < n; i++) { var s = 0; for (var j = a0; j < a1; j++) s += horiz ? o.m[i * o.w + j] : o.m[j * o.w + i]; if (s / (a1 - a0) > umbral) L.push(i); }
+  return L;
+}
+function pentagramas(o) {
+  var lin = lineasLargas(o, true, 0.30), G = [];
+  lin.forEach(function (y) { var g = G[G.length - 1]; if (g && y - g[g.length - 1] <= Math.max(3, o.h * 0.022)) g.push(y); else G.push([y]); });
+  return { lineas: lin, G: G.filter(function (g) { return g[g.length - 1] - g[0] >= o.h * 0.025; }) };
+}
+function medirPagina(c) {
+  var o = oscuro(c), filas = lineasLargas(o, true, 0.38).length, cols = lineasLargas(o, false, 0.38).length;
+  return { lado: cols > Math.max(6, filas * 1.5), filas: filas, cols: cols };
+}
+// ¿Cuánta música hay en los pentagramas de arriba frente a los de abajo? (los de abajo suelen quedar vacíos)
+function arribaMenosAbajo(c) {
+  var o = oscuro(c), P = pentagramas(o); if (P.G.length < 3) return 0;
+  var esLinea = {}; P.lineas.forEach(function (y) { esLinea[y] = 1; });
+  function dens(g) { var s = 0, n = 0; for (var y = g[0]; y <= g[g.length - 1]; y++) { if (esLinea[y]) continue; for (var x = 0; x < o.w; x++) s += o.m[y * o.w + x]; n += o.w; } return n ? s / n : 0; }
+  var d = P.G.map(dens), k = P.G.length;
+  return (d[0] + d[1]) / 2 - (d[k - 1] + d[k - 2]) / 2;
+}
+// Empieza un papel si encima del primer pentagrama hay una franja con escritura (el título y el instrumento)
+function tieneTitulo(c) {
+  var o = oscuro(c), P = pentagramas(o); if (!P.G.length) return { sinMusica: true };
+  var y = P.G[0][0], y0 = Math.round(o.h * 0.01), esLinea = {}; P.lineas.forEach(function (l) { esLinea[l] = 1; esLinea[l - 1] = 1; esLinea[l + 1] = 1; });
+  var s = 0, n = 0, x0 = Math.round(o.w * 0.05), x1 = Math.round(o.w * 0.95);
+  for (var yy = y0; yy < y - 2; yy++) { if (esLinea[yy]) continue; for (var x = x0; x < x1; x++) { s += o.m[yy * o.w + x]; n++; } }
+  var alto = (y - y0) / o.h, tinta = n ? s / n : 0;
+  return { titulo: alto >= 0.035 && tinta >= 0.012, alto: alto, tinta: tinta, y: y / o.h };
+}
+function cortesPorForma(S) {
+  var k = 0, C = {}, M = {};
+  function render(n) {
+    return enCola(S, function () { return S.pdf.getPage(n).then(function (pg) {
+      var v = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: 420 / Math.max(v.width, v.height) }), c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
+      var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+      return pg.render({ canvasContext: x, viewport: vp }).promise.then(function () { return c; });
+    }); });
+  }
+  function sig() {
+    if (k >= S.P.length) return Promise.resolve();
+    var p = S.P[k++];
+    cargando(true, 'Mirando la página ' + p.n + ' de ' + S.P.length + '…');
+    return render(p.n).then(function (c) { C[p.n] = c; M[p.n] = medirPagina(c); return sig(); });
+  }
+  return sig().then(function () {
+    // Páginas de lado: se decide hacia dónde girarlas con todas a la vez (cada una por separado falla a veces)
+    var nLado = S.P.filter(function (p) { return M[p.n].lado; }).length;
+    if (nLado >= S.P.length * 0.6) S.P.forEach(function (p) { if (M[p.n].filas < 6) M[p.n].lado = true; });
+    var deLado = S.P.filter(function (p) { return M[p.n].lado; }), voto = 0;
+    deLado.forEach(function (p) { voto += arribaMenosAbajo(girarCanvas(C[p.n], 270)); });
+    var giroLado = voto >= 0 ? 270 : 90, n = 0, primera = 0;
+    S.P.forEach(function (p) {
+      p.giro = M[p.n].lado ? giroLado : 0;
+      var r = tieneTitulo(girarCanvas(C[p.n], p.giro)); p.dbg = r;
+      if (r.sinMusica) { if (primera) { p.inicio = false; p.ignorar = false; p.papeles = []; } else { p.inicio = true; p.ignorar = true; p.papeles = []; } return; }   // sin pentagramas claros: portada al principio, si no, sigue el papel anterior
+      var empieza = !primera || r.titulo;
+      if (!primera) primera = p.n;
+      p.inicio = empieza; p.ignorar = false; p.papeles = []; if (empieza) n++;
+    });
+    if (deLado.length) S.miniGiradas = true;
+    return n;
+  });
+}
+function detectarCortes(S, auto, listaTxt) {
+  cargando(true, 'Buscando dónde empieza cada papel…');
+  return cortesPorForma(S).then(function (n) {
+    cargando(false); S.manuscrito = true; S.estampar = true;
+    var L = listaDeTexto(listaTxt);
+    if (L.lista.length) {
+      var obj = comienzosLibres(S);
+      obj.forEach(function (p, i) { if (L.lista[i]) { p.papeles = [].concat(L.lista[i]); p.ignorar = false; } });
+      pintarAsistente(S);
+      var aviso = L.lista.length !== obj.length ? ' Ojo: ' + L.lista.length + ' instrumentos en la lista y ' + obj.length + ' papeles encontrados; revisa los cortes.' : ' Revisa y sube.';
+      toast('Encontrados ' + obj.length + ' papeles y repartidos con tu lista.' + aviso + (L.malas.length ? ' No reconozco: ' + L.malas.join(', ') + '.' : ''), 8000);
+      return;
+    }
+    pintarAsistente(S);
+    toast(auto ? 'No he podido leer los nombres (¿manuscrito?). He encontrado ' + n + ' papeles por la forma de las páginas: dime los instrumentos en orden.' : 'He encontrado ' + n + ' papeles. Revisa los cortes y di los instrumentos en orden.', 7000);
+    if (n) setTimeout(function () { repartirPorOrden(S); }, 500);
+  }).catch(function () { cargando(false); toast('No he podido analizar las páginas', 4000); });
+}
+
+function listaDeTexto(t) {
+  var malas = [], lista = [];
+  String(t || '').split(/\n+/).map(function (l) { return l.trim(); }).filter(Boolean).forEach(function (l) {
+    var r = detectarPapeles(l.replace(/^\s*\d{1,2}\s*[-.)]\s+/, ''));
+    if (r && r.length) lista.push(r.length === 1 ? r[0] : r.slice()); else malas.push(l);
+  });
+  return { lista: lista, malas: malas };
+}
+function comienzosLibres(S) { var c = S.P.filter(function (p) { return p.inicio && !p.ignorar; }), libres = c.filter(function (p) { return !p.papeles.length; }); return libres.length && libres.length < c.length ? libres : c; }
 // El director dice en qué orden vienen los papeles y Atril se los pone a cada comienzo, por orden
 function repartirPorOrden(S) {
   var lista = []; try { lista = JSON.parse(localStorage.getItem('atril_orden') || '[]'); } catch (e) {}
@@ -2217,17 +2633,27 @@ function repartirPorOrden(S) {
   function comienzos() { var c = S.P.filter(function (p) { return p.inicio && !p.ignorar; }), libres = c.filter(function (p) { return !p.papeles.length; }); return libres.length && libres.length < c.length ? libres : c; }
   function pintar() {
     var obj = comienzos();
-    panel('<h3>Repartir por orden</h3><p class="s">Toca los papeles en el orden en que vienen en el PDF. Atril se los pone, por orden, ' + (obj.length === 1 ? 'al único comienzo de papel' : 'a los ' + obj.length + ' comienzos de papel') + (obj.length < S.P.filter(function (p) { return p.inicio && !p.ignorar; }).length ? ' que están sin asignar' : '') + '. Ignora antes la portada. Si falta un comienzo, márcalo antes tocando su página → «Empieza un papel aquí».</p>' +
-      '<div class="orden-lista">' + (lista.map(function (x, i) { return '<button data-q="' + i + '"><i>' + (i + 1) + '</i>' + esc(x) + ' ✕</button>'; }).join('') || '<span style="color:var(--gris);font-size:13.5px">Aún no has elegido ninguno</span>') + '</div>' +
+    panel((S.manuscrito ? '<h3>Lista de instrumentos</h3><p class="s" style="color:#3a3c40">He encontrado <b>' + obj.length + ' papeles</b>. Escribe o pega los instrumentos <b>en el orden en que vienen en el PDF</b>, uno por línea, y pulsa «Usar este listado».</p>' : '<h3>Repartir por orden</h3>') + '<p class="s">Toca los papeles en el orden en que vienen en el PDF. Atril se los pone, por orden, ' + (obj.length === 1 ? 'al único comienzo de papel' : 'a los ' + obj.length + ' comienzos de papel') + (obj.length < S.P.filter(function (p) { return p.inicio && !p.ignorar; }).length ? ' que están sin asignar' : '') + '. Ignora antes la portada. Si falta un comienzo, márcalo antes tocando su página → «Empieza un papel aquí».</p>' +
+      '<div class="campo" style="margin-top:10px"><label>¿Tienes el listado escrito? Pégalo aquí, un instrumento por línea</label><textarea id="tLista" style="min-height:90px" placeholder="Flauta&#10;Clarinete 1&#10;Clarinete 2&#10;Saxo alto 1&#10;Trompeta 1…"></textarea>' +
+      '<button class="btn linea" id="bUsarLista" style="margin-top:6px;padding:9px 12px">Usar este listado</button><div id="lErr" style="font-size:13px;color:var(--rojo);margin:6px 2px 0"></div></div>' +
+      '<div class="grupo-papel" style="margin-top:12px">…o tócalos en orden:</div>' +
+      '<div class="orden-lista">' + (lista.map(function (x, i) { return '<button data-q="' + i + '"><i>' + (i + 1) + '</i>' + esc([].concat(x).join(', ')) + ' ✕</button>'; }).join('') || '<span style="color:var(--gris);font-size:13.5px">Aún no has elegido ninguno</span>') + '</div>' +
       (lista.length && lista.length !== obj.length ? '<p style="font-size:13px;color:var(--rojo);margin:6px 2px 0">' + lista.length + ' papeles en la lista y ' + obj.length + (obj.length === 1 ? ' comienzo: ' : ' comienzos: ') + (lista.length < obj.length ? 'los últimos quedarán sin asignar.' : 'sobran los últimos de la lista.') + '</p>' : '') +
       Object.keys(fam).map(function (f) { return '<div class="campo" style="margin-top:12px"><label>' + esc(f) + '</label><div class="selchips">' + fam[f].map(function (x) { return '<button data-add="' + esc(x) + '">' + esc(x) + '</button>'; }).join('') + '</div></div>'; }).join('') +
       '<div style="position:sticky;bottom:-22px;background:var(--papel);padding:12px 0 4px;display:flex;gap:8px"><button class="btn linea" id="bOrdLimpiar">Vaciar</button><button class="btn negro" style="flex:1" id="bOrdOk"' + (lista.length ? '' : ' disabled') + '>Aplicar ' + (Math.min(lista.length, obj.length) === 1 ? '1 papel' : Math.min(lista.length, obj.length) + ' papeles') + '</button></div>');
     $('panel').querySelectorAll('[data-add]').forEach(function (b) { b.onclick = function () { lista.push(b.dataset.add); var top = $('panel').scrollTop; pintar(); $('panel').scrollTop = top; }; });
     $('panel').querySelectorAll('[data-q]').forEach(function (b) { b.onclick = function () { lista.splice(+b.dataset.q, 1); var top = $('panel').scrollTop; pintar(); $('panel').scrollTop = top; }; });
     $('bOrdLimpiar').onclick = function () { lista = []; pintar(); };
+    $('bUsarLista').onclick = function () {
+      var L = listaDeTexto($('tLista').value), malas = L.malas, nuevas = L.lista;
+      if (!nuevas.length) { $('lErr').textContent = 'No reconozco ningún instrumento en el listado.'; return; }
+      lista = nuevas; S.estampar = true;
+      var top = $('panel').scrollTop; pintar(); $('panel').scrollTop = top;
+      if (malas.length) $('lErr').textContent = 'No reconozco: ' + malas.join(', ') + '. Añádelos tocando abajo.';
+    };
     $('bOrdOk').onclick = function () {
       var obj2 = comienzos();
-      obj2.forEach(function (p, i) { if (lista[i]) { p.papeles = [lista[i]]; p.ignorar = false; } });
+      obj2.forEach(function (p, i) { if (lista[i]) { p.papeles = [].concat(lista[i]); p.ignorar = false; } });
       localStorage.setItem('atril_orden', JSON.stringify(lista));
       cerrarPanel(); pintarAsistente(S); toast('Repartidos ' + Math.min(lista.length, obj2.length) + ' papeles por orden. Revísalo y sube.', 4500);
     };
@@ -2257,7 +2683,10 @@ function subirRangos(S) {
       $('resumen').querySelector('b').textContent = 'Subiendo ' + (hechos + 1) + ' de ' + R.length;
       return PDFLib.PDFDocument.create().then(function (nuevo) {
         var idx = r.pags.map(function (n) { return n - 1; });
-        return nuevo.copyPages(src, idx).then(function (pags) { pags.forEach(function (pg) { nuevo.addPage(pg); }); return nuevo.save(); });
+        return nuevo.copyPages(src, idx).then(function (pags) {
+          pags.forEach(function (pg, j) { var g = (S.P[idx[j]] || {}).giro || 0; if (g) pg.setRotation(PDFLib.degrees(((pg.getRotation().angle || 0) + g) % 360)); nuevo.addPage(pg); });
+          return S.estampar ? estamparPapel(nuevo, r.papeles.join(', ')) : null;
+        }).then(function () { return nuevo.save(); });
       }).then(function (bytes) {
         return api('subirParte', { obra: S.o.id, papeles: r.papeles, paginas: r.pags.length, base64: bytesAb64(new Uint8Array(bytes)) });
       }).then(function () { hechos++; $('prog').querySelector('i').style.width = (hechos / R.length * 100) + '%'; return sig(); });

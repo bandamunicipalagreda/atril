@@ -1,5 +1,5 @@
 /* Atril · funcionamiento sin conexión */
-const VERSION = 'atril-v4';
+const VERSION = 'atril-v5';
 const BASE = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 const EXTERNOS = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
@@ -19,6 +19,7 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;                                  // las llamadas al motor no se guardan
   const url = new URL(req.url);
   if (url.hostname.endsWith('google.com') || url.hostname.endsWith('googleusercontent.com')) return;
+  if (url.pathname.endsWith('.mp4')) return;                        // el vídeo guía no se guarda (pesa mucho)
   if (url.origin === location.origin) {
     // la app: primero internet (para tener la última versión), si no, lo guardado
     e.respondWith(fetch(req).then(r => { const c = r.clone(); caches.open(VERSION).then(x => x.put(req, c)); return r; })
