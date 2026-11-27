@@ -1108,7 +1108,9 @@ function abrirPrograma(id) {
   $('vPrograma').innerHTML = cabCom(p.titulo, esc(cuando(p)), 'vCal') + '<main>' + bannerUrgente(p, false) +
     (bloqueCita(p) ? '<div class="tarjeta" style="margin-top:16px">' + bloqueCita(p) + '</div>' : '') + (p.pedirConfirmacion && p.fecha >= hoyIso() ? '<div class="lista" style="margin-top:16px">' + bloqueVienes(p) + '</div>' : '') +
     '<h2 class="sec">Obras <small>' + p.obras.length + '</small></h2><div class="lista">' +
-    (p.obras.map(obra).filter(Boolean).map(function (o) { return filaObra(o, p.id); }).join('') || '<div class="vacio">Sin obras</div>') + '</div></main>';
+    (p.obras.map(obra).filter(Boolean).map(function (o) { return filaObra(o, p.id); }).join('') || '<div class="vacio">Sin obras</div>') + '</div>' +
+    // El director o administrador puede mandar un aviso urgente de cualquier ensayo o actuación que venga, no solo del próximo
+    (esAdmin() && p.fecha >= hoyIso() ? '<button class="btn urg ancho" data-urgente="' + p.id + '" style="margin-top:18px;padding:12px">⚠ Aviso urgente a la banda</button>' : '') + '</main>';
   vistaPrograma = id; ir('vPrograma');
 }
 
