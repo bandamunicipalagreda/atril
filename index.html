@@ -138,11 +138,14 @@ h2.sec small{font-family:var(--sans);font-size:13px;color:var(--gris);font-weigh
 .ytmini iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .repro.peq .ytmini{width:58%;padding-top:32.6%;margin-left:auto}
 /* YouTube en miniatura: ventanita en la esquina que casi no tapa la partitura */
-.repro.yt.peq{left:calc(100% - min(46vw,240px) - 10px)!important;right:auto!important;margin:0!important;width:min(46vw,240px);max-width:none;padding:6px;border-radius:14px}
-.repro.yt.peq .rt,.repro.yt.peq .ytenlace{display:none}
-.repro.yt.peq .r1{justify-content:flex-end;gap:4px}
-.repro.yt.peq .cerrar{width:26px;height:26px;font-size:14px}
-.repro.yt.peq .ytmini{width:100%;padding-top:56.25%;margin:4px 0 0;border-radius:9px}
+.repro.ytr.peq{left:calc(100% - min(46vw,240px) - 10px)!important;right:auto!important;margin:0!important;width:min(46vw,240px);max-width:none;padding:6px;border-radius:14px}
+.repro.ytr.peq .rt,.repro.ytr.peq .ytenlace{display:none}
+.repro.ytr.peq .r1{justify-content:flex-end;gap:4px}
+.repro .agarre{flex:1;align-self:stretch;min-height:30px;display:flex;align-items:center;gap:6px;color:#aaaeb3;font-size:12px;padding-left:4px}
+.repro .agarre i{font-style:normal;font-size:16px;letter-spacing:-2px;color:var(--oro2)}
+.repro:not(.peq) .agarre{display:none}
+.repro.ytr.peq .cerrar{width:26px;height:26px;font-size:14px}
+.repro.ytr.peq .ytmini{width:100%;padding-top:56.25%;margin:4px 0 0;border-radius:9px}
 .visor.noche,.visor.noche .hojas{background:#000}
 .visor.noche .hoja{background:#000;box-shadow:none}
 .visor.noche .hoja canvas{filter:invert(1) hue-rotate(180deg) brightness(.85)}
@@ -153,6 +156,40 @@ h2.sec small{font-family:var(--sans);font-size:13px;color:var(--gris);font-weigh
 .siguiente b{font-family:var(--serif);font-size:20px;color:#ffffff;display:block}
 .siguiente span{font-size:12px;color:#aaaeb3}
 .cambio{margin:10px 12px 0;background:#f5ebd4;color:#c1942d;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600}
+.avatar{width:40px;height:40px;border-radius:50%;flex:none;margin-left:10px;background:linear-gradient(150deg,#e9d49a,#c9a24a);color:#26282a;font-weight:700;font-size:15px;letter-spacing:.02em;display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.55)}
+.avatar.on{box-shadow:0 0 0 3px var(--oro2),0 2px 8px rgba(0,0,0,.35)}
+.cab .fila{display:flex;align-items:center}
+.cab .fila .avatar{margin-left:auto}
+.fprox.pasado{opacity:.6}
+.fprox.pasado .fechab{filter:grayscale(1)}
+details.pasados{margin-top:18px}
+details.pasados summary{cursor:pointer;font-family:var(--serif);font-size:22px;font-weight:600;padding:8px 4px;list-style:none}
+details.pasados summary small{font-family:var(--sans,inherit);font-size:13px;color:var(--gris);font-weight:500;margin-left:6px}
+details.pasados summary::after{content:' ▾';font-size:14px;color:var(--gris)}
+.obra.doc{display:flex;align-items:center;gap:12px}
+.ic-doc{width:40px;height:48px;border-radius:8px;background:#f3e3df;color:#a33a2c;font-size:11px;font-weight:800;display:grid;place-items:center;flex:none;letter-spacing:.04em}
+.docvisor{position:fixed;inset:0;z-index:60;background:#3a3d40;display:flex;flex-direction:column}
+.dv-barra{background:var(--negro);color:var(--oro2);padding:calc(8px + env(safe-area-inset-top)) 12px 8px;display:flex;align-items:center;gap:8px}
+.dv-tit{flex:1;min-width:0}
+.dv-tit b{display:block;font-family:var(--serif);font-size:19px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dv-tit span{font-size:12px;color:#aaaeb3}
+.dv-hojas{flex:1;overflow:auto;padding:12px 10px 40px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.dv-hojas canvas{background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.35);max-width:100%;height:auto}
+.copiar-prog{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.copiar-prog .btn{text-align:left;font-size:14px;white-space:normal;line-height:1.3;padding:11px 14px}
+.busca-obra{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--linea);border-radius:12px;font-size:16px;margin-bottom:10px;background:#fff}
+.fprox{background:#fff;border:1px solid var(--linea);border-radius:16px;margin-bottom:10px;overflow:hidden}
+.fprox.falta{border-color:#e6c98a;box-shadow:0 0 0 2px #f6ecd3}
+.fp-top{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer}
+.fechab.peq{width:46px;height:50px;flex:none}
+.fechab.peq b{font-size:20px}
+.fp-t{flex:1;min-width:0}
+.fp-t small{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--oro);font-weight:600}
+.fp-t b{display:block;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp-t span{font-size:12.5px;color:var(--gris)}
+.fp-fl{color:#b9b4a8;font-size:22px}
+.fp-v.vbtn{display:flex;align-items:center;gap:8px;padding:0 14px 12px;margin-top:0}
+.fp-v span{flex:0 0 auto;font-size:13.5px;font-weight:600;color:#7a5a17;margin-right:4px}
 .vienes{padding:14px 20px;border-top:1px solid var(--linea);background:#fcf9f2}
 .vienes .q{font-weight:600;font-size:15px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .vienes .q small{font-weight:500;color:var(--gris);font-size:12.5px}
@@ -473,6 +510,7 @@ nav button.com.on{background:linear-gradient(135deg,#4f5458,#3d4044);color:#f3df
 <div class="app oculto" id="app">
   <section id="vHome" class="oculto"></section>
   <section id="vGuia" class="oculto"></section>
+  <section id="vCal" class="oculto"></section>
   <section id="vInicio" class="oculto"></section>
   <section id="vPrograma" class="oculto"></section>
   <section id="vBiblio" class="oculto"></section>
@@ -483,6 +521,7 @@ nav button.com.on{background:linear-gradient(135deg,#4f5458,#3d4044);color:#f3df
 </div>
 
 <!-- VISOR -->
+<div class="docvisor oculto" id="docVisor"><div class="dv-barra"><button class="icono" id="dvCerrar" aria-label="Volver">‹</button><div class="dv-tit"><b id="dvTit"></b><span id="dvSub"></span></div><button class="icono" id="dvDescargar" aria-label="Descargar">⤓</button></div><div class="dv-hojas" id="dvHojas"></div></div>
 <div class="visor oculto" id="visor">
   <div class="barra"><button class="icono" id="bCerrar" aria-label="Volver">‹</button><div class="tit"><b id="vTit"></b><span id="vSub"></span></div><button class="icono" id="bNoche" aria-label="Modo noche">☾</button><button class="icono" id="bActuacion" aria-label="Modo actuación">⛶</button><button class="icono" id="bCompartir" aria-label="Imprimir o enviar">⇪</button></div>
   <div class="flotante"><button id="fEscribir" class="ancho" aria-label="Escribir">✎ Escribir</button><button id="fNoche" aria-label="Modo noche">☾</button><button id="fSalir" aria-label="Salir de pantalla completa">✕</button></div>
@@ -667,7 +706,7 @@ function arrancar() {
 function mostrarLogin(msg) {
   $('vLogin').classList.remove('oculto'); $('app').classList.add('oculto'); $('nav').classList.add('oculto');
   $('lError').textContent = msg || ''; vista = 'vHome'; vistaAnterior = '';
-  ['vGuia', 'vInicio', 'vPrograma', 'vNoticias', 'vBiblio', 'vAfin', 'vPerfil', 'vDir'].forEach(function (x) { $(x).classList.add('oculto'); }); $('vHome').classList.remove('oculto');
+  ['vGuia', 'vCal', 'vInicio', 'vPrograma', 'vNoticias', 'vBiblio', 'vAfin', 'vPerfil', 'vDir'].forEach(function (x) { $(x).classList.add('oculto'); }); $('vHome').classList.remove('oculto');
   var ins = document.querySelectorAll('#pin input'); ins.forEach(function (i) { i.value = ''; }); setTimeout(function () { ins[0].focus(); }, 100);
 }
 function entrarApp() {
@@ -754,7 +793,7 @@ function sincronizar(primeraVez) {
   if (primeraVez) cargando(true, 'Cargando tus partituras…');
   return api('datos').then(function (r) {
     sinConexion = false;
-    D = { usuario: r.usuario, banda: r.banda, papeles: r.papeles, obras: r.obras, programas: r.programas, noticias: r.noticias || [], mensajes: r.mensajes || [], anotaciones: r.anotaciones || {}, equipo: r.equipo || [] };
+    D = { usuario: r.usuario, banda: r.banda, papeles: r.papeles, obras: r.obras, programas: r.programas, noticias: r.noticias || [], mensajes: r.mensajes || [], documentos: r.documentos || [], anotaciones: r.anotaciones || {}, equipo: r.equipo || [] };
     return guardado.put('datos', D).then(function () {
       cargando(false);
       if (primeraVez) entrarApp(); else pintarTodo();
@@ -843,27 +882,31 @@ var ICO_PERFIL = '<svg viewBox="0 0 24 24" width="22" height="22" style="display
 var ICO_DIR = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2.4"/><path d="M8.7 13.2c.4-1.8 1.7-2.9 3.3-2.9s2.9 1.1 3.3 2.9"/><path d="M8.9 11.3L5.3 8.1 4.5 4.6"/><path d="M15.1 11.3l3.1-3.4"/><path d="M18.2 7.9l3.1-5.6" stroke-width="1.3"/><path d="M5.5 14h13l-1.8 3.2H7.3z"/><path d="M12 17.2v3.8M9 21h6"/></svg>';
 var ICO_ADMIN = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>';
 var ICO_INICIO = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></svg>';
+var ICO_CAL = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><circle cx="8.5" cy="13.5" r=".9" fill="currentColor"/><circle cx="12" cy="13.5" r=".9" fill="currentColor"/><circle cx="15.5" cy="13.5" r=".9" fill="currentColor"/><circle cx="8.5" cy="17" r=".9" fill="currentColor"/></svg>';
 var ICO_JUNTA = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:block;margin:-2px auto -1px" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2.2"/><circle cx="4.5" cy="9" r="2"/><circle cx="19.5" cy="9" r="2"/><path d="M2.5 14.5h19"/><path d="M5 14.5V21M19 14.5V21"/><path d="M9 12.2c.6-1.6 1.7-2.5 3-2.5s2.4.9 3 2.5"/></svg>';
 function pintarNav() {
   // Música (dorado) | Banda y comunicación (azul) | Yo
-  var b = [['vHome', ICO_INICIO, 'Inicio', 'mus'], ['vBiblio', '♫', 'Partituras', 'mus'], ['vInicio', ICO_BANDA, 'Banda', 'com sep']];
+  // El perfil va arriba a la derecha (el circulito con tu inicial)
+  var b = [['vHome', ICO_INICIO, 'Inicio', 'mus'], ['vCal', ICO_CAL, 'Calendario', 'mus'], ['vBiblio', '♫', 'Partituras', 'mus'], ['vInicio', ICO_BANDA, 'Banda', 'com sep']];
   if (esJunta()) b.push(['vDir', ICO_JUNTA, 'Junta', 'com']);
-  b.push(['vPerfil', ICO_PERFIL, 'Perfil', 'yo sep']);
-  if (esAdmin()) b.push(esDirector() ? ['vDir', ICO_DIR, 'Director', 'yo'] : ['vDir', ICO_ADMIN, 'Administrador', 'yo']);
-  $('navbar').innerHTML = b.map(function (x) { return '<button data-ir="' + x[0] + '" class="' + x[3] + '"><span>' + x[1] + '</span>' + x[2] + (x[0] === 'vInicio' ? '<i class="badge" id="navBadge"></i>' : '') + '</button>'; }).join('');
+  if (esAdmin()) b.push(esDirector() ? ['vDir', ICO_DIR, 'Director', 'yo sep'] : ['vDir', ICO_ADMIN, 'Admin', 'yo sep']);
+  $('navbar').innerHTML = b.map(function (x) { return '<button data-ir="' + x[0] + '" class="' + x[3] + '"><span>' + x[1] + '</span>' + x[2] + (x[0] === 'vInicio' ? '<i class="badge" id="navBadge"></i>' : x[0] === 'vCal' ? '<i class="badge" id="navBadgeCal"></i>' : '') + '</button>'; }).join('');
   marcarNav();
 }
 function marcarNav() {
-  document.querySelectorAll('#navbar button').forEach(function (b) { b.classList.toggle('on', b.dataset.ir === vista || ((vista === 'vPrograma' || vista === 'vNoticias') && b.dataset.ir === 'vInicio')); });
+  document.querySelectorAll('#navbar button').forEach(function (b) { b.classList.toggle('on', b.dataset.ir === vista || (vista === 'vNoticias' && b.dataset.ir === 'vInicio') || (vista === 'vPrograma' && b.dataset.ir === 'vCal')); });
   var bd = $('navBadge'); if (bd) { var n = pendientesBanda(); bd.textContent = n > 9 ? '9+' : n || ''; bd.style.display = n ? '' : 'none'; }
+  var bc = $('navBadgeCal'); if (bc) { var c = pendientesCal(); bc.textContent = c > 9 ? '9+' : c || ''; bc.style.display = c ? '' : 'none'; }
+  document.querySelectorAll('.avatar').forEach(function (a) { a.classList.toggle('on', vista === 'vPerfil'); });
 }
 var vistaAnterior = '';
 function ir(v) {
   vistaAnterior = vista;
   vista = v;
-  if (v === 'vInicio') marcarAvisosVistos();
+  if (v === 'vInicio') marcarAvisosVistos('mensajes');
+  if (v === 'vCal') marcarAvisosVistos('urgentes');
   if (v !== 'vAfin' && typeof pararAfinador === 'function') { pararAfinador(); pararTono(); }
-  ['vHome', 'vGuia', 'vInicio', 'vPrograma', 'vNoticias', 'vBiblio', 'vAfin', 'vPerfil', 'vDir'].forEach(function (x) { $(x).classList.toggle('oculto', x !== v); });
+  ['vHome', 'vGuia', 'vCal', 'vInicio', 'vPrograma', 'vNoticias', 'vBiblio', 'vAfin', 'vPerfil', 'vDir'].forEach(function (x) { $(x).classList.toggle('oculto', x !== v); });
   if (v === 'vGuia') pintarGuia();
   if (v === 'vHome') pintarPortada();
   marcarNav(); window.scrollTo(0, 0);
@@ -872,23 +915,35 @@ function ir(v) {
   if (v === 'vNoticias') pintarNoticias();
   if (v === 'vInicio' && D && vistaAnterior === 'vNoticias') pintarInicio();
 }
-function pintarTodo() { pintarPortada(); pintarInicio(); pintarBiblio(); pintarPerfil(); pintarNav(); if (vista === 'vNoticias') pintarNoticias(); }
+function pintarTodo() { pintarPortada(); pintarCalendario(); pintarInicio(); pintarBiblio(); pintarPerfil(); pintarNav(); if (vista === 'vNoticias') pintarNoticias(); }
 
+function avatar() {
+  var u = D && yo(); if (!u) return '';
+  var ini = u.nombre.trim().split(/\s+/).slice(0, 2).map(function (x) { return x.charAt(0); }).join('').toUpperCase();
+  return '<button class="avatar' + (vista === 'vPerfil' ? ' on' : '') + '" data-ir="vPerfil" aria-label="Mi perfil">' + esc(ini) + '</button>';
+}
 function cab(titulo, sub, conVolver, extra) {
   return '<div class="cab"><div class="fila">' + (conVolver ? '<button class="volver" data-volver="' + conVolver + '">‹</button>' : '<div class="marca"><img src="' + LOGO_BANDA + '" alt=""><span>Atril</span></div>') +
-    (extra || '') + '</div><h1>' + esc(titulo) + '</h1>' + (sub ? '<div class="sub">' + sub + '</div>' : '') + '</div>';
+    (extra || '') + (conVolver ? '' : avatar()) + '</div><h1>' + esc(titulo) + '</h1>' + (sub ? '<div class="sub">' + sub + '</div>' : '') + '</div>';
 }
 // Cabecera azul: todo lo que es comunicación (banda, programas, noticias, junta) se distingue de lo musical (dorado)
-function cabCom(titulo, sub, conVolver, extra) { return cab(titulo, sub, conVolver, (extra || '') + '<img class="escudo-cab" src="' + LOGO_BANDA + '" alt="Banda Municipal de Ágreda">').replace('<div class="cab">', '<div class="cab com">'); }
-function pendientesBanda() {
+// (el escudo de la derecha solo en las pantallas con «volver»: en las demás está el circulito del perfil)
+function cabCom(titulo, sub, conVolver, extra) { return cab(titulo, sub, conVolver, (extra || '') + (conVolver ? '<img class="escudo-cab" src="' + LOGO_BANDA + '" alt="Banda Municipal de Ágreda">' : '')).replace('<div class="cab">', '<div class="cab com">'); }
+// Calendario: «¿Vienes?» sin contestar y avisos urgentes sin ver
+function pendientesCal() {
   if (!D) return 0;
-  var hoy = hoyIso(), n = 0;
-  var vistos = avisosVistos();
+  var hoy = hoyIso(), n = 0, vistos = avisosVistos();
   D.programas.forEach(function (p) {
     if (p.fecha < hoy) return;
     if (p.pedirConfirmacion && !p.miRespuesta && !(p.limite && p.limite < hoy)) n++;
     (p.urgentes || (p.urgente ? [p.urgente] : [])).forEach(function (a) { if (vistos.indexOf(claveAviso(p, a)) < 0) n++; });
   });
+  return n;
+}
+// Banda: mensajes y noticias sin ver
+function pendientesBanda() {
+  if (!D) return 0;
+  var n = 0, vistos = avisosVistos();
   (D.mensajes || []).forEach(function (m) { if (vistos.indexOf('m|' + m.id) < 0) n++; });
   (D.noticias || []).forEach(function (x) { if (!noticiaVista(x)) n++; });
   return n;
@@ -896,11 +951,11 @@ function pendientesBanda() {
 // Avisos urgentes y mensajes ya vistos: dejan de contar en el número de la pestaña Banda
 function avisosVistos() { try { return JSON.parse(localStorage.getItem('atril_avisos_vistos') || '[]'); } catch (e) { return []; } }
 function claveAviso(p, a) { return 'u|' + p.id + '|' + (a.id || '') + '|' + (a.fecha || ''); }
-function marcarAvisosVistos() {
+function marcarAvisosVistos(que) {
   if (!D) return;
   var v = avisosVistos(), hoy = hoyIso();
-  D.programas.forEach(function (p) { if (p.fecha >= hoy) (p.urgentes || (p.urgente ? [p.urgente] : [])).forEach(function (a) { var k = claveAviso(p, a); if (v.indexOf(k) < 0) v.push(k); }); });
-  (D.mensajes || []).forEach(function (m) { if (v.indexOf('m|' + m.id) < 0) v.push('m|' + m.id); });
+  if (que !== 'mensajes') D.programas.forEach(function (p) { if (p.fecha >= hoy) (p.urgentes || (p.urgente ? [p.urgente] : [])).forEach(function (a) { var k = claveAviso(p, a); if (v.indexOf(k) < 0) v.push(k); }); });
+  if (que !== 'urgentes') (D.mensajes || []).forEach(function (m) { if (v.indexOf('m|' + m.id) < 0) v.push('m|' + m.id); });
   try { localStorage.setItem('atril_avisos_vistos', JSON.stringify(v.slice(-300))); } catch (e) {}
 }
 function vistosPapel() { try { return JSON.parse(localStorage.getItem('atril_papeles_vistos') || '{}'); } catch (e) { return {}; } }
@@ -930,16 +985,8 @@ function bannerInstalar() {
 function pintarInicio() {
   if (!D) return;
   var u = yo(), hoy = hoyIso();
-  var futuros = D.programas.filter(function (p) { return p.fecha >= hoy; });
-  var nuevas = D.obras.filter(esNueva).length;
-  var h = cabCom('Banda', 'Ensayos, actuaciones, avisos y noticias');
-  h += '<main>' + futuros.map(function (p) { return bannerUrgente(p, true); }).join('');
-  if (futuros.length) {
-    var p = futuros[0], d = fecha(p.fecha);
-    h += '<div class="proximo"><div class="top"><div class="fechab ' + (p.tipo === 'Ensayo' ? 'ensayo' : '') + '"><b>' + d.getDate() + '</b><span>' + MESES[d.getMonth()] + '</span></div><div><div class="eti">Próximo · ' + esc(p.tipo) + '</div><h3>' + esc(p.titulo) + '</h3><div class="hora">' + esc(cuando(p)) + '</div></div></div>' + bloqueCita(p) + bloqueVienes(p) +
-      (esAdmin() && p.fecha >= hoyIso() ? '<div class="vienes" style="padding:10px 20px"><button class="btn urg ancho" data-urgente="' + p.id + '" style="padding:10px">⚠ Aviso urgente a la banda</button></div>' : '') +
-      (p.obras.map(function (id) { return obra(id); }).filter(Boolean).map(function (o) { return filaObra(o, p.id); }).join('') || '<div class="obra" style="cursor:default"><div class="s">Aún sin obras</div></div>') + '</div>';
-  } else h += '<div class="proximo"><div class="top"><div><div class="eti">Sin programas próximos</div><h3>Nada a la vista</h3><div class="hora">Cuando el director publique, aparecerá aquí.</div></div></div></div>';
+  var h = cabCom('Banda', 'Noticias, mensajes, documentos y junta');
+  h += '<main>';
   h += bannerAvisos() + bloqueMensajes();
   var nots = D.noticias || [];
   if (nots.length) {
@@ -947,23 +994,118 @@ function pintarInicio() {
     h += '<h2 class="sec">Noticias <small>' + (sinLeer ? sinLeer + ' sin leer · ' : '') + '<a data-ir="vNoticias" style="color:var(--oro);cursor:pointer">Ver todas ›</a></small></h2>' +
       nots.slice(0, 2).map(function (n) { return tarjetaNoticia(n, true); }).join('');
   } else if (puedeComunicar()) h += '<h2 class="sec">Noticias</h2><button class="noticia vacia" data-ir="vNoticias">＋ Publica la primera noticia para la banda</button>';
-  if (futuros.length > 1) {
-    h += '<h2 class="sec">Más adelante <small>' + (futuros.length - 1) + '</small></h2>' + futuros.slice(1).map(function (p) {
-      return '<div class="programa" data-prog="' + p.id + '"><div class="fechab ' + (p.tipo === 'Ensayo' ? 'ensayo' : '') + '"><b>' + fecha(p.fecha).getDate() + '</b><span>' + MESES[fecha(p.fecha).getMonth()] + '</span></div><div style="flex:1;min-width:0"><div class="t">' + esc(p.titulo) + '</div><div class="s">' + esc(cuando(p)) + ' · ' + p.obras.length + ' obras</div></div>' + pildoraVienes(p) + '<div class="flecha">›</div></div>';
-    }).join('');
-  }
-  h += '<button class="noticia vacia" data-ir="vNoticias" style="margin-top:6px">Quién es quién: director y junta directiva ›</button>';
+  h += bloqueDocumentos() + tarjetaEquipo();
   h += '<div style="text-align:center;margin-top:20px"><button class="btn linea" id="bActualizar">↻ Actualizar</button></div></main>';
   $('vInicio').innerHTML = h;
-  if (vista === 'vInicio') marcarAvisosVistos();
+  if (vista === 'vInicio') marcarAvisosVistos('mensajes');
   $('vInicio').querySelectorAll('[data-bmen]').forEach(function (b) { b.onclick = function () {
     preguntar('¿Borrar este mensaje?', 'Desaparecerá de la app para todos.', 'Borrar', true).then(function (si) { if (!si) return;
       cargando(true); api('borrarMensaje', { id: b.dataset.bmen }).then(function () { return sincronizar(false); }).then(function () { cargando(false); toast('Mensaje borrado'); }).catch(function (e) { cargando(false); toast(e.message); }); }); }; });
   marcarNav();
 }
+/* =================== Documentos de la banda =================== */
+var CATS_DOC = ['Estatutos', 'Actas', 'Reglamento', 'Otros'];
+function bloqueDocumentos() {
+  var l = D.documentos || [], puede = puedeComunicar();
+  if (!l.length && !puede) return '';
+  var h = '<h2 class="sec">Documentos <small>' + (l.length || '') + '</small></h2>';
+  if (!l.length) return h + '<button class="noticia vacia" id="bNuevoDoc">＋ Sube los estatutos, las actas… para que toda la banda los consulte</button>';
+  h += '<div class="lista">' + CATS_DOC.map(function (c) {
+    var d = l.filter(function (x) { return x.categoria === c; }); if (!d.length) return '';
+    return '<div class="grupo-papel" style="padding:12px 16px 4px">' + c + '</div>' + d.map(function (x) {
+      var f = fecha(x.fecha);
+      return '<div class="obra doc" data-doc="' + x.id + '"><div class="ic-doc">PDF</div><div style="flex:1;min-width:0"><div class="t">' + esc(x.titulo) + '</div><div class="s">' + f.getDate() + ' ' + MESES[f.getMonth()] + ' ' + f.getFullYear() + (x.kb ? ' · ' + (x.kb > 1024 ? (Math.round(x.kb / 102.4) / 10) + ' MB' : x.kb + ' KB') : '') + '</div></div>' +
+        (puede ? '<button class="mini" data-bdoc="' + x.id + '" aria-label="Borrar">🗑</button>' : '<div class="fp-fl">›</div>') + '</div>';
+    }).join('');
+  }).join('') + '</div>';
+  if (puede) h += '<button class="btn linea ancho" id="bNuevoDoc" style="margin-top:10px">＋ Subir documento</button>';
+  return h;
+}
+function nuevoDocumento() {
+  panel('<h3>Subir documento</h3><p class="s">Lo podrá abrir toda la banda en Banda › Documentos. Solo PDF.</p>' +
+    '<div class="campo"><label>Título</label><input id="dTit" placeholder="Estatutos de la Asociación"></div>' +
+    '<div class="campo"><label>Tipo</label><select id="dCat">' + CATS_DOC.map(function (c) { return '<option>' + c + '</option>'; }).join('') + '</select></div>' +
+    '<div class="campo"><label>Archivo PDF</label><input id="dPdf" type="file" accept="application/pdf,.pdf"></div>' +
+    '<button class="btn negro ancho" id="dSubir">Subir</button>');
+  $('dPdf').onchange = function () { var f = this.files[0]; if (f && !$('dTit').value.trim()) $('dTit').value = f.name.replace(/\.pdf$/i, '').replace(/[_-]+/g, ' '); };
+  $('dSubir').onclick = function () {
+    var f = $('dPdf').files[0], t = $('dTit').value.trim();
+    if (!t) return toast('Ponle un título');
+    if (!f) return toast('Elige el PDF');
+    if (f.size > 20 * 1024 * 1024) return toast('Demasiado grande (máx. 20 MB)', 4000);
+    var lector = new FileReader();
+    lector.onload = function () {
+      cerrarPanel(); cargando(true, 'Subiendo documento…');
+      api('subirDocumento', { titulo: t, categoria: $('dCat') ? $('dCat').value : 'Otros', base64: bytesAb64(new Uint8Array(lector.result)) })
+        .then(function () { return sincronizar(false); }).then(function () { cargando(false); toast('Documento subido ✓'); })
+        .catch(function (e) { cargando(false); toast(e.message === 'Failed to fetch' ? 'Sin conexión' : e.message, 4500); });
+    };
+    var cat = $('dCat').value; lector.readAsArrayBuffer(f); $('dCat').value = cat;
+  };
+}
+function abrirDocumento(id) {
+  var d = (D.documentos || []).find(function (x) { return x.id === id; }); if (!d) return;
+  var dv = $('docVisor'), cont = $('dvHojas');
+  $('dvTit').textContent = d.titulo; $('dvSub').textContent = d.categoria + ' · cargando…'; cont.innerHTML = ''; dv.classList.remove('oculto'); DV.id = id; DV.bytes = null;
+  guardado.get('doc-' + id, 'pdf').then(function (x) {
+    if (x && x.bytes) return new Uint8Array(x.bytes);
+    if (!navigator.onLine) throw new Error('Sin conexión: este documento aún no está en el móvil');
+    return api('documento', { id: id }).then(function (r) { var b = b64aBytes(r.base64); guardado.put('doc-' + id, { bytes: b.buffer }, 'pdf').catch(function () {}); return b; });
+  }).then(function (b) {
+    if (DV.id !== id) return; DV.bytes = b;
+    return pdfjsLib.getDocument({ data: b.slice(0) }).promise.then(function (pdf) {
+      $('dvSub').textContent = d.categoria + ' · ' + pdf.numPages + (pdf.numPages === 1 ? ' página' : ' páginas');
+      var W = Math.min(cont.clientWidth - 20, 900), dpr = Math.min(window.devicePixelRatio || 1, 2), cadena = Promise.resolve();
+      for (var i = 1; i <= pdf.numPages; i++) (function (n) {
+        var cv = document.createElement('canvas'); cont.appendChild(cv);
+        cadena = cadena.then(function () { if (DV.id !== id) return; return pdf.getPage(n).then(function (pg) {
+          var v1 = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: W / v1.width * dpr });
+          cv.width = vp.width; cv.height = vp.height; cv.style.width = W + 'px';
+          return pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise; }); });
+      })(i);
+      return cadena;
+    });
+  }).catch(function (e) { if (DV.id === id) { $('dvSub').textContent = d.categoria; cont.innerHTML = '<div class="aviso-visor">' + esc(e.message === 'Failed to fetch' ? 'Sin conexión' : e.message) + '</div>'; } });
+}
+var DV = { id: null, bytes: null };
+$('dvCerrar').onclick = function () { DV.id = null; $('docVisor').classList.add('oculto'); $('dvHojas').innerHTML = ''; };
+$('dvDescargar').onclick = function () {
+  if (!DV.bytes) return toast('Espera a que cargue');
+  var d = (D.documentos || []).find(function (x) { return x.id === DV.id; }), a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([DV.bytes], { type: 'application/pdf' })); a.download = ((d && d.titulo) || 'documento').replace(/[\\/:*?"<>|]/g, '') + '.pdf';
+  document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+};
+
+/* =================== Calendario =================== */
+function pintarCalendario() {
+  if (!D || !$('vCal')) return;
+  var hoy = hoyIso();
+  var futuros = D.programas.filter(function (p) { return p.fecha >= hoy; });
+  var pasados = D.programas.filter(function (p) { return p.fecha < hoy; }).slice(-12).reverse();
+  var pend = futuros.filter(function (p) { return p.pedirConfirmacion && !p.miRespuesta && !(p.limite && p.limite < hoy); }).length;
+  var h = cabCom('Calendario', futuros.length ? futuros.length + (futuros.length === 1 ? ' ensayo o actuación' : ' ensayos y actuaciones') + (pend ? ' · ' + pend + ' sin contestar' : '') : 'Ensayos y actuaciones');
+  h += '<main>' + futuros.map(function (p) { return bannerUrgente(p, true); }).join('');
+  if (futuros.length) {
+    var p = futuros[0], d = fecha(p.fecha);
+    h += '<div class="proximo"><div class="top"><div class="fechab ' + (p.tipo === 'Ensayo' ? 'ensayo' : '') + '"><b>' + d.getDate() + '</b><span>' + MESES[d.getMonth()] + '</span></div><div><div class="eti">Próximo · ' + esc(p.tipo) + '</div><h3>' + esc(p.titulo) + '</h3><div class="hora">' + esc(cuando(p)) + '</div></div></div>' + bloqueCita(p) + bloqueVienes(p) +
+      (esAdmin() && p.fecha >= hoyIso() ? '<div class="vienes" style="padding:10px 20px"><button class="btn urg ancho" data-urgente="' + p.id + '" style="padding:10px">⚠ Aviso urgente a la banda</button></div>' : '') +
+      (p.obras.map(function (id) { return obra(id); }).filter(Boolean).map(function (o) { return filaObra(o, p.id); }).join('') || '<div class="obra" style="cursor:default"><div class="s">Aún sin obras</div></div>') + '</div>';
+  } else h += '<div class="proximo"><div class="top"><div><div class="eti">Sin programas próximos</div><h3>Nada a la vista</h3><div class="hora">Cuando el director publique, aparecerá aquí.</div></div></div></div>';
+  // El resto, por meses, cada uno con su «¿Vienes?»
+  var mes = '';
+  futuros.slice(1).forEach(function (p) {
+    var d = fecha(p.fecha), m = MESES_L[d.getMonth()] + (d.getFullYear() !== new Date().getFullYear() ? ' ' + d.getFullYear() : '');
+    if (m !== mes) { h += '<h2 class="sec">' + m.replace(/^./, function (c) { return c.toUpperCase(); }) + '</h2>'; mes = m; }
+    h += filaProxima(p);
+  });
+  if (pasados.length) h += '<details class="pasados"><summary>Ya pasados <small>' + pasados.length + '</small></summary>' + pasados.map(filaProxima).join('') + '</details>';
+  h += '<div style="text-align:center;margin-top:20px"><button class="btn linea" id="bActualizar">↻ Actualizar</button></div></main>';
+  $('vCal').innerHTML = h;
+  if (vista === 'vCal') marcarAvisosVistos('urgentes');
+}
 function abrirPrograma(id) {
-  var p = D.programas.find(function (x) { return x.id === id; }); if (!p) return ir('vInicio');
-  $('vPrograma').innerHTML = cabCom(p.titulo, esc(cuando(p)), 'vInicio') + '<main>' + bannerUrgente(p, false) +
+  var p = D.programas.find(function (x) { return x.id === id; }); if (!p) return ir('vCal');
+  $('vPrograma').innerHTML = cabCom(p.titulo, esc(cuando(p)), 'vCal') + '<main>' + bannerUrgente(p, false) +
     (bloqueCita(p) ? '<div class="tarjeta" style="margin-top:16px">' + bloqueCita(p) + '</div>' : '') + (p.pedirConfirmacion && p.fecha >= hoyIso() ? '<div class="lista" style="margin-top:16px">' + bloqueVienes(p) + '</div>' : '') +
     '<h2 class="sec">Obras <small>' + p.obras.length + '</small></h2><div class="lista">' +
     (p.obras.map(obra).filter(Boolean).map(function (o) { return filaObra(o, p.id); }).join('') || '<div class="vacio">Sin obras</div>') + '</div></main>';
@@ -1042,7 +1184,7 @@ var GUIA = [
   { t: 'Inicio', p: [
     'Es lo primero que ves al abrir: el saludo, los <b>avisos</b> que no has visto y <b>lo próximo</b> (ensayo o actuación).',
     'Contesta <b>«¿Vienes?»</b> con <b>Sí, voy</b> o <b>No puedo</b> ahí mismo.',
-    'En <b>Para preparar</b> están las obras del próximo programa: tócalas para abrir tu papel.',
+    'Toca <b>lo próximo</b> para ver sus obras y abrir tu papel.',
     'En <b>Accesos rápidos</b> tienes el Afinador, todo el Repertorio y las Noticias.'] },
   { t: 'Partituras', p: [
     'Arriba, las obras del próximo ensayo o concierto; después, las <b>nuevas o cambiadas</b>; y abajo, <b>todo el repertorio</b> con buscador.',
@@ -1077,14 +1219,20 @@ var GUIA = [
     'Está en <b>Inicio → Accesos rápidos</b>.',
     'Pulsa <b>Empezar</b> y toca una nota larga y estable. La aguja en el centro y en verde = afinado.',
     'Elige tu instrumento (<b>Do, Si♭, Mi♭ o Fa</b>) para ver la nota como la lees en tu papel.'] },
-  { t: 'Banda: ensayos, avisos y noticias', p: [
-    'Día, hora, lugar, <b>citación</b> y <b>uniforme</b> de cada ensayo y actuación.',
-    'Contesta <b>«¿Vienes?»</b> y, si quieres, añade una explicación para el director («llego tarde», «tengo turno»…).',
+  { t: 'Calendario: ensayos y actuaciones', p: [
+    'En <b>Calendario</b> están todos los ensayos y actuaciones, ordenados por meses: día, hora, lugar, <b>citación</b> y <b>uniforme</b>.',
+    'Contesta <b>«¿Vienes?»</b> en cada uno y, si quieres, añade una explicación para el director («llego tarde», «tengo turno»…). Los que te faltan por contestar salen con borde dorado.',
     'Los <b>avisos urgentes</b> salen en rojo y se quitan solos al día siguiente.',
+    'Abajo, en <b>Ya pasados</b>, tienes los anteriores.',
+    'El número rojo de la pestaña Calendario es lo que te falta por contestar o ver.'] },
+  { t: 'Banda: noticias, mensajes y documentos', p: [
     'Los <b>mensajes</b> del director o la junta se quedan una semana.',
-    'En <b>Noticias</b> está lo que se cuece en la banda y <b>quién es quién</b> (dirección y junta).',
+    'En <b>Noticias</b> está lo que se cuece en la banda.',
+    'En <b>Documentos</b> puedes consultar los estatutos, las actas y el reglamento. Se abren en la app y se pueden descargar con ⤓.',
+    'También verás <b>quién es quién</b>: director y junta directiva.',
     'El número rojo de la pestaña Banda indica lo que aún no has visto.'] },
   { t: 'Perfil y avisos', p: [
+    'Tu perfil está en el <b>circulito con tu inicial</b>, arriba a la derecha.',
     '<b>Mis papeles:</b> elige qué papeles tocas.',
     '<b>Correo:</b> si quieres recibir las obras nuevas para imprimirlas.',
     '<b>Avisos:</b> pulsa <b>Activar avisos</b> para que te lleguen al momento los ensayos, cambios y avisos urgentes. Hazlo en cada aparato que uses.',
@@ -1097,7 +1245,8 @@ var GUIA = [
 ];
 var GUIA_JUNTA = { t: 'Para la junta directiva', p: [
   'En la pestaña <b>Junta</b> publicas <b>noticias</b> (se pueden fijar arriba) y mandas <b>mensajes</b> a toda la banda o solo a un instrumento.',
-  'Los mensajes llegan como aviso al móvil y se quedan una semana en la pestaña Banda.'] };
+  'Los mensajes llegan como aviso al móvil y se quedan una semana en la pestaña Banda.',
+  'En <b>Banda › Documentos</b> subes los estatutos, actas o reglamento (en PDF) para que los consulte toda la banda.'] };
 var GUIA_DIR = { t: 'Para el director y los administradores', p: [
   '<b>Subir una obra:</b> Director → Obras → <b>＋ Nueva obra</b>. Pon el título, elige la <b>carpeta</b> (Procesiones, Pasodobles… o <b>＋ Nueva carpeta</b>) y pulsa <b>Guardar datos</b> → <b>Subir PDF</b> → <b>Detectar instrumentos</b>. Revisa los papeles, pulsa <b>Subir</b> y luego <b>Publicar</b>.',
   '¿Los papeles vienen ya separados, un PDF por instrumento? Usa <b>📁 Subir varios PDF a la vez</b> (o <b>📂 Subir una carpeta</b> en el ordenador): el instrumento se saca del nombre de cada archivo.',
@@ -1136,17 +1285,16 @@ function pintarPortada() {
     var partes = [];
     if (sv.urgentes) partes.push(sv.urgentes + ' aviso' + (sv.urgentes > 1 ? 's' : '') + ' urgente' + (sv.urgentes > 1 ? 's' : ''));
     if (sv.mensajes) partes.push(sv.mensajes + ' mensaje' + (sv.mensajes > 1 ? 's' : '') + ' nuevo' + (sv.mensajes > 1 ? 's' : ''));
-    h += '<button class="urg-mini" data-ir="vInicio"' + (sv.urgentes ? '' : ' style="background:#f6f0e1;color:#7a5a17;border-color:#ead9b0"') + '>' + (sv.urgentes ? '⚠' : '✉') + ' Tienes ' + partes.join(' y ') + ' · ver ›</button>';
+    h += '<button class="urg-mini" data-ir="' + (sv.urgentes ? 'vCal' : 'vInicio') + '"' + (sv.urgentes ? '' : ' style="background:#f6f0e1;color:#7a5a17;border-color:#ead9b0"') + '>' + (sv.urgentes ? '⚠' : '✉') + ' Tienes ' + partes.join(' y ') + ' · ver ›</button>';
   }
   if (futuros.length) {
     var p = futuros[0], d = fecha(p.fecha);
     h += '<div class="proximo" style="margin-top:16px"><div class="top" data-prog="' + p.id + '" style="cursor:pointer"><div class="fechab ' + (p.tipo === 'Ensayo' ? 'ensayo' : '') + '"><b>' + d.getDate() + '</b><span>' + MESES[d.getMonth()] + '</span></div><div><div class="eti">Lo próximo · ' + esc(p.tipo) + '</div><h3>' + esc(p.titulo) + '</h3><div class="hora">' + esc(cuando(p)) + '</div></div></div>' + bloqueVienes(p) + '</div>';
+    // Lo siguiente: hasta 3 más, cada uno con su «¿Vienes?», para que no se olvide ninguno
+    var mas = futuros.slice(1, 4);
+    if (mas.length) h += '<h2 class="sec">Después <small>' + (futuros.length - 1) + (futuros.length - 1 === 1 ? ' más' : ' más') + '</small></h2><div>' + mas.map(filaProxima).join('') + '</div>' +
+      (futuros.length > 4 ? '<button class="guia-enlace" data-ir="vCal" style="margin-top:8px">Ver los ' + futuros.length + ' en el Calendario ›</button>' : '');
   } else h += '<div class="proximo" style="margin-top:16px"><div class="top"><div><div class="eti">Sin ensayos ni actuaciones</div><h3>Nada a la vista</h3><div class="hora">Cuando el director publique, aparecerá aquí.</div></div></div></div>';
-  var prox = futuros.filter(function (x) { return x.obras.length; })[0];
-  if (prox) {
-    var obs = prox.obras.map(obra).filter(Boolean);
-    if (obs.length) h += '<h2 class="sec">Para preparar <small>' + (prox.tipo === 'Ensayo' ? 'ensayo' : esc(prox.tipo.toLowerCase())) + ' del ' + fecha(prox.fecha).getDate() + ' ' + MESES[fecha(prox.fecha).getMonth()] + '</small></h2><div class="lista">' + obs.map(function (o) { return filaObra(o, prox.id); }).join('') + '</div>';
-  }
   var tile = function (ir, ic, t, sub) { return '<button class="acceso" ' + (ir.charAt(0) === 'v' ? 'data-ir' : 'data-destino') + '="' + ir + '"><span>' + ic + '</span><b>' + t + '</b><small>' + sub + '</small></button>'; };
   var nMen = (D.mensajes || []).length;
   h += '<h2 class="sec">Accesos rápidos</h2><div class="accesos">' + tile('mensajes', '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4.5 3.5V17H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M7.5 9.5h9M7.5 12.5h6"/></svg>', 'Mensajes', nMen ? nMen + (nMen > 1 ? ' esta semana' : ' esta semana') : 'Del director y la junta') + tile('vAfin', '◎', 'Afinador', 'Afina antes de tocar') + tile('vBiblio', '♫', 'Repertorio', 'Todas las obras') + tile('vNoticias', '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="15" height="15" rx="2"/><path d="M18 8.5h2.5v9a2 2 0 0 1-2 2H5"/><path d="M6.5 8.5h8M6.5 12h8M6.5 15.5h5"/></svg>', 'Noticias', 'De la banda') + '</div>';
@@ -1281,6 +1429,14 @@ function bloqueVienes(p) {
     }).join('') + '</div>' +
     '<div class="vcom">' + (r ? (r.comentario ? '«' + esc(r.comentario) + '» · ' : '') + '<a data-vcom="' + p.id + '">' + (r.comentario ? 'Cambiar explicación' : 'Añadir una explicación (opcional)') + '</a>' : 'Tu respuesta ayuda al director a organizar la banda.') + '</div></div>';
 }
+// Fila corta para la pantalla de Inicio: fecha, título y los botones Sí / No
+function filaProxima(p) {
+  var d = fecha(p.fecha), r = p.miRespuesta, pide = p.pedirConfirmacion && p.fecha >= hoyIso();
+  return '<div class="fprox' + (pide && !r ? ' falta' : '') + (p.fecha < hoyIso() ? ' pasado' : '') + '"><div class="fp-top" data-prog="' + p.id + '"><div class="fechab peq ' + (p.tipo === 'Ensayo' ? 'ensayo' : '') + '"><b>' + d.getDate() + '</b><span>' + MESES[d.getMonth()] + '</span></div>' +
+    '<div class="fp-t"><small>' + esc(p.tipo) + '</small><b>' + esc(p.titulo) + '</b><span>' + esc(cuando(p)) + '</span></div><div class="fp-fl">›</div></div>' +
+    (pide ? '<div class="fp-v vbtn">' + (r ? '' : '<span>¿Vienes?</span>') + ['Sí', 'No'].map(function (x) {
+      return '<button class="' + { 'Sí': 'si', 'No': 'no' }[x] + (r && r.respuesta === x ? ' on' : '') + '" data-vienes="' + p.id + '" data-r="' + x + '">' + TXT_R[x] + '</button>'; }).join('') + '</div>' : '') + '</div>';
+}
 function pildoraVienes(p) {
   if (!p.pedirConfirmacion || p.fecha < hoyIso()) return '';
   return p.miRespuesta ? '<span class="pres ' + p.miRespuesta.respuesta + '">' + TXT_R[p.miRespuesta.respuesta] + '</span>' : '<span class="pres falta">¿Vienes?</span>';
@@ -1289,7 +1445,7 @@ function responderVienes(idProg, respuesta, comentario) {
   var p = D.programas.find(function (x) { return x.id === idProg; }); if (!p) return;
   if (comentario === undefined) comentario = p.miRespuesta ? p.miRespuesta.comentario : '';
   var antes = p.miRespuesta;
-  function repintar() { pintarInicio(); pintarPortada(); pintarBiblio(); if (vista === 'vPrograma' && vistaPrograma === idProg) abrirPrograma(idProg); }
+  function repintar() { pintarInicio(); pintarCalendario(); pintarPortada(); pintarBiblio(); if (vista === 'vPrograma' && vistaPrograma === idProg) abrirPrograma(idProg); }
   // se marca al momento; el guardado en el Excel va por detrás
   p.miRespuesta = { respuesta: respuesta, comentario: comentario }; repintar();
   toast({ 'Sí': '¡Apuntado! Cuentan contigo ✓', 'No': 'Apuntado: no puedes ir', 'Duda': 'Apuntado. Confírmalo cuando lo sepas' }[respuesta]);
@@ -1311,7 +1467,7 @@ function pintarBiblio(q) {
     h = h.replace('</h1>', '</h1><div class="chips">' + misPapeles().map(function (p) { return '<span class="chip">♪ ' + esc(p) + '</span>'; }).join('') + '</div>');
     h += '<main>';
     var urg = futuros.filter(function (p) { return p.urgente; });
-    if (urg.length) h += '<button class="urg-mini" data-ir="vInicio">⚠ Hay un aviso urgente de la banda · ver ›</button>';
+    if (urg.length) h += '<button class="urg-mini" data-ir="vCal">⚠ Hay un aviso urgente de la banda · ver ›</button>';
     var prox = futuros.filter(function (p) { return p.obras.length; })[0], enProx = {};
     if (prox) {
       h += '<h2 class="sec">' + ({ 'Ensayo': 'Para el ensayo', 'Concierto': 'Para el concierto' }[prox.tipo] || 'Para la actuación') + '<small>' + DIAS[fecha(prox.fecha).getDay()] + ' ' + fecha(prox.fecha).getDate() + ' ' + MESES[fecha(prox.fecha).getMonth()] + '</small></h2><div class="lista">' +
@@ -1351,10 +1507,10 @@ function pintarPerfil() {
       '<p>Te avisamos el día del ensayo, si cambia algo y cuando hay obras nuevas, aunque no tengas Atril abierto.</p><button class="btn negro ancho" id="pActAvisos" style="margin-top:12px">🔔 Activar avisos</button>') + '</div>') +
     '<h2 class="sec">Ayuda</h2><button class="noticia vacia" data-ir="vGuia" style="text-align:left;border-style:solid;color:var(--texto)"><b>📖 Guía de uso</b><br><small style="color:#8a8e93">Todo lo que puedes hacer con Atril, paso a paso, y el vídeo</small></button>' +
     '<h2 class="sec">Sugerencias</h2><div class="tarjeta"><p>¿Algo no funciona o se te ocurre una mejora? Cuéntaselo a la dirección.</p><button class="btn linea ancho" id="bSugerir" style="margin-top:12px">Enviar una sugerencia</button></div>' +
-    '<h2 class="sec">Este aparato</h2><div class="tarjeta"><div class="dato"><span>Partituras guardadas</span><b id="pAlm">…</b></div>' +
-    '<button class="btn linea ancho" style="margin-top:12px" id="bSalir">Cerrar sesión</button></div>' +
+    '<h2 class="sec">Sesión</h2><div class="tarjeta"><p style="font-size:13.5px;color:var(--gris);margin:0 2px 12px">Tienes <b id="pAlm">…</b> guardadas en este móvil para usarlas sin internet.</p>' +
+    '<button class="btn linea ancho" id="bSalir">Cerrar sesión</button><p style="font-size:12.5px;color:var(--gris);margin:8px 2px 0">Solo si el móvil no es tuyo o lo vas a dejar. Para volver a entrar necesitarás tu código.</p></div>' +
     '<p style="text-align:center;margin:18px 0 6px"><a id="bPriv" style="color:var(--gris);font-size:13.5px;text-decoration:underline;cursor:pointer">Privacidad: tus datos en Atril</a></p></main>';
-  guardado.claves('pdf').then(function (k) { var e = $('pAlm'); if (e) e.textContent = (k || []).length + ' papeles'; });
+  guardado.claves('pdf').then(function (k) { var e = $('pAlm'); if (e) { var n = (k || []).filter(function (x) { return String(x).indexOf('doc-') !== 0; }).length; e.textContent = n + (n === 1 ? ' partitura' : ' partituras'); } });
   $('pRecibir').onclick = function () { this.querySelector('.sw').classList.toggle('on'); };
   $('bPapeles').onclick = function () { elegirPapeles(false); };
   $('bSugerir').onclick = abrirSugerencia;
@@ -1383,7 +1539,7 @@ function pintarPerfil() {
   $('bSalir').onclick = function () { preguntar('¿Cerrar sesión en este aparato?', 'Se borrarán las partituras guardadas en él.', 'Cerrar sesión').then(function (ok) { if (!ok) return;
     var tk = localStorage.getItem('atril_aviso_token'); if (tk) api('quitarAviso', { token: tk }).catch(function () {});
     localStorage.removeItem('atril_codigo'); localStorage.removeItem('atril_aviso_token'); guardado.del('codigo'); codigo = ''; D = null;
-    Promise.all([guardado.del('datos')]).then(function () { return guardado.claves('pdf'); }).then(function (k) { return Promise.all((k || []).map(function (x) { return guardado.del(x, 'pdf'); })); }).then(function () { mostrarLogin(); }); });
+    A = null; Promise.all([guardado.del('datos'), guardado.del('admin')]).then(function () { return guardado.claves('pdf'); }).then(function (k) { return Promise.all((k || []).map(function (x) { return guardado.del(x, 'pdf'); })); }).then(function () { mostrarLogin(); }); });
   };
 }
 function telBonito(t) { t = String(t || ''); var m = t.match(/^\+34(\d{3})(\d{3})(\d{3})$/); return m ? m[1] + ' ' + m[2] + ' ' + m[3] : t; }
@@ -1704,7 +1860,7 @@ function pintarSobre() {
     a.onclick = function (e) { e.preventDefault(); pestana('papel'); reproducir(fuentes(o)[+a.dataset.fuente]); };
   });
 }
-$('bCerrar').onclick = function () { salirAnot(true); cerrarRepro(); soltarPantalla(); $('visor').classList.remove('actuacion'); salirPantallaCompleta(); docActual = null; maqId++; renderId++; $('visor').classList.add('oculto'); $('hojas').innerHTML = ''; pintarInicio(); pintarBiblio(); };
+$('bCerrar').onclick = function () { salirAnot(true); cerrarRepro(); soltarPantalla(); $('visor').classList.remove('actuacion'); salirPantallaCompleta(); docActual = null; maqId++; renderId++; $('visor').classList.add('oculto'); $('hojas').innerHTML = ''; pintarInicio(); pintarCalendario(); pintarBiblio(); };
 $('tPapel').onclick = function () { pestana('papel'); };
 $('bUsarOtro').onclick = function () { elegirPapelObra(obraActual, parteActual); $('vOtro').classList.add('oculto'); descargarMias(); toast('En esta obra tocarás: ' + parteActual.papeles.join(', ') + '. Se guarda para tocar sin internet.', 3500); };
 $('tSobre').onclick = function () { pestana('sobre'); };
@@ -2055,15 +2211,20 @@ function verControles(seguir) {
 ['fNoche', 'fSalir'].forEach(function (id) { $(id).addEventListener('click', function () { $('visor').classList.remove('controles'); }); });
 
 /* =================== Reproductores que se mueven con el dedo =================== */
+try { if (!localStorage.getItem('atril_pos_v2')) { localStorage.removeItem('atril_pos_yt'); localStorage.removeItem('atril_pos_aud'); localStorage.setItem('atril_pos_v2', '1'); } } catch (e) {}
+// Si gira el móvil o cambia el tamaño, la ventanita vuelve dentro de la pantalla
+window.addEventListener('resize', function () { var r = $('repro'); if (!r.classList.contains('movido')) return; var rr = r.getBoundingClientRect(); if (rr.bottom > window.innerHeight || rr.right > window.innerWidth) { r.classList.remove('movido'); r.style.removeProperty('left'); r.style.removeProperty('top'); } });
 function hacerMovible(caja, asa, clave) {
   var v = $('visor');
+  // Límites: lo que se ve de verdad en la pantalla (no lo que mide el visor por dentro)
+  function zona() { var rv = v.getBoundingClientRect(); return [Math.min(v.clientWidth, window.innerWidth - Math.max(0, rv.left)), Math.min(v.clientHeight, window.innerHeight - Math.max(0, rv.top))]; }
   function colocar(x, y) {
-    var W = v.clientWidth, H = v.clientHeight, w = caja.offsetWidth, hh = caja.offsetHeight;
+    var z = zona(), W = z[0], H = z[1], w = caja.offsetWidth, hh = caja.offsetHeight;
     x = Math.max(4, Math.min(W - w - 4, x)); y = Math.max(4, Math.min(H - hh - 4, y));
     caja.classList.add('movido'); caja.style.setProperty('left', x + 'px', 'important'); caja.style.setProperty('top', y + 'px', 'important');
     return [x, y];
   }
-  try { var g = JSON.parse(localStorage.getItem('atril_pos_' + clave) || 'null'); if (g) requestAnimationFrame(function () { colocar(g[0] * v.clientWidth, g[1] * v.clientHeight); }); } catch (e) {}
+  try { var g = JSON.parse(localStorage.getItem('atril_pos_' + clave) || 'null'); if (g && g[0] >= 0 && g[0] <= 1 && g[1] >= 0 && g[1] <= 1) requestAnimationFrame(function () { var z = zona(); colocar(g[0] * z[0], g[1] * z[1]); }); } catch (e) {}
   if (asa.dataset.movible) return; asa.dataset.movible = '1';
   asa.addEventListener('pointerdown', function (e) {
     if (e.target.closest('button,input,a,iframe')) return;
@@ -2072,7 +2233,7 @@ function hacerMovible(caja, asa, clave) {
     function mov(ev) { ult = colocar(ev.clientX - rv.left - dx, ev.clientY - rv.top - dy); }
     function sol() {
       asa.removeEventListener('pointermove', mov); asa.removeEventListener('pointerup', sol); asa.removeEventListener('pointercancel', sol);
-      if (ult) try { localStorage.setItem('atril_pos_' + clave, JSON.stringify([ult[0] / v.clientWidth, ult[1] / v.clientHeight])); } catch (x) {}
+      if (ult) try { var z = zona(); localStorage.setItem('atril_pos_' + clave, JSON.stringify([ult[0] / z[0], ult[1] / z[1]])); } catch (x) {}
     }
     asa.addEventListener('pointermove', mov); asa.addEventListener('pointerup', sol); asa.addEventListener('pointercancel', sol);
   });
@@ -2183,9 +2344,9 @@ function reproducir(f) {
   if (f.tipo === 'yt') {
     if (!f.yt) { window.open(f.url, '_blank'); return; }
     if (!navigator.onLine) return toast('Los vídeos de YouTube necesitan internet');
-    $('repro').className = 'repro yt peq';
+    $('repro').className = 'repro ytr peq';
     $('repro').innerHTML = '<div class="r1"><div class="rt"><b>▶ ' + esc(f.titulo) + '</b><span>YouTube · se para si bloqueas la pantalla</span></div>' +
-      '<button class="cerrar" id="rTam" aria-label="Tamaño">⤢</button><button class="cerrar" id="rCerrar" aria-label="Cerrar">✕</button></div>' +
+      '<div class="agarre"><i>⠿⠿</i>mover</div><button class="cerrar" id="rTam" aria-label="Tamaño">⤢</button><button class="cerrar" id="rCerrar" aria-label="Cerrar">✕</button></div>' +
       '<div class="ytmini"><iframe src="https://www.youtube-nocookie.com/embed/' + f.yt + '?autoplay=1&playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>' +
       '<div class="ytenlace" style="text-align:right;margin-top:6px"><a href="' + esc(f.url) + '" target="_blank" rel="noopener" style="font-size:12px;color:#aaaeb3">¿No se ve? Abrir en YouTube ›</a></div>';
     $('repro').querySelector('.r1').classList.add('asa');
@@ -2299,6 +2460,13 @@ document.body.addEventListener('click', function (e) {
     return;
   }
   var o = t.closest('[data-obra]'); if (o && !t.closest('#vDir')) return abrirObra(o.dataset.obra, null, o.dataset.ctx || null);
+  var bd = t.closest('[data-bdoc]'); if (bd) {
+    var dd = (D.documentos || []).find(function (x) { return x.id === bd.dataset.bdoc; });
+    return preguntar('¿Borrar «' + (dd ? dd.titulo : '') + '»?', 'Dejará de verse en la app y se mandará a la papelera de Drive.', 'Borrar', true).then(function (si) { if (!si) return;
+      cargando(true); api('borrarDocumento', { id: bd.dataset.bdoc }).then(function () { return sincronizar(false); }).then(function () { cargando(false); toast('Documento borrado'); }).catch(function (e) { cargando(false); toast(e.message); }); });
+  }
+  var dc = t.closest('[data-doc]'); if (dc) return abrirDocumento(dc.dataset.doc);
+  if (t.id === 'bNuevoDoc') return nuevoDocumento();
   var p = t.closest('[data-prog]'); if (p) return abrirPrograma(p.dataset.prog);
   var dz = t.closest('[data-destino]'); if (dz) return irA(dz.dataset.destino);
   var n = t.closest('[data-ir]'); if (n) return ir(n.dataset.ir);
@@ -2315,14 +2483,20 @@ window.addEventListener('online', function () { sincronizar(false); });
    ====================================================================== */
 var dirTab = 'obras';
 function cargarAdmin() {
-  return api('adminDatos').then(function (r) { A = r; return r; });
+  return api('adminDatos').then(function (r) { A = r; guardado.put('admin', { de: yo().id, A: r }).catch(function () {}); return r; });
 }
+// ¿Se está editando algo en Administración? (entonces no se repinta por detrás)
+function dirEditando() { return !!document.querySelector('#dirCont input:not(#bBuscaObra), #dirCont textarea, #dirCont select, #velo:not(.oculto)'); }
 function abrirDireccion() {
   if (esJunta()) return abrirJunta();
   if (!esAdmin()) return;
   $('vDir').innerHTML = cab(esDirector() ? 'Director' : 'Administración', 'Obras, programas y músicos') + '<main><div class="seg"><button data-dt="obras">Obras</button><button data-dt="programas">Programas</button><button data-dt="musicos">Músicos</button><button data-dt="avisos">Avisos</button></div><div id="dirCont"><div class="vacio" style="margin-top:16px">Cargando…</div></div></main>';
   $('vDir').querySelectorAll('[data-dt]').forEach(function (b) { b.onclick = function () { dirTab = b.dataset.dt; pintarDir(); }; });
-  cargarAdmin().then(pintarDir).catch(function (e) { $('dirCont').innerHTML = '<div class="vacio" style="margin-top:16px">' + (e.message === 'Failed to fetch' ? 'La dirección necesita conexión a internet.' : esc(e.message)) + '</div>'; });
+  var pintado = false;
+  guardado.get('admin').then(function (g) { if (g && g.A && g.de === yo().id && !A) { A = g.A; } if (A && vista === 'vDir' && dirTab) { pintarDir(); pintado = true; } }).catch(function () {})
+    .then(function () { return cargarAdmin(); })
+    .then(function () { if (!pintado || !dirEditando()) pintarDir(); })
+    .catch(function (e) { if (pintado) return toast(e.message === 'Failed to fetch' ? 'Sin conexión: estás viendo lo último guardado' : e.message, 4000); $('dirCont').innerHTML = '<div class="vacio" style="margin-top:16px">' + (e.message === 'Failed to fetch' ? 'La dirección necesita conexión a internet.' : esc(e.message)) + '</div>'; });
 }
 function pintarDir() {
   $('vDir').querySelectorAll('[data-dt]').forEach(function (b) { b.classList.toggle('on', b.dataset.dt === dirTab); });
@@ -3037,6 +3211,32 @@ function verRespuestas(id) {
       .catch(function (e) { cargando(false); toast(e.message, 5000); });
   };
 }
+// Añadir obras a un programa: primero las usadas hace poco, y atajos para copiar las de programas anteriores
+function normaliza(t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+function bloqueAnadirObras(p, id) {
+  var otros = A.programas.filter(function (x) { return x.id !== id && x.obras && x.obras.length; });
+  var ultima = {}; // obra → programa más reciente en que se usó
+  otros.forEach(function (x) { x.obras.forEach(function (oid) { if (!ultima[oid] || ultima[oid].fecha < x.fecha) ultima[oid] = x; }); });
+  var libres = A.obras.filter(function (o) { return p.obras.indexOf(o.id) < 0; });
+  var usadas = libres.filter(function (o) { return ultima[o.id]; }).sort(function (a, b) { return ultima[a.id].fecha < ultima[b.id].fecha ? 1 : ultima[a.id].fecha > ultima[b.id].fecha ? -1 : a.titulo.localeCompare(b.titulo, 'es'); });
+  usadas = usadas.slice(0, 15);                                   // las 15 últimas usadas arriba…
+  var resto = libres.filter(function (o) { return usadas.indexOf(o) < 0; }).sort(function (a, b) { return a.titulo.localeCompare(b.titulo, 'es'); }); // …y todas las demás de la A a la Z
+  function dia(f) { var d = fecha(f); return d.getDate() + ' ' + MESES[d.getMonth()]; }
+  var recientes = otros.slice().sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; })
+    .filter(function (x) { return x.obras.some(function (oid) { return p.obras.indexOf(oid) < 0; }); }).slice(0, 3);
+  var h = '<h2 class="sec">Añadir obra</h2>';
+  if (recientes.length) h += '<div class="copiar-prog">' + recientes.map(function (x) {
+    return '<button class="btn linea ancho" data-copia="' + x.id + '">＋ Las ' + x.obras.length + ' obras de «' + esc(x.titulo) + '» · ' + dia(x.fecha) + '</button>'; }).join('') + '</div>';
+  if (!libres.length) return h + '<div class="lista"><div class="vacio" style="border:0">No hay más obras. Créalas en «Obras».</div></div>';
+  h += '<input id="bBuscaObra" class="busca-obra" type="search" placeholder="🔍 Buscar obra…" autocomplete="off">';
+  h += '<div class="lista">';
+  if (usadas.length) h += '<div class="grupo-papel grupo-anade" style="padding:12px 16px 4px">Las ' + usadas.length + ' últimas usadas</div>' + usadas.map(function (o) {
+    var u = ultima[o.id];
+    return '<div class="obra" data-anade="' + o.id + '"><div class="icobra">＋</div><div class="info"><div class="t">' + esc(o.titulo) + '</div><div class="s">' + esc(u.tipo) + ' del ' + dia(u.fecha) + '</div></div></div>'; }).join('');
+  if (resto.length) h += (usadas.length ? '<div class="grupo-papel grupo-anade" style="padding:12px 16px 4px">Todas las demás (A-Z)</div>' : '') + resto.map(function (o) {
+    return '<div class="obra" data-anade="' + o.id + '"><div class="icobra">＋</div><div class="info"><div class="t">' + esc(o.titulo) + '</div></div></div>'; }).join('');
+  return h + '</div>';
+}
 function editarPrograma(id) {
   var p = id ? JSON.parse(JSON.stringify(A.programas.find(function (x) { return x.id === id; }))) : { titulo: '', tipo: 'Ensayo', fecha: hoyIso(), hora: '', lugar: '', obras: [], pedirConfirmacion: true, limite: '' };
   function pintar() {
@@ -3056,9 +3256,7 @@ function editarPrograma(id) {
         var o = A.obras.find(function (x) { return x.id === oid; }); if (!o) return '';
         return '<div class="obra" style="cursor:default"><div class="icobra">' + (i + 1) + '</div><div class="info"><div class="t">' + esc(o.titulo) + '</div><div class="s">' + (o.publicada ? 'Publicada' : 'Borrador: los músicos no la verán hasta publicarla') + '</div></div><button class="mini" data-sube="' + i + '">↑</button><button class="mini" data-quita="' + i + '">✕</button></div>';
       }).join('') || '<div class="vacio" style="border:0">Añade obras de abajo</div>') + '</div>' +
-      '<h2 class="sec">Añadir obra</h2><div class="lista">' + (obras.filter(function (o) { return p.obras.indexOf(o.id) < 0; }).map(function (o) {
-        return '<div class="obra" data-anade="' + o.id + '"><div class="icobra">＋</div><div class="info"><div class="t">' + esc(o.titulo) + '</div></div></div>';
-      }).join('') || '<div class="vacio" style="border:0">No hay más obras. Créalas en «Obras».</div>') + '</div>' +
+      bloqueAnadirObras(p, id) +
       '<div style="margin-top:16px"><button class="btn negro ancho" id="bGuardarProg">Guardar programa</button>' + (id ? '<button class="btn rojo ancho" id="bBorrarProg" style="margin-top:6px">Borrar programa</button>' : '') + '</div>';
     function leer() { p.titulo = $('gTit').value.trim(); p.tipo = $('gTipo').value; p.fecha = $('gFecha').value; p.hora = $('gHora').value; p.lugar = $('gLugar').value.trim(); p.citacion = $('gCita').value; p.lugarCitacion = $('gLugarCita').value.trim(); p.pedirConfirmacion = $('gConf').querySelector('.sw').classList.contains('on'); p.limite = $('gLim').value; }
     $('gConf').onclick = function () { var sw = this.querySelector('.sw'); sw.classList.toggle('on'); $('gLimC').style.display = sw.classList.contains('on') ? '' : 'none'; };
@@ -3072,6 +3270,16 @@ function editarPrograma(id) {
       cargando(true); api('urgente', { programa: id, borrar: true, aviso: idAviso }).then(cargarAdmin).then(function () { cargando(false); toast('Aviso quitado'); editarPrograma(id); sincronizar(false); }).catch(function (e) { cargando(false); toast(e.message); }); }); }; });
     $('bVolverProg').onclick = dirProgramas;
     $('dirCont').querySelectorAll('[data-anade]').forEach(function (b) { b.onclick = function () { leer(); p.obras.push(b.dataset.anade); pintar(); }; });
+    $('dirCont').querySelectorAll('[data-copia]').forEach(function (b) { b.onclick = function () {
+      leer(); var o = A.programas.find(function (x) { return x.id === b.dataset.copia; }), n = 0;
+      (o ? o.obras : []).forEach(function (oid) { if (p.obras.indexOf(oid) < 0 && A.obras.some(function (x) { return x.id === oid; })) { p.obras.push(oid); n++; } });
+      pintar(); toast(n ? 'Añadidas ' + n + (n === 1 ? ' obra' : ' obras') + ' · quita las que sobren con ✕' : 'Ya estaban todas');
+    }; });
+    if ($('bBuscaObra')) $('bBuscaObra').oninput = function () {
+      var t = normaliza(this.value);
+      $('dirCont').querySelectorAll('[data-anade]').forEach(function (b) { b.style.display = !t || normaliza(b.textContent).indexOf(t) > -1 ? '' : 'none'; });
+      $('dirCont').querySelectorAll('.grupo-anade').forEach(function (g) { g.style.display = t ? 'none' : ''; });
+    };
     $('dirCont').querySelectorAll('[data-quita]').forEach(function (b) { b.onclick = function () { leer(); p.obras.splice(+b.dataset.quita, 1); pintar(); }; });
     $('dirCont').querySelectorAll('[data-sube]').forEach(function (b) { b.onclick = function () { leer(); var i = +b.dataset.sube; if (i > 0) { var t = p.obras[i]; p.obras[i] = p.obras[i - 1]; p.obras[i - 1] = t; } pintar(); }; });
     $('bGuardarProg').onclick = function () {
