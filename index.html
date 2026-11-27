@@ -146,9 +146,9 @@ h2.sec small{font-family:var(--sans);font-size:13px;color:var(--gris);font-weigh
 .repro:not(.peq) .agarre{display:none}
 .repro.ytr.peq .cerrar{width:26px;height:26px;font-size:14px}
 .repro.ytr.peq .ytmini{width:100%;padding-top:56.25%;margin:4px 0 0;border-radius:9px}
-.visor.noche,.visor.noche .hojas{background:#000}
-.visor.noche .hoja{background:#000;box-shadow:none}
-.visor.noche .hoja canvas{filter:invert(1) hue-rotate(180deg) brightness(.85)}
+/* «Papel cálido»: la partitura en color crema y con menos brillo, como papel antiguo (las notas siguen negras) */
+.visor.noche .hoja{background:#efe2c3}
+.visor.noche .hoja canvas:not(.tinta){filter:sepia(.6) saturate(1.5) brightness(.9) contrast(1.05)}
 .visor.actuacion .barra,.visor.actuacion .pestanas,.visor.actuacion #herr,.visor.actuacion #vCambio{display:none!important}
 .flotante{position:absolute;top:calc(8px + env(safe-area-inset-top));right:10px;z-index:4;display:none;gap:6px}
 .flotante button{width:44px;height:44px;border-radius:12px;background:rgba(33,35,37,.7);color:var(--oro2);font-size:18px}
@@ -175,11 +175,15 @@ details.pasados summary::after{content:' ▾';font-size:14px;color:var(--gris)}
 .dv-tit span{font-size:12px;color:#aaaeb3}
 .dv-hojas{flex:1;overflow:auto;padding:12px 10px 40px;display:flex;flex-direction:column;align-items:center;gap:10px}
 .dv-hojas canvas{background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.35);max-width:100%;height:auto}
+.dv-hojas.ampliado{align-items:flex-start}
+.dvz{font-size:22px}
+.dvzn{font-size:12px;color:#aaaeb3;min-width:40px;text-align:center}
 .copiar-prog{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
 .copiar-prog .btn{text-align:left;font-size:14px;white-space:normal;line-height:1.3;padding:11px 14px}
 .busca-obra{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--linea);border-radius:12px;font-size:16px;margin-bottom:10px;background:#fff}
 .sug-partir{margin-top:14px;background:#fbf3df;border:1px solid #e6c98a;border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.4;color:#5a4410}
 .sug-partir .btn{display:block;margin-top:10px;width:100%}
+.nota-motivos{font-size:13px;color:var(--gris);background:#f6f2e7;border-radius:12px;padding:10px 12px;margin:14px 0 0}
 .fprox{background:#fff;border:1px solid var(--linea);border-radius:16px;margin-bottom:10px;overflow:hidden}
 .fprox.falta{border-color:#e6c98a;box-shadow:0 0 0 2px #f6ecd3}
 .fp-top{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer}
@@ -344,9 +348,14 @@ details.pasados summary::after{content:' ▾';font-size:14px;color:var(--gris)}
 .anot-herr button{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 4px;border-radius:10px;color:#aaaeb3;font-size:11px;font-weight:600}
 .anot-herr button span{font-size:17px;line-height:1.1}
 .anot-herr button.on{background:var(--oro);color:var(--negro)}
-.anot-b{width:44px;height:44px;border-radius:12px;background:var(--oscuro2);color:var(--oro2);font-size:20px;flex:none}
+.anot-gr .txb{width:auto!important;min-width:34px;padding:0 6px;font-weight:700;font-size:14px;color:#fff}
+.anot-herr button{padding:5px 1px;font-size:10.5px;min-width:0}
+.anot-f{gap:6px}
+@media (max-width:400px){.anot-col button{width:26px!important;height:26px!important}}
+.txayuda{font-size:12px;color:#aaaeb3;white-space:nowrap;align-self:center}
+.anot-b{width:40px;height:44px;border-radius:12px;background:var(--oscuro2);color:var(--oro2);font-size:20px;flex:none}
 .anot-b:disabled{opacity:.35}
-.anot-hecho{height:44px;padding:0 16px;border-radius:12px;background:var(--oro);color:var(--negro);font-weight:700;font-size:15px;flex:none}
+.anot-hecho{height:44px;padding:0 12px;border-radius:12px;background:var(--oro);color:var(--negro);font-weight:700;font-size:15px;flex:none}
 .anot-col{display:flex;gap:6px;flex:1;align-items:center;padding-left:4px}
 .anot-col button{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.25);flex:none}
 .anot-col button.on{box-shadow:0 0 0 3px var(--negro),0 0 0 5px var(--oro2)}
@@ -523,10 +532,10 @@ nav button.com.on{background:linear-gradient(135deg,#4f5458,#3d4044);color:#f3df
 </div>
 
 <!-- VISOR -->
-<div class="docvisor oculto" id="docVisor"><div class="dv-barra"><button class="icono" id="dvCerrar" aria-label="Volver">‹</button><div class="dv-tit"><b id="dvTit"></b><span id="dvSub"></span></div><button class="icono" id="dvDescargar" aria-label="Descargar">⤓</button></div><div class="dv-hojas" id="dvHojas"></div></div>
+<div class="docvisor oculto" id="docVisor"><div class="dv-barra"><button class="icono" id="dvCerrar" aria-label="Volver">‹</button><div class="dv-tit"><b id="dvTit"></b><span id="dvSub"></span></div><button class="icono dvz" id="dvMenos" aria-label="Reducir">−</button><span id="dvZnivel" class="dvzn">100 %</span><button class="icono dvz" id="dvMas" aria-label="Ampliar">＋</button><button class="icono" id="dvDescargar" aria-label="Descargar">⤓</button></div><div class="dv-hojas" id="dvHojas"></div></div>
 <div class="visor oculto" id="visor">
-  <div class="barra"><button class="icono" id="bCerrar" aria-label="Volver">‹</button><div class="tit"><b id="vTit"></b><span id="vSub"></span></div><button class="icono" id="bNoche" aria-label="Modo noche">☾</button><button class="icono" id="bActuacion" aria-label="Modo actuación">⛶</button><button class="icono" id="bCompartir" aria-label="Imprimir o enviar">⇪</button></div>
-  <div class="flotante"><button id="fEscribir" class="ancho" aria-label="Escribir">✎ Escribir</button><button id="fNoche" aria-label="Modo noche">☾</button><button id="fSalir" aria-label="Salir de pantalla completa">✕</button></div>
+  <div class="barra"><button class="icono" id="bCerrar" aria-label="Volver">‹</button><div class="tit"><b id="vTit"></b><span id="vSub"></span></div><button class="icono" id="bNoche" aria-label="Papel cálido">◐</button><button class="icono" id="bActuacion" aria-label="Modo actuación">⛶</button><button class="icono" id="bCompartir" aria-label="Imprimir o enviar">⇪</button></div>
+  <div class="flotante"><button id="fEscribir" class="ancho" aria-label="Escribir">✎ Escribir</button><button id="fNoche" aria-label="Papel cálido">◐</button><button id="fSalir" aria-label="Salir de pantalla completa">✕</button></div>
   <div class="pestanas"><button class="on" id="tPapel">Mi papel</button><button id="tSobre">Sobre la obra</button></div>
   <div class="otro oculto" id="vOtro"><span id="vOtroTxt"></span><button id="bUsarOtro">Tocar este papel</button></div>
   <div class="cambio oculto" id="vCambio">⚠ El director ha cambiado este papel. Revisa los cambios.</div>
@@ -537,7 +546,7 @@ nav button.com.on{background:linear-gradient(135deg,#4f5458,#3d4044);color:#f3df
   <div class="repro oculto" id="repro"></div>
   <div class="anot oculto" id="anot">
     <div class="anot-f">
-      <div class="anot-herr"><button data-h="boli" class="on" aria-label="Bolígrafo"><span>✎</span>Bolígrafo</button><button data-h="fosfo" aria-label="Subrayador"><span>▬</span>Subrayar</button><button data-h="goma" aria-label="Goma"><span>⌫</span>Goma</button></div>
+      <div class="anot-herr"><button data-h="boli" class="on" aria-label="Bolígrafo"><span>✎</span>Bolígrafo</button><button data-h="fosfo" aria-label="Subrayador"><span>▬</span>Subrayar</button><button data-h="texto" aria-label="Texto"><span style="font-family:Georgia,serif;font-weight:700">T</span>Texto</button><button data-h="goma" aria-label="Goma"><span>⌫</span>Goma</button></div>
       <button class="anot-b" id="aDeshacer" aria-label="Deshacer">↶</button><button class="anot-hecho" id="aHecho">Hecho</button>
     </div>
     <div class="anot-f">
@@ -889,7 +898,7 @@ var ICO_JUNTA = '<svg viewBox="0 0 24 24" width="22" height="22" style="display:
 function pintarNav() {
   // Música (dorado) | Banda y comunicación (azul) | Yo
   // El perfil va arriba a la derecha (el circulito con tu inicial)
-  var b = [['vHome', ICO_INICIO, 'Inicio', 'mus'], ['vCal', ICO_CAL, 'Calendario', 'mus'], ['vBiblio', '♫', 'Partituras', 'mus'], ['vInicio', ICO_BANDA, 'Banda', 'com sep']];
+  var b = [['vHome', ICO_INICIO, 'Inicio', 'mus'], ['vCal', ICO_CAL, 'Agenda', 'mus'], ['vBiblio', '♫', 'Partituras', 'mus'], ['vInicio', ICO_BANDA, 'Banda', 'com sep']];
   if (esJunta()) b.push(['vDir', ICO_JUNTA, 'Junta', 'com']);
   if (esAdmin()) b.push(esDirector() ? ['vDir', ICO_DIR, 'Director', 'yo sep'] : ['vDir', ICO_ADMIN, 'Admin', 'yo sep']);
   $('navbar').innerHTML = b.map(function (x) { return '<button data-ir="' + x[0] + '" class="' + x[3] + '"><span>' + x[1] + '</span>' + x[2] + (x[0] === 'vInicio' ? '<i class="badge" id="navBadge"></i>' : x[0] === 'vCal' ? '<i class="badge" id="navBadgeCal"></i>' : '') + '</button>'; }).join('');
@@ -1048,7 +1057,7 @@ function nuevoDocumento() {
 function abrirDocumento(id) {
   var d = (D.documentos || []).find(function (x) { return x.id === id; }); if (!d) return;
   var dv = $('docVisor'), cont = $('dvHojas');
-  $('dvTit').textContent = d.titulo; $('dvSub').textContent = d.categoria + ' · cargando…'; cont.innerHTML = ''; dv.classList.remove('oculto'); DV.id = id; DV.bytes = null;
+  $('dvTit').textContent = d.titulo; $('dvSub').textContent = d.categoria + ' · cargando…'; cont.innerHTML = ''; dv.classList.remove('oculto'); DV.id = id; DV.bytes = null; DV.z = 1; $('dvZnivel').textContent = '100 %';
   guardado.get('doc-' + id, 'pdf').then(function (x) {
     if (x && x.bytes) return new Uint8Array(x.bytes);
     if (!navigator.onLine) throw new Error('Sin conexión: este documento aún no está en el móvil');
@@ -1062,7 +1071,7 @@ function abrirDocumento(id) {
         var cv = document.createElement('canvas'); cont.appendChild(cv);
         cadena = cadena.then(function () { if (DV.id !== id) return; return pdf.getPage(n).then(function (pg) {
           var v1 = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: W / v1.width * dpr });
-          cv.width = vp.width; cv.height = vp.height; cv.style.width = W + 'px';
+          cv.width = vp.width; cv.height = vp.height; cv.style.width = (DV.z || 1) * 100 + '%'; cv.style.maxWidth = (DV.z || 1) > 1 ? 'none' : W + 'px';
           return pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise; }); });
       })(i);
       return cadena;
@@ -1070,7 +1079,9 @@ function abrirDocumento(id) {
   }).catch(function (e) { if (DV.id === id) { $('dvSub').textContent = d.categoria; cont.innerHTML = '<div class="aviso-visor">' + esc(e.message === 'Failed to fetch' ? 'Sin conexión' : e.message) + '</div>'; } });
 }
 var DV = { id: null, bytes: null };
-$('dvCerrar').onclick = function () { DV.id = null; $('docVisor').classList.add('oculto'); $('dvHojas').innerHTML = ''; };
+$('dvCerrar').onclick = function () { var v = DV.volver; DV.id = null; DV.volver = null; $('docVisor').classList.add('oculto'); $('docVisor').classList.remove('lupa'); $('dvDescargar').classList.remove('oculto'); $('dvHojas').innerHTML = ''; if (v) v(); };
+$('dvMas').onclick = function () { dvZoom((DV.z || 1) * 1.5); };
+$('dvMenos').onclick = function () { dvZoom((DV.z || 1) / 1.5); };
 $('dvDescargar').onclick = function () {
   if (!DV.bytes) return toast('Espera a que cargue');
   var d = (D.documentos || []).find(function (x) { return x.id === DV.id; }), a = document.createElement('a');
@@ -1085,7 +1096,7 @@ function pintarCalendario() {
   var futuros = D.programas.filter(function (p) { return p.fecha >= hoy; });
   var pasados = D.programas.filter(function (p) { return p.fecha < hoy; }).slice(-12).reverse();
   var pend = futuros.filter(function (p) { return p.pedirConfirmacion && !p.miRespuesta && !(p.limite && p.limite < hoy); }).length;
-  var h = cabCom('Calendario', futuros.length ? futuros.length + (futuros.length === 1 ? ' ensayo o actuación' : ' ensayos y actuaciones') + (pend ? ' · ' + pend + ' sin contestar' : '') : 'Ensayos y actuaciones');
+  var h = cabCom('Actuaciones y ensayos', futuros.length ? futuros.length + (futuros.length === 1 ? ' actuación o ensayo' : ' actuaciones y ensayos') + (pend ? ' · ' + pend + ' sin contestar' : '') : 'Ensayos y actuaciones');
   h += '<main>' + futuros.map(function (p) { return bannerUrgente(p, true); }).join('');
   if (futuros.length) {
     var p = futuros[0], d = fecha(p.fecha);
@@ -1150,11 +1161,11 @@ function textoUrgente(p) { return '⚠️ *AVISO URGENTE · ' + p.titulo + '*\n'
 
 
 /* =================== Privacidad y sugerencias =================== */
-var VERSION_PRIV = '3';   // al cambiar el aviso, todos lo vuelven a ver una vez
+var VERSION_PRIV = '4';   // al cambiar el aviso, todos lo vuelven a ver una vez
 function textoPrivacidad() {
   return '<div class="priv"><h3>Aviso de privacidad</h3><p>El responsable de tus datos es la <b>Asociación Músico-Cultural de Ágreda</b>, que gestiona la ' + esc(D && D.banda || 'Banda Municipal de Ágreda') + '. Atril solo la usa la banda, para organizar ensayos, actuaciones y partituras.</p>' +
     '<p><b>Qué se guarda:</b></p><ul><li>Tu nombre, instrumento y papeles.</li><li>Tu correo, solo si lo pones.</li><li>Tu móvil, solo si lo pones (para que la dirección y la junta te escriban por WhatsApp). Lo puedes quitar cuando quieras en Perfil.</li><li>Tus respuestas a «¿Vienes?».</li><li>Tus anotaciones en las partituras.</li><li>Si activas los avisos, un identificador de tu aparato para poder enviarlos.</li></ul>' +
-    '<p><b>Quién lo ve:</b> la dirección ve las respuestas y los correos; la dirección y la junta, la lista de músicos y los móviles que se hayan puesto; tus anotaciones, solo tú.</p>' +
+    '<p><b>Quién lo ve:</b> la dirección ve las respuestas y los correos (los motivos de no ir solo los ve el director y se borran 24 horas después de leerlos); la dirección y la junta, la lista de músicos y los móviles que se hayan puesto; tus anotaciones, solo tú.</p>' +
     '<p>Se guarda en la cuenta de Google de la banda. No se comparte con nadie de fuera ni se usa para publicidad.</p>' +
     '<p>Para consultar, corregir o borrar tus datos, díselo al director o a la junta directiva de la asociación.</p></div>';
 }
@@ -1196,13 +1207,14 @@ var GUIA = [
     'Si en una obra hay varios papeles para ti, Atril te pregunta cuál vas a tocar y lo recuerda. Lo cambias con el botón <b>Papel</b>.'] },
   { t: 'Leer y pasar página', p: [
     '<b>Desliza</b> hacia el lado para pasar de página. En tableta y en horizontal ves dos páginas a la vez.',
-    'Botón de <b>pantalla completa</b> (arriba): no se ve ningún botón. Toca a los lados para pasar página y en el centro para que aparezcan un momento (escribir, modo noche, salir, ampliar).',
+    'Botón de <b>pantalla completa</b> (arriba): no se ve ningún botón. Toca a los lados para pasar página y en el centro para que aparezcan un momento (escribir, papel cálido, salir, ampliar).',
     '<b>Ampliar:</b> abre la partitura con dos dedos (o con los botones <b>＋ −</b> de la derecha). Con un dedo la mueves. <b>Ajustar</b> vuelve a la página entera. Puedes ampliar, escribir y luego reducir.',
-    'La <b>luna</b> pone el modo noche, para leer con poca luz.',
+    'El botón <b>◐</b> pone el <b>papel cálido</b>: la partitura en color crema y con menos brillo. Cansa menos la vista en ensayos largos y deslumbra menos de noche.',
     'Con un <b>pedal</b> o teclado bluetooth también pasas página (flechas).',
     'La pantalla no se apaga mientras tienes una partitura abierta.'] },
   { t: 'Anotar la partitura', p: [
-    'Pulsa <b>Anotar</b>: tienes <b>bolígrafo</b> (varios colores y grosores), <b>subrayador</b> y <b>goma</b>.',
+    'Pulsa <b>Anotar</b>: tienes <b>bolígrafo</b> (varios colores y grosores), <b>subrayador</b>, <b>texto</b> y <b>goma</b>.',
+    'Con <b>T Texto</b> tocas donde quieres la nota y la escribes con el teclado («Comienzan las flautas en anacrusa»). Arrástrala con el dedo y hazla más grande o más pequeña con <b>A+ A−</b>.',
     'El subrayador se endereza solo si trazas casi recto. La flecha <b>deshace</b> lo último.',
     'Pulsa <b>Hecho</b> al terminar. Tus anotaciones son solo tuyas y te salen en todos tus aparatos.'] },
   { t: 'Metrónomo', p: [
@@ -1223,12 +1235,12 @@ var GUIA = [
     'Está en <b>Inicio → Accesos rápidos</b>.',
     'Pulsa <b>Empezar</b> y toca una nota larga y estable. La aguja en el centro y en verde = afinado.',
     'Elige tu instrumento (<b>Do, Si♭, Mi♭ o Fa</b>) para ver la nota como la lees en tu papel.'] },
-  { t: 'Calendario: ensayos y actuaciones', p: [
-    'En <b>Calendario</b> están todos los ensayos y actuaciones, ordenados por meses: día, hora, lugar, <b>citación</b> y <b>uniforme</b>.',
+  { t: 'Agenda: actuaciones y ensayos', p: [
+    'En <b>Agenda</b> están todas las actuaciones y ensayos, ordenados por meses: día, hora, lugar, <b>citación</b> y <b>uniforme</b>.',
     'Contesta <b>«¿Vienes?»</b> en cada uno y, si quieres, añade una explicación para el director («llego tarde», «tengo turno»…). Los que te faltan por contestar salen con borde dorado.',
     'Los <b>avisos urgentes</b> salen en rojo y se quitan solos al día siguiente.',
     'Abajo, en <b>Ya pasados</b>, tienes los anteriores.',
-    'El número rojo de la pestaña Calendario es lo que te falta por contestar o ver.'] },
+    'El número rojo de la pestaña Agenda es lo que te falta por contestar o ver.'] },
   { t: 'Banda: noticias, mensajes y documentos', p: [
     'Los <b>mensajes</b> del director o la junta se quedan una semana.',
     'En <b>Noticias</b> está lo que se cuece en la banda.',
@@ -1298,7 +1310,7 @@ function pintarPortada() {
     // Lo siguiente: hasta 3 más, cada uno con su «¿Vienes?», para que no se olvide ninguno
     var mas = futuros.slice(1, 4);
     if (mas.length) h += '<h2 class="sec">Después <small>' + (futuros.length - 1) + (futuros.length - 1 === 1 ? ' más' : ' más') + '</small></h2><div>' + mas.map(filaProxima).join('') + '</div>' +
-      (futuros.length > 4 ? '<button class="guia-enlace" data-ir="vCal" style="margin-top:8px">Ver los ' + futuros.length + ' en el Calendario ›</button>' : '');
+      (futuros.length > 4 ? '<button class="guia-enlace" data-ir="vCal" style="margin-top:8px">Ver los ' + futuros.length + ' en la Agenda ›</button>' : '');
   } else h += '<div class="proximo" style="margin-top:16px"><div class="top"><div><div class="eti">Sin ensayos ni actuaciones</div><h3>Nada a la vista</h3><div class="hora">Cuando el director publique, aparecerá aquí.</div></div></div></div>';
   var tile = function (ir, ic, t, sub) { return '<button class="acceso" ' + (ir.charAt(0) === 'v' ? 'data-ir' : 'data-destino') + '="' + ir + '"><span>' + ic + '</span><b>' + t + '</b><small>' + sub + '</small></button>'; };
   var nMen = (D.mensajes || []).length;
@@ -1763,7 +1775,8 @@ function mostrarParte() {
       docActual = pdf; cargarAnot();
       $('vCambio').classList.toggle('oculto', !avisoCambio);
       if (avisoCambio) toast('⚠ El director ha cambiado tu papel', 5000);
-      return maquetar(0, true);
+      // forma de la página (alto / ancho): las apaisadas (papeles recortados de media hoja) van de una en una
+      return pdf.getPage(1).then(function (pg) { var v = pg.getViewport({ scale: 1 }); pdf._forma = v.height / v.width; }, function () {}).then(function () { if (mi === renderId) return maquetar(0, true); });
     });
   }).catch(function (e) {
     if (mi !== renderId) return;
@@ -1779,15 +1792,18 @@ function maquetar(paginaInicial, primera) {
   var W = cont.clientWidth - (act ? 0 : 20), H = cont.clientHeight - (act ? (T.on ? 140 : 0) : (T.on ? 162 : 108)), n = pdf.numPages;
   if (W < 50 || H < 50) return Promise.resolve();
   var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-  porDiapo = W > H * 1.15 && n > 1 ? 2 : 1; totalPags = n;
+  var forma = pdf._forma || 1.414;
+  // a pantalla completa, si la música va apaisada (media hoja), mejor de una en una para que llene la pantalla
+  porDiapo = W > H * 1.15 && n > 1 && forma > 1 && !(act && pdf._musicaApaisada) ? 2 : 1; totalPags = n;
   var celdaW = (W - (porDiapo - 1) * 10) / porDiapo;
+  if (forma <= 1 && celdaW * forma > H) celdaW = H / forma;          // apaisada: lo más ancha que quepa
   var zg = Z.guardar; Z.guardar = null; zoomQuitar(true);
   cont.innerHTML = '';
   var diapos = [], lienzos = [];
   for (var i = 1; i <= n; i++) {
     var d = diapos[Math.floor((i - 1) / porDiapo)];
     if (!d) { d = document.createElement('div'); d.className = 'diapo'; cont.appendChild(d); diapos.push(d); }
-    var hoja = document.createElement('div'); hoja.className = 'hoja'; hoja.style.width = Math.round(celdaW) + 'px'; hoja.style.height = Math.round(Math.min(H, celdaW * 1.414)) + 'px';
+    var hoja = document.createElement('div'); hoja.className = 'hoja'; hoja.style.width = Math.round(celdaW) + 'px'; hoja.style.height = Math.round(Math.min(H, celdaW * forma)) + 'px';
     var cv = document.createElement('canvas'); hoja.appendChild(cv);
     var tn = document.createElement('canvas'); tn.className = 'tinta'; tn.dataset.pag = i; hoja.appendChild(tn);
     d.appendChild(hoja); lienzos.push([hoja, cv]);
@@ -1815,11 +1831,47 @@ function maquetar(paginaInicial, primera) {
         var h = lienzos[k][0], cv = lienzos[k][1];
         h.style.width = Math.round(v1.width * ajuste) + 'px'; h.style.height = Math.round(v1.height * ajuste) + 'px';
         cv.width = vp.width; cv.height = vp.height; pintarTinta(k + 1);
-        return pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+        return pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise.then(function () {
+          if (mi !== maqId) return;
+          if (k === 0 && act && porDiapo === 2 && !pdf._musicaMirada) {      // ¿la música del papel es apaisada? (media hoja)
+            pdf._musicaMirada = true; var b0 = cajaMusica(cv);
+            if (b0 && (b0[2] - b0[0]) * v1.width > (b0[3] - b0[1]) * v1.height * 1.2) { pdf._musicaApaisada = true; pdf._cajas = pdf._cajas || {}; pdf._cajas[1] = b0; return remaquetar(); }
+          }
+          if (Math.floor(k / porDiapo) === diapoActual()) ajustarMusica();
+        });
       });
     });
   });
   return cadena;
+}
+// Pantalla completa: se amplía hasta la música, sin el blanco de la hoja (no se toca el PDF; las anotaciones van con la página)
+function cajaMusica(cv) {
+  try {
+    var c = document.createElement('canvas'), e = 300 / Math.max(cv.width, cv.height); c.width = Math.max(1, Math.round(cv.width * e)); c.height = Math.max(1, Math.round(cv.height * e));
+    c.getContext('2d').drawImage(cv, 0, 0, c.width, c.height);
+    var o = oscuro(c), W = o.w, H = o.h, fil = [], col = [];
+    for (var y = 0; y < H; y++) { var f = 0; for (var x = 0; x < W; x++) f += o.m[y * W + x]; fil.push(f / W); }
+    for (var x2 = 0; x2 < W; x2++) { var g = 0; for (var y2 = 0; y2 < H; y2++) g += o.m[y2 * W + x2]; col.push(g / H); }
+    function lim(v) { var a = Math.floor(v.length * 0.015), b = v.length - 1 - Math.floor(v.length * 0.015); while (a < b && v[a] < 0.006) a++; while (b > a && v[b] < 0.006) b--; return [a / v.length, (b + 1) / v.length]; }
+    var fy = lim(fil), fx = lim(col); if (fy[1] - fy[0] < 0.05 || fx[1] - fx[0] < 0.05) return null;
+    var m = 0.015; return [Math.max(0, fx[0] - m), Math.max(0, fy[0] - m), Math.min(1, fx[1] + m), Math.min(1, fy[1] + m)];
+  } catch (e) { return null; }
+}
+function ajustarMusica() {
+  if (!$('visor').classList.contains('actuacion') || T.on || porDiapo !== 1 || (Z.z > 1.01 && !Z.auto)) return;
+  var el = zDiapo(), hoja = el && el.querySelector('.hoja'), cv = hoja && hoja.querySelector('canvas:not(.tinta)'); if (!cv || !cv.width) return;
+  docActual._cajas = docActual._cajas || {};
+  var pag = +hoja.querySelector('.tinta').dataset.pag, b = docActual._cajas[pag] || (docActual._cajas[pag] = cajaMusica(cv)); if (!b) return;
+  el.style.transform = '';                                   // medir sin la ampliación anterior
+  var re = el.getBoundingClientRect(), rh = hoja.getBoundingClientRect();
+  var W = el.clientWidth, H = el.clientHeight, hw = rh.width, hh = rh.height;
+  var x0 = rh.left - re.left + b[0] * hw, y0 = rh.top - re.top + b[1] * hh, cw = (b[2] - b[0]) * hw, ch = (b[3] - b[1]) * hh;
+  var z = Math.min(W / cw, H / ch, ZMAX); if (z < 1.06) return;
+  if (Z.el !== el) { zoomQuitar(true); Z.el = el; }
+  Z.z = z; Z.x = W / 2 - (x0 + cw / 2) * z; Z.y = H / 2 - (y0 + ch / 2) * z; Z.auto = true;
+  // centrado aunque se salga un poco de los límites normales
+  Z.x = Math.min(0, Math.max(W - W * z, Z.x)); Z.y = Math.min(H / 2, Math.max(H / 2 - H * z, Z.y));
+  zAplicar();
 }
 function diapoActual() { var h = $('hojas'); return h.clientWidth ? Math.round(h.scrollLeft / h.clientWidth) : 0; }
 function contadorPagina(extra) {
@@ -1886,9 +1938,9 @@ $('bCambiar').onclick = function () {
 
 
 /* =================== Anotaciones a mano (se guardan en el aparato) =================== */
-var COLORES = { boli: ['#1b1b1b', '#c0392b', '#1f5fbf', '#2e7d32'], fosfo: ['#ffe14d', '#7ee081', '#ff8fc7', '#7cc8ff'] };
+var COLORES = { boli: ['#1b1b1b', '#c0392b', '#1f5fbf', '#2e7d32'], fosfo: ['#ffe14d', '#7ee081', '#ff8fc7', '#7cc8ff'], texto: ['#c0392b', '#1f5fbf', '#1b1b1b', '#2e7d32'] };
 var GROSOR = { boli: [0.0022, 0.004, 0.0075], fosfo: [0.012, 0.022, 0.036] };
-var T = { on: false, herr: 'boli', color: { boli: '#1a1b1c', fosfo: '#ffe14d' }, grosor: { boli: 1, fosfo: 1 }, datos: {}, clave: '', hist: [], penVista: false, trazo: null, cache: {}, temp: null };
+var T = { on: false, herr: 'boli', sel: null, color: { boli: '#1a1b1c', fosfo: '#ffe14d', texto: '#c0392b' }, grosor: { boli: 1, fosfo: 1 }, datos: {}, clave: '', hist: [], penVista: false, trazo: null, cache: {}, temp: null };
 function claveAnot() { return obraActual && parteActual ? 'anot|' + clavePapel(obraActual, parteActual) : ''; }
 // Cada partitura anotada se guarda en el aparato como { d: trazos, f: cuándo, s: ¿ya subida? } y se sube a la nube del músico
 function metaAnot(v) { return !v ? null : ('d' in v && 'f' in v ? v : { d: v, f: 1, s: false }); }
@@ -1948,7 +2000,29 @@ function pintarTinta(pag, extra) {
   var x = c.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, H);
   (T.datos[pag] || []).concat(extra ? [extra] : []).forEach(function (t) { dibujarTrazo(x, t, W, H); });
 }
+// Notas de texto: { t:'txt', txt, c (color), s (tamaño de letra respecto al ancho), p:[[x,y]] esquina de arriba a la izquierda }
+function cajaTexto(t, W, H) {
+  var px = Math.max(6, t.s * W), lin = String(t.txt || '').split('\n'), m = document.createElement('canvas').getContext('2d');
+  m.font = '600 ' + px + 'px Georgia, "Times New Roman", serif';
+  var w = Math.max.apply(null, lin.map(function (l) { return m.measureText(l).width; }));
+  return { x: t.p[0][0] * W, y: t.p[0][1] * H, w: w, h: px * 1.2 * lin.length, px: px, lin: lin };
+}
+function dibujarTexto(x, t, W, H) {
+  var b = cajaTexto(t, W, H);
+  x.save(); x.font = '600 ' + b.px + 'px Georgia, "Times New Roman", serif'; x.textBaseline = 'top'; x.fillStyle = t.c;
+  x.shadowColor = 'rgba(255,255,255,.9)'; x.shadowBlur = Math.max(2, b.px / 6);
+  b.lin.forEach(function (l, i) { x.fillText(l, b.x, b.y + i * b.px * 1.2); });
+  x.restore();
+  if (T.sel && T.sel.t === t && T.on) { x.save(); x.strokeStyle = '#d4a53c'; x.lineWidth = 1.5; x.setLineDash([5, 4]); x.strokeRect(b.x - 5, b.y - 4, b.w + 10, b.h + 8); x.restore(); }
+}
+function textoEn(pag, q, c) {
+  var W = c.clientWidth, H = c.clientHeight, l = T.datos[pag] || [];
+  for (var i = l.length - 1; i >= 0; i--) { var t = l[i]; if (t.t !== 'txt') continue; var b = cajaTexto(t, W, H), px = q[0] * W, py = q[1] * H;
+    if (px >= b.x - 10 && px <= b.x + b.w + 10 && py >= b.y - 10 && py <= b.y + b.h + 10) return t; }
+  return null;
+}
 function dibujarTrazo(x, t, W, H) {
+  if (t.t === 'txt') return dibujarTexto(x, t, W, H);
   var p = t.p; if (!p.length) return;
   x.save(); x.lineCap = t.t === 'hl' ? 'butt' : 'round'; x.lineJoin = 'round'; x.strokeStyle = t.c; x.fillStyle = t.c; x.lineWidth = Math.max(1, t.w * W);
   if (t.t === 'hl') { x.globalAlpha = 0.4; x.globalCompositeOperation = 'multiply'; }
@@ -1959,6 +2033,15 @@ function dibujarTrazo(x, t, W, H) {
 }
 function pintarColores() {
   var h = T.herr === 'goma' ? null : T.herr;
+  if (h === 'texto') {
+    $('aColores').innerHTML = COLORES.texto.map(function (c) { return '<button data-c="' + c + '" style="background:' + c + '" class="' + ((T.sel ? T.sel.t.c : T.color.texto) === c ? 'on' : '') + '" aria-label="Color"></button>'; }).join('');
+    $('aGrosor').style.display = '';
+    $('aGrosor').innerHTML = T.sel ? '<button data-tx="menos" class="txb" aria-label="Más pequeño">A−</button><button data-tx="mas" class="txb" aria-label="Más grande">A+</button><button data-tx="editar" class="txb" aria-label="Cambiar el texto">✎</button><button data-tx="borrar" class="txb" aria-label="Borrar la nota">🗑</button>'
+      : '<span class="txayuda">Toca donde quieras escribir</span>';
+    $('aDeshacer').disabled = !T.hist.length;
+    [].forEach.call(document.querySelectorAll('.anot-herr button'), function (b) { b.classList.toggle('on', b.dataset.h === T.herr); });
+    return;
+  }
   $('aColores').innerHTML = h ? COLORES[h].map(function (c) { return '<button data-c="' + c + '" style="background:' + c + '" class="' + (T.color[h] === c ? 'on' : '') + '" aria-label="Color"></button>'; }).join('') : '<span style="color:#aaaeb3;font-size:13px">Toca un trazo para borrarlo</span>';
   $('aGrosor').style.display = h ? '' : 'none';
   if (h) $('aGrosor').innerHTML = [0, 1, 2].map(function (i) { return '<button data-g="' + i + '" class="' + (T.grosor[h] === i ? 'on' : '') + '" aria-label="' + ['Fino', 'Medio', 'Grueso'][i] + '"><i style="height:' + (h === 'boli' ? [2, 4, 7] : [5, 9, 14])[i] + 'px;background:' + T.color[h] + (h === 'fosfo' ? ';opacity:.75' : '') + '"></i></button>'; }).join('');
@@ -1971,6 +2054,7 @@ function entrarAnot() {
   toast('Escribe con un dedo · amplía o mueve con dos · «Hecho» para terminar', 3000);
 }
 function salirAnot(silencio) {
+  T.sel = null;
   if (!T.on) return; T.on = false; $('visor').classList.remove('anotando');
   clearTimeout(T.tempSubir); if (T.cache[T.clave] && !T.cache[T.clave].s) { guardado.put(T.clave, T.cache[T.clave]).catch(function () {}); subirAnot(T.clave); } $('anot').classList.add('oculto'); zoomGuardar(); remaquetar();
   if (!silencio) toast(navigator.onLine ? 'Anotaciones guardadas ✓ (las verás también en tus otros aparatos)' : 'Anotaciones guardadas ✓ Se subirán cuando tengas internet', 3500);
@@ -1978,9 +2062,20 @@ function salirAnot(silencio) {
 $('bAnotar').onclick = entrarAnot;
 $('aHecho').onclick = function () { salirAnot(false); };
 $('aAnt').onclick = function () { pasar(-1); }; $('aSig').onclick = function () { pasar(1); };
-$('aGrosor').onclick = function (e) { var b = e.target.closest('[data-g]'); if (b && T.herr !== 'goma') { T.grosor[T.herr] = +b.dataset.g; pintarColores(); } };
-document.querySelector('.anot-herr').onclick = function (e) { var b = e.target.closest('[data-h]'); if (b) { T.herr = b.dataset.h; pintarColores(); } };
-$('aColores').onclick = function (e) { var b = e.target.closest('[data-c]'); if (b) { T.color[T.herr] = b.dataset.c; pintarColores(); } };
+$('aGrosor').onclick = function (e) {
+  var tb = e.target.closest('[data-tx]');
+  if (tb && T.sel) {
+    var t = T.sel.t, pag = T.sel.pag, a = tb.dataset.tx;
+    if (a === 'mas') t.s = Math.min(0.14, t.s * 1.2);
+    else if (a === 'menos') t.s = Math.max(0.01, t.s / 1.2);
+    else if (a === 'borrar') { var l = T.datos[pag] || [], i = l.indexOf(t); if (i > -1) { T.hist.push({ a: '-', pag: pag, t: t, i: i }); l.splice(i, 1); } T.sel = null; }
+    else if (a === 'editar') return pedirTexto('Cambia la nota', t.txt).then(function (v) { if (v === null || v === undefined) return; v = String(v).trim(); if (v) t.txt = v.slice(0, 200); guardarAnot(); pintarTinta(pag); });
+    guardarAnot(); pintarTinta(pag); pintarColores(); return;
+  }
+  var b = e.target.closest('[data-g]'); if (b && T.herr !== 'goma' && T.herr !== 'texto') { T.grosor[T.herr] = +b.dataset.g; pintarColores(); } };
+document.querySelector('.anot-herr').onclick = function (e) { var b = e.target.closest('[data-h]'); if (b) { T.herr = b.dataset.h; if (T.herr !== 'texto' && T.sel) { var ps = T.sel.pag; T.sel = null; pintarTinta(ps); } pintarColores(); if (T.herr === 'texto') toast('Toca donde quieras poner la nota · para moverla, arrástrala', 3000); } };
+$('aColores').onclick = function (e) { var b = e.target.closest('[data-c]'); if (!b) return; T.color[T.herr] = b.dataset.c;
+  if (T.herr === 'texto' && T.sel) { T.sel.t.c = b.dataset.c; guardarAnot(); pintarTinta(T.sel.pag); } pintarColores(); };
 $('aDeshacer').onclick = function () {
   var h = T.hist.pop(); if (!h) return;
   var l = T.datos[h.pag] = T.datos[h.pag] || [];
@@ -1991,7 +2086,8 @@ function puntoEn(c, e) { var r = c.getBoundingClientRect(); return [Math.round((
 function borrarEn(c, pag, q) {
   var W = c.clientWidth, H = c.clientHeight, l = T.datos[pag] || [], borrado = false;
   for (var i = l.length - 1; i >= 0; i--) {
-    var t = l[i], lim = Math.max(14, t.w * W / 2 + 8), cerca = false;
+    var t = l[i], lim = Math.max(14, (t.w || 0) * W / 2 + 8), cerca = false;
+    if (t.t === 'txt') { var bx = cajaTexto(t, W, H); cerca = q[0] * W >= bx.x - 6 && q[0] * W <= bx.x + bx.w + 6 && q[1] * H >= bx.y - 6 && q[1] * H <= bx.y + bx.h + 6; if (cerca) { T.hist.push({ a: '-', pag: pag, t: t, i: i }); l.splice(i, 1); borrado = true; } continue; }
     for (var k = 0; k < t.p.length && !cerca; k++) {
       var a = t.p[k], b = t.p[k + 1] || a, ax = a[0] * W, ay = a[1] * H, bx = b[0] * W, by = b[1] * H, px = q[0] * W, py = q[1] * H;
       var dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy, u = L ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / L)) : 0;
@@ -2021,6 +2117,19 @@ $('hojas').addEventListener('pointerdown', function (e) {
   e.preventDefault(); try { c.setPointerCapture(e.pointerId); } catch (x) {}
   var pag = +c.dataset.pag, q = puntoEn(c, e);
   if (T.herr === 'goma') { T.trazo = { goma: true, c: c, pag: pag }; return borrarEn(c, pag, q); }
+  if (T.herr === 'texto') {
+    var tx = textoEn(pag, q, c);
+    if (tx) { var antes = T.sel; T.sel = { t: tx, pag: pag }; T.trazo = { mover: true, c: c, pag: pag, t: tx, d: [q[0] - tx.p[0][0], q[1] - tx.p[0][1]], movido: false }; if (!antes || antes.t !== tx) { pintarTinta(pag); pintarColores(); } return; }
+    if (T.sel) { var ps = T.sel.pag; T.sel = null; pintarTinta(ps); pintarColores(); return; }
+    T.trazo = null;
+    pedirTexto('Escribe la nota', '', 'Luego la puedes mover con el dedo y hacerla más grande o más pequeña con A+ y A−.').then(function (v) {
+      v = (v || '').trim(); if (!v) return;
+      var nt = { t: 'txt', txt: v.slice(0, 200), c: T.color.texto, s: 0.04, p: [[q[0], Math.max(0, q[1] - 0.02)]] };
+      (T.datos[pag] = T.datos[pag] || []).push(nt); T.hist.push({ a: '+', pag: pag, t: nt }); T.sel = { t: nt, pag: pag };
+      guardarAnot(); pintarTinta(pag); pintarColores();
+    });
+    return;
+  }
   T.trazo = { c: c, pag: pag, t: { t: T.herr === 'fosfo' ? 'hl' : 'pen', c: T.color[T.herr], w: GROSOR[T.herr][T.grosor[T.herr]], p: [q] } };
   pintarTinta(pag, T.trazo.t);
 });
@@ -2029,6 +2138,8 @@ $('hojas').addEventListener('pointermove', function (e) {
   if (Z.pinza) return;
   var q = puntoEn(T.trazo.c, e);
   if (T.trazo.goma) return borrarEn(T.trazo.c, T.trazo.pag, q);
+  if (T.trazo.mover) { var tm = T.trazo; tm.t.p = [[Math.max(0, Math.min(0.98, q[0] - tm.d[0])), Math.max(0, Math.min(0.98, q[1] - tm.d[1]))]]; tm.movido = true;
+    if (!tm.rf) tm.rf = requestAnimationFrame(function () { tm.rf = 0; pintarTinta(tm.pag); }); return; }
   var p = T.trazo.t.p, u = p[p.length - 1];
   if (Math.abs(q[0] - u[0]) + Math.abs(q[1] - u[1]) < 0.0025) return;
   p.push(q);
@@ -2036,6 +2147,7 @@ $('hojas').addEventListener('pointermove', function (e) {
 });
 function finTrazo() {
   var tr = T.trazo; T.trazo = null; if (!tr || tr.goma) return;
+  if (tr.mover) { if (tr.movido) guardarAnot(); pintarTinta(tr.pag); return; }
   if (tr.t.t === 'hl') enderezar(tr.t);
   (T.datos[tr.pag] = T.datos[tr.pag] || []).push(tr.t); T.hist.push({ a: '+', pag: tr.pag, t: tr.t });
   guardarAnot(); pintarTinta(tr.pag); pintarColores();
@@ -2044,7 +2156,7 @@ $('hojas').addEventListener('pointerup', finTrazo); $('hojas').addEventListener(
 
 /* =================== Modo noche y modo actuación =================== */
 if (localStorage.getItem('atril_noche') === '1') $('visor').classList.add('noche');
-function alternarNoche() { var on = $('visor').classList.toggle('noche'); localStorage.setItem('atril_noche', on ? '1' : '0'); toast(on ? 'Modo noche ☾' : 'Modo día'); }
+function alternarNoche() { var on = $('visor').classList.toggle('noche'); localStorage.setItem('atril_noche', on ? '1' : '0'); toast(on ? 'Papel cálido: menos brillo ◐' : 'Papel blanco'); }
 $('bNoche').onclick = alternarNoche; $('fNoche').onclick = alternarNoche;
 var pantallaCompleta = false;
 function entrarPantallaCompleta() {
@@ -2072,6 +2184,7 @@ function pasar(dir) {
   if (dir > 0 && i >= total - 1) { var b = $('bSiguiente'); if (b) b.click(); return; }
   if (dir < 0 && i <= 0) return;
   h.scrollTo({ left: (i + dir) * h.clientWidth, behavior: 'smooth' });
+  if ($('visor').classList.contains('actuacion')) setTimeout(ajustarMusica, 450);
 }
 // Tocar la partitura: a pantalla completa, los lados pasan página y el centro abre el lápiz; en vista normal, abre el lápiz
 $('hojas').addEventListener('click', function (e) {
@@ -2079,7 +2192,7 @@ $('hojas').addEventListener('click', function (e) {
   if (Date.now() - Z.gesto < 450) return;                 // venía de ampliar o mover
   if ($('visor').classList.contains('actuacion')) {
     var x = e.clientX / window.innerWidth;
-    if (Z.z > 1.01) return verControles();               // ampliada: tocar no pasa página
+    if (Z.z > 1.01 && !Z.auto) return verControles();     // ampliada a mano: tocar no pasa página
     if (x > 0.7) return pasar(1);
     if (x < 0.3) return pasar(-1);
     return verControles();
@@ -2105,7 +2218,7 @@ function zAplicar() {
 }
 // cx, cy: punto de la pantalla (respecto a las hojas) que se queda quieto al ampliar
 function zoomA(nz, cx, cy) {
-  var el = zDiapo(); if (!el) return;
+  var el = zDiapo(); if (!el) return; Z.auto = false;
   if (Z.el !== el) { zoomQuitar(true); Z.el = el; }
   var r = $('hojas').getBoundingClientRect();
   if (cx === undefined) { cx = r.width / 2; cy = r.height / 2; }
@@ -2116,7 +2229,7 @@ function zoomA(nz, cx, cy) {
 function zoomQuitar(sinPintar) {
   var el = Z.el, eraNitida = Z.nitidez > 1;
   if (el) { el.style.transform = ''; el.classList.remove('ampliada'); }
-  Z.z = 1; Z.x = Z.y = 0; Z.el = null; Z.nitidez = 1;
+  Z.z = 1; Z.x = Z.y = 0; Z.el = null; Z.nitidez = 1; Z.auto = false;
   if (!sinPintar) { zAplicar(); if (eraNitida && el) nitidezDe(el, 1); } else { $('hojas').classList.remove('zoom'); $('zAjustar').classList.add('oculto'); $('zNivel').classList.add('oculto'); }
 }
 function zoomGuardar() {
@@ -2167,7 +2280,7 @@ $('zAjustar').onclick = function (e) { e.stopPropagation(); zoomQuitar(); verCon
       var a = rel(e.touches[0]), b = rel(e.touches[1]), el = zDiapo(); if (!el) return;
       if (Z.el !== el) { zoomQuitar(true); Z.el = el; }
       if (T.trazo && !T.trazo.goma) { var pg = T.trazo.pag; T.trazo = null; pintarTinta(pg); }   // el primer dedo no pinta
-      Z.pinza = true; M1 = null;
+      Z.pinza = true; M1 = null; Z.auto = false;
       P = { d: Math.hypot(a[0] - b[0], a[1] - b[1]) || 1, cx: (a[0] + b[0]) / 2, cy: (a[1] + b[1]) / 2, z0: Z.z, x0: Z.x, y0: Z.y };
       e.preventDefault();
     } else if (e.touches.length === 1 && Z.z > 1.01 && !T.on) {
@@ -2428,7 +2541,7 @@ function accionPdf(acc, movil) {
   if (acc === 'correo') {
     if (!yo().correo) { toast('Pon tu correo en el Perfil'); $('visor').classList.add('oculto'); return ir('vPerfil'); }
     cargando(true, 'Enviando…');
-    return api('correo', { id: parteActual.id }).then(function () { cargando(false); toast('Enviado a ' + yo().correo + ' ✓'); })
+    return api('correo', { id: parteActual.id }).then(function () { cargando(false); toast('Enviado a ' + yo().correo + ' ✓ · Si no te llega en un par de minutos, mira en la carpeta de Spam y márcalo como «No es spam»', 7000); })
       .catch(function (e) { cargando(false); toast(e.message === 'Failed to fetch' ? 'Necesitas conexión para enviarlo' : e.message, 4000); });
   }
   blobActual().then(function (blob) {
@@ -2555,6 +2668,7 @@ function editarObra(id) {
       (o.partes.slice().sort(function (a, b) { return a.papeles[0].localeCompare(b.papeles[0], 'es'); }).map(function (p) {
         return '<div class="dato"><b>' + esc(p.papeles.join(', ')) + '</b><span>' + (p.paginas || '?') + ' pág. · ' + p.kb + ' KB <button class="mini" data-borrar-parte="' + p.id + '" style="margin-left:6px">Quitar</button></span></div>';
       }).join('') || '<p>Todavía no hay partituras.</p>') +
+      (o.partes.length ? '<button class="btn linea ancho" id="bRecortarObra" style="margin-top:10px">✂ Recortar el blanco de los papeles de media hoja</button>' : '') +
       '<p style="font-size:13px;color:var(--gris);margin:12px 2px 0">¿Todos los instrumentos en un solo PDF? Atril los separa:</p>' +
       '<label class="estampar" style="margin-top:8px"><input type="checkbox" id="cManu"><span><b>Es un manuscrito</b> (escrito a mano)<br>Pon abajo los instrumentos en el orden en que vienen y Atril los reparte y les escribe el nombre arriba.</span></label>' +
       '<div class="campo oculto" id="manuLista" style="margin-top:8px"><label>Orden de los instrumentos en el PDF (uno por línea)</label><textarea id="tManu" style="min-height:150px" placeholder="Flauta&#10;Requinto&#10;Clarinete principal&#10;Clarinete 1&#10;Clarinete 2…"></textarea></div>' +
@@ -2612,6 +2726,7 @@ function editarObra(id) {
     if (manu) try { localStorage.setItem('atril_lista_manu', lista); } catch (e) {}
     asistente(o, this.files[0], manu ? { lista: lista } : null);
   };
+  if ($('bRecortarObra')) $('bRecortarObra').onclick = function () { recortarObra(o); };
   $('fPdfs').onchange = function () { if (this.files.length) variosPdf(o, this.files); };
   if ($('fCarpeta')) $('fCarpeta').onchange = function () { if (this.files.length) variosPdf(o, this.files); };
   $('fAudio').onchange = function () {
@@ -2696,7 +2811,14 @@ function detectarPapeles(texto) {
     familias[mejor.k] = 1; if (mejor.k !== 'guion') lineasInstr++;
     if (!primera) primera = mejor;
   });
-  if (!primera) return null;
+  if (!primera) {
+    // Instrumentos añadidos a mano (no están en la tabla): se buscan por su nombre
+    var propios = A.papeles.filter(function (x) { return x.familia === 'Otros'; }).map(function (x) {
+      return { papel: x.papel, base: normInstr(x.papel).replace(/\b\d+\b/g, ' ').replace(/\s+/g, ' ').trim() }; }).filter(function (x) { return x.base.length >= 4; });
+    for (var li = 0; li < lineas.length; li++) { var hit = propios.filter(function (x) { return (' ' + lineas[li] + ' ').indexOf(' ' + x.base + ' ') > -1; });
+      if (hit.length) { var num = (lineas[li].match(/\b([1-4])\b/) || [])[1]; var exacto = hit.filter(function (x) { return num && normInstr(x.papel).indexOf(num) > -1; }); return [(exacto[0] || hit[0]).papel]; } }
+    return null;
+  }
   var distintas = Object.keys(familias).filter(function (k) { return k !== 'guion'; }).length;
   if (familias.guion || distintas >= 3 || lineasInstr >= 3) return ['Guion / Director'].filter(function (p) { return validos.indexOf(p) > -1; });   // partitura general
   var k = primera.k, l = primera.l, res;
@@ -2828,6 +2950,7 @@ function pintarAsistente(S) {
         (p.inicio ? '<div class="lab' + (!p.ignorar && !p.papeles.length ? ' sin' : '') + '">' + esc(lab) + '</div>' : '<div class="cont">↳ sigue ' + esc(actual.ignorar ? 'ignorada' : (actual.papeles.join(', ') || 'sin asignar')) + '</div>') + '</div>';
     }).join('') + '</div>' +
     '<label class="estampar"><input type="checkbox" id="cEstA"' + (S.estampar ? ' checked' : '') + '><span><b>Escribir el instrumento arriba de cada página</b><br>Recomendado en manuscritos, donde el nombre no se lee bien.</span></label>' +
+    '<label class="estampar"><input type="checkbox" id="cRecA"' + (S.recortar !== false ? ' checked' : '') + '><span><b>Recortar los márgenes en blanco</b><br>Los papeles que ocupan media hoja (marchas…) llenarán la pantalla al girar el móvil.</span></label>' +
     '<div class="resumen" id="resumen"><div><b>' + buenos + '</b> papeles' + (sin ? ' · <span style="color:#f0a493">' + sin + ' sin asignar</span>' : '') + '<div class="barra-prog oculto" id="prog"><i></i></div></div><button class="btn oro" id="bSubirA"' + (buenos && !sin ? '' : ' style="opacity:.55"') + '>Subir ' + buenos + '</button></div>';
   S.P.forEach(function (p) { if (S.th && S.th[p.n]) pintarMini(p.n, girarCanvas(S.th[p.n], p.giro)); });
   $('bCancelarA').onclick = function () { S.cancelado = true; editarObra(S.o.id); };
@@ -2838,6 +2961,7 @@ function pintarAsistente(S) {
   $('bCortes').onclick = function () { detectarCortes(S, false); };
   if ($('bGirarTodas')) $('bGirarTodas').onclick = function () { S.P.forEach(function (p) { if (p.giro) p.giro = (p.giro + 180) % 360; }); pintarAsistente(S); };
   if ($('cEstA')) $('cEstA').onchange = function () { S.estampar = this.checked; };
+  if ($('cRecA')) $('cRecA').onchange = function () { S.recortar = this.checked; };
   $('dirCont').querySelectorAll('[data-pag]').forEach(function (d) { d.onclick = function () { menuPagina(S, Number(d.dataset.pag)); }; });
   $('bSubirA').onclick = function () {
     if (!buenos) return toast('Aún no hay ningún papel con instrumento. Pulsa «✨ Detectar instrumentos» o toca la primera página de cada papel.', 6000);
@@ -2872,6 +2996,7 @@ function menuPagina(S, n) {
   var fam = {}; A.papeles.forEach(function (x) { (fam[x.familia] = fam[x.familia] || []).push(x.papel); });
   function pintar() {
     panel('<h3>Página ' + n + '</h3><p class="s">¿Qué hay en esta página?</p>' +
+      '<button class="opcion" data-m="lupa"><div class="ic">🔍</div><div><b>Ver la página en grande</b><span>Para leer bien el nombre del instrumento</span></div></button>' +
       (n > 1 ? '<button class="opcion' + (!p.inicio ? ' on' : '') + '" data-m="sigue"><div class="ic">↳</div><div><b>Sigue el papel anterior</b><span>Es la 2ª, 3ª… página del mismo instrumento</span></div></button>' : '') +
       '<button class="opcion' + (p.inicio && !p.ignorar && !p.papeles.length ? ' on' : '') + '" data-m="empieza"><div class="ic">▸</div><div><b>Empieza un papel aquí</b><span>Aún sin decir de qué instrumento (luego «Repartir por orden»)</span></div></button>' +
       '<button class="opcion' + (p.inicio && p.ignorar ? ' on' : '') + '" data-m="ignorar"><div class="ic">⊘</div><div><b>Ignorar</b><span>Portada, anuncios, página en blanco…</span></div></button>' +
@@ -2883,9 +3008,11 @@ function menuPagina(S, n) {
       Object.keys(fam).map(function (f) {
         return '<div class="grupo-papel">' + esc(f) + '</div>' + fam[f].map(function (x) { var on = sel.indexOf(x) > -1; return '<button class="opcion' + (on ? ' on' : '') + '" data-pp="' + esc(x) + '"><div class="ic">' + (on ? '✓' : '♪') + '</div><div><b>' + esc(x) + '</b></div></button>'; }).join('');
       }).join('') +
+      '<button class="opcion" id="bOtroPapel"><div class="ic">＋</div><div><b>Otro instrumento…</b><span>Si no está en la lista: escríbelo y quedará para las siguientes obras</span></div></button>' +
       '<div style="position:sticky;bottom:-22px;background:var(--papel);padding:12px 0 4px"><button class="btn negro ancho" id="bOkPag">Aceptar' + (sel.length ? ' (' + sel.length + ')' : '') + '</button></div>');
     $('panel').querySelectorAll('[data-pp]').forEach(function (b) { b.onclick = function () { var x = b.dataset.pp, i = sel.indexOf(x); if (i > -1) sel.splice(i, 1); else sel.push(x); var top = $('panel').scrollTop; pintar(); $('panel').scrollTop = top; }; });
     $('panel').querySelectorAll('[data-m]').forEach(function (b) { b.onclick = function () {
+      if (b.dataset.m === 'lupa') { verPaginaGrande(S, n); return; }
       if (b.dataset.m === 'girar') { p.giro = ((p.giro || 0) + 90) % 360; cerrarPanel(); pintarAsistente(S); return; }
       if (/^partir|^unir/.test(b.dataset.m)) { cerrarPanel(); partirUna(S, p.src, b.dataset.m === 'unir' ? '' : b.dataset.m.slice(-1)); return; }
       if (b.dataset.m === 'sigue') { p.inicio = false; p.papeles = []; p.ignorar = false; }
@@ -2894,8 +3021,74 @@ function menuPagina(S, n) {
       cerrarPanel(); pintarAsistente(S);
     }; });
     $('bOkPag').onclick = function () { if (sel.length) { p.inicio = true; p.ignorar = false; p.papeles = sel; } cerrarPanel(); pintarAsistente(S); };
+    $('bOtroPapel').onclick = function () {
+      pedirTexto('Nombre del instrumento', '', 'Por ejemplo «Dulzaina 1ª» o «Clarinete 4º». Quedará en la lista para las siguientes obras.').then(function (v) {
+        v = String(v || '').trim(); if (!v) return menuPagina(S, n);
+        cargando(true, 'Añadiendo…');
+        return api('nuevoPapel', { papel: v, familia: 'Otros' }).then(function (r) {
+          cargando(false); A.papeles = r.papeles; if (sel.indexOf(r.papel) < 0) sel.push(r.papel);
+          fam = {}; A.papeles.forEach(function (x) { (fam[x.familia] = fam[x.familia] || []).push(x.papel); });
+          panel(''); pintar(); toast('«' + r.papel + '» añadido a la lista ✓');
+        }).catch(function (e) { cargando(false); toast(e.message === 'Failed to fetch' ? 'Sin conexión' : e.message, 4000); menuPagina(S, n); });
+      });
+    };
   }
   pintar();
+}
+// Ver una página del separador en grande, con zoom (para leer el nombre del instrumento)
+// Obras ya subidas: recorta el blanco de los papeles que ocupan media hoja (se mantiene el papel y las anotaciones)
+function recortarObra(o) {
+  var partes = o.partes.slice(), hechos = 0, k = 0;
+  if (!navigator.onLine) return toast('Necesitas conexión');
+  cargando(true, 'Revisando los papeles…');
+  return Promise.all([cargarPdfLib()]).then(function () {
+    function sig() {
+      if (k >= partes.length) return;
+      var pa = partes[k++]; cargando(true, 'Revisando ' + pa.papeles.join(', ') + ' (' + k + ' de ' + partes.length + ')…');
+      return api('parte', { id: pa.id }).then(function (r) {
+        var bytes = b64aBytes(r.base64);
+        return pdfjsLib.getDocument({ data: bytes.slice(0) }).promise.then(function (doc) {
+          var cajas = [], i = 0;
+          function una() {
+            if (++i > doc.numPages) return;
+            return doc.getPage(i).then(function (pg) {
+              var v = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: 300 / v.width }), c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
+              var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+              return pg.render({ canvasContext: x, viewport: vp }).promise.then(function () { cajas.push(zonaConMusica(c)); return una(); });
+            });
+          }
+          return una().then(function () {
+            if (!cajas.length || !cajas.every(Boolean)) return;            // solo si todas sus páginas van a media hoja
+            return PDFLib.PDFDocument.load(bytes).then(function (d) {
+              d.getPages().forEach(function (pg, j) { recortarVisual(pg, cajas[j]); });
+              return d.save();
+            }).then(function (nb) { return api('recortarParte', { id: pa.id, base64: bytesAb64(new Uint8Array(nb)) }); }).then(function () { hechos++; });
+          });
+        });
+      }).catch(function () {}).then(sig);
+    }
+    return sig();
+  }).then(function () { return cargarAdmin(); }).then(function () {
+    cargando(false); editarObra(o.id);
+    toast(hechos ? 'Recortados ' + hechos + (hechos === 1 ? ' papel' : ' papeles') + ' ✓ · Las anotaciones que hubiera en ellos pueden quedar un poco movidas' : 'No había ningún papel con blanco que recortar', 6000);
+  }).catch(function (e) { cargando(false); toast(e.message || 'No se ha podido', 4000); });
+}
+function verPaginaGrande(S, n) {
+  var dv = $('docVisor'), cont = $('dvHojas'), p = S.P[n - 1] || {};
+  cerrarPanel();
+  $('dvTit').textContent = 'Página ' + (p.mitad ? 'h' + p.src + (p.mitad === 1 ? ' (1ª mitad)' : ' (2ª mitad)') : n); $('dvSub').textContent = 'Amplía con ＋ o con dos dedos';
+  cont.innerHTML = '<div class="aviso-visor" style="color:#ddd">Cargando…</div>'; dv.classList.remove('oculto'); dv.classList.add('lupa'); DV.id = 'lupa-' + n; DV.bytes = null;
+  $('dvDescargar').classList.add('oculto');
+  enCola(S, function () { return conTiempo(dibujarPag(S, n, { ancho: Math.min(2200, Math.round(cont.clientWidth * Math.min(window.devicePixelRatio || 1, 2) * 2)) }), 30000); }).then(function (c) {
+    if (DV.id !== 'lupa-' + n) return;
+    var g = p.giro ? girarCanvas(c, p.giro) : c; g.className = 'lupa-img'; cont.innerHTML = ''; cont.appendChild(g); dvZoom(1);
+  }).catch(function () { cont.innerHTML = '<div class="aviso-visor">No se ha podido dibujar la página</div>'; });
+  DV.volver = function () { menuPagina(S, n); };
+}
+function dvZoom(z) {
+  DV.z = Math.max(1, Math.min(4, z)); var cv = $('dvHojas').querySelectorAll('canvas');
+  cv.forEach(function (c) { c.style.width = (DV.z * 100) + '%'; c.style.maxWidth = 'none'; });
+  $('dvHojas').classList.toggle('ampliado', DV.z > 1); $('dvZnivel').textContent = Math.round(DV.z * 100) + ' %';
 }
 function ocr(S) {
   if (!navigator.onLine) return toast('La detección necesita internet');
@@ -3065,6 +3258,30 @@ function recortarMitad(pg, modo, mitad) {
   var bajo = (mitad === 1) === T[1], x = mb.x, y = mb.y, w = W, h = H;
   if (T[0] === 'x') { w = W / 2; if (!bajo) x += W / 2; } else { h = H / 2; if (!bajo) y += H / 2; }
   pg.setMediaBox(x, y, w, h); pg.setCropBox(x, y, w, h);
+}
+// Zona de la página con música (en fracciones de lo que se ve). null si no merece la pena recortar (la página ya va llena)
+function zonaConMusica(c) {
+  var o = oscuro(c), W = o.w, H = o.h; if (!W || !H) return null;
+  var filas = [], cols = [];
+  for (var y = 0; y < H; y++) { var f = 0; for (var x = 0; x < W; x++) f += o.m[y * W + x]; filas.push(f / W); }
+  for (var x2 = 0; x2 < W; x2++) { var g = 0; for (var y2 = 0; y2 < H; y2++) g += o.m[y2 * W + x2]; cols.push(g / H); }
+  // se ignoran motas sueltas y los bordes sucios del escaneo (2 % de cada lado)
+  function lim(v, um) { var a = Math.floor(v.length * 0.02), b = v.length - 1 - Math.floor(v.length * 0.02); while (a < b && v[a] < um) a++; while (b > a && v[b] < um) b--; return [a / v.length, (b + 1) / v.length]; }
+  var fy = lim(filas, 0.006), fx = lim(cols, 0.006);
+  var alto = fy[1] - fy[0], ancho = fx[1] - fx[0];
+  if (alto <= 0.05 || ancho <= 0.05) return null;          // página casi vacía: no se toca
+  if (alto > 0.8 && ancho > 0.85) return null;              // ya ocupa casi toda la hoja
+  var m = 0.025;                                            // un poco de margen alrededor
+  return [Math.max(0, fx[0] - m), Math.max(0, fy[0] - m), Math.min(1, fx[1] + m), Math.min(1, fy[1] + m)];
+}
+// Recorta la página a una zona dada en fracciones de lo que se ve (x0, y0 arriba-izquierda; x1, y1 abajo-derecha), teniendo en cuenta el giro
+function recortarVisual(pg, f) {
+  var mb = pg.getMediaBox(), W = mb.width, H = mb.height, a = ((pg.getRotation().angle || 0) % 360 + 360) % 360;
+  var vw = a % 180 ? H : W, vh = a % 180 ? W : H;
+  function aPag(vx, vy) { return a === 90 ? [W - vy, vx] : a === 180 ? [W - vx, H - vy] : a === 270 ? [vy, H - vx] : [vx, vy]; }   // vy desde abajo
+  var p1 = aPag(f[0] * vw, (1 - f[1]) * vh), p2 = aPag(f[2] * vw, (1 - f[3]) * vh);
+  var x0 = Math.min(p1[0], p2[0]), x1 = Math.max(p1[0], p2[0]), y0 = Math.min(p1[1], p2[1]), y1 = Math.max(p1[1], p2[1]);
+  pg.setMediaBox(mb.x + x0, mb.y + y0, x1 - x0, y1 - y0); pg.setCropBox(mb.x + x0, mb.y + y0, x1 - x0, y1 - y0);
 }
 function estamparPapel(doc, texto) {
   return doc.embedFont(PDFLib.StandardFonts.HelveticaBold).then(function (font) {
@@ -3273,10 +3490,15 @@ function subirRangos(S) {
       $('resumen').querySelector('b').textContent = 'Subiendo ' + (hechos + 1) + ' de ' + R.length;
       return PDFLib.PDFDocument.create().then(function (nuevo) {
         var idx = r.pags.map(function (n) { return n - 1; }), fuentes = idx.map(function (i) { return ((S.P[i] || {}).src || i + 1) - 1; });
+        // Recortar el blanco solo si TODAS las páginas del papel van a media hoja (si no, la última página de un papel largo saldría ampliada)
+        var cajas = null;
+        try { cajas = S.recortar === false ? null : r.pags.map(function (n) { return S.th[n] ? zonaConMusica(S.th[n]) : null; }); } catch (e) { cajas = null; }
+        if (cajas && !cajas.every(Boolean)) cajas = null;
         return nuevo.copyPages(src, fuentes).then(function (pags) {
           pags.forEach(function (pg, j) {
             var vp = S.P[idx[j]] || {};
             if (vp.mitad && vp.corte) recortarMitad(pg, vp.corte, vp.mitad);
+            if (cajas && cajas[j]) try { recortarVisual(pg, cajas[j]); } catch (e) { /* si no se puede, se sube sin recortar */ }
             var g = vp.giro || 0; if (g) pg.setRotation(PDFLib.degrees(((pg.getRotation().angle || 0) + g) % 360));
             nuevo.addPage(pg);
           });
@@ -3327,11 +3549,14 @@ function verRespuestas(id) {
       var g = grupos[k], vs = g.filter(function (x) { return x.r && x.r.respuesta === 'Sí'; }).length;
       return '<tr><td><b>' + esc(k) + '</b></td><td style="width:40%"><div class="barrita"><i style="width:' + Math.round(vs / g.length * 100) + '%"></i></div></td><td style="text-align:right;white-space:nowrap"><b>' + vs + '</b> de ' + g.length + '</td></tr>';
     }).join('') + '</table></div>' +
-    '<h2 class="sec">No vienen <small>' + no.length + '</small></h2><div class="tarjeta">' + (no.map(function (x) { return '<div class="dato"><b>' + nombre(x.u) + '</b><span>' + esc(x.r.comentario || '—') + '</span></div>'; }).join('') || '<p>Nadie.</p>') + '</div>' +
+    (no.some(function (x) { return x.r.comentario; }) ? '<p class="nota-motivos">🔒 ' + (esDirector() ? 'Los motivos solo los ves tú. Por privacidad, se borran solos 24 horas después de que los leas.' : 'Los motivos solo los ve el director, y se borran 24 horas después de que los lea.') + '</p>' : '') +
+    '<h2 class="sec">No vienen <small>' + no.length + '</small></h2><div class="tarjeta">' + (no.map(function (x) { return '<div class="dato"><b>' + nombre(x.u) + '</b><span>' + (esDirector() ? esc(x.r.comentario || '—') : (x.r.comentario ? '🔒 motivo para el director' : '—')) + '</span></div>'; }).join('') || '<p>Nadie.</p>') + '</div>' +
     '<h2 class="sec">Sin responder <small>' + sin.length + '</small></h2><div class="tarjeta">' + (sin.map(function (x) { return '<div class="dato"><b>' + nombre(x.u) + '</b><span>' + esc(x.u.instrumento) + '</span></div>'; }).join('') || '<p>Han respondido todos 🎉</p>') +
     (sin.length ? '<button class="btn negro ancho" id="bRecordar" style="margin-top:12px">Recordárselo ahora (notificación)</button><button class="btn linea ancho" id="bRecordarWa" style="margin-top:8px">Recordárselo por WhatsApp</button>' : '') + '</div>' +
-    '<h2 class="sec">Vienen <small>' + si.length + '</small></h2><div class="tarjeta">' + (si.map(function (x) { return '<div class="dato"><b>' + nombre(x.u) + '</b><span>' + esc(x.r.comentario || x.u.instrumento) + '</span></div>'; }).join('') || '<p>Todavía nadie.</p>') + '</div>';
+    '<h2 class="sec">Vienen <small>' + si.length + '</small></h2><div class="tarjeta">' + (si.map(function (x) { return '<div class="dato"><b>' + nombre(x.u) + '</b><span>' + esc((esDirector() && x.r.comentario) || x.u.instrumento) + '</span></div>'; }).join('') || '<p>Todavía nadie.</p>') + '</div>';
   $('bVolverEd').onclick = function () { editarPrograma(id); };
+  // El director ha leído los motivos: empiezan a contar las 24 h para borrarlos
+  if (esDirector() && no.some(function (x) { return x.r.comentario; })) api('motivosLeidos', { programa: id }).catch(function () {});
   if ($('bRecordarWa')) $('bRecordarWa').onclick = function () {
     var texto = '🎺 ' + p.titulo + ' · ' + cuando(p) + '\n¿Vienes? Contesta en Atril, es un momento: ' + location.href.split('#')[0];
     if (!sin.some(function (x) { return x.u.telefono; })) return whatsapp(texto);
