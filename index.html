@@ -178,6 +178,8 @@ details.pasados summary::after{content:' ▾';font-size:14px;color:var(--gris)}
 .copiar-prog{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
 .copiar-prog .btn{text-align:left;font-size:14px;white-space:normal;line-height:1.3;padding:11px 14px}
 .busca-obra{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--linea);border-radius:12px;font-size:16px;margin-bottom:10px;background:#fff}
+.sug-partir{margin-top:14px;background:#fbf3df;border:1px solid #e6c98a;border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.4;color:#5a4410}
+.sug-partir .btn{display:block;margin-top:10px;width:100%}
 .fprox{background:#fff;border:1px solid var(--linea);border-radius:16px;margin-bottom:10px;overflow:hidden}
 .fprox.falta{border-color:#e6c98a;box-shadow:0 0 0 2px #f6ecd3}
 .fp-top{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer}
@@ -1250,6 +1252,7 @@ var GUIA_JUNTA = { t: 'Para la junta directiva', p: [
   'Los mensajes llegan como aviso al móvil y se quedan una semana en la pestaña Banda.',
   'En <b>Banda › Documentos</b> subes los estatutos, actas o reglamento (en PDF) para que los consulte toda la banda.'] };
 var GUIA_DIR = { t: 'Para el director y los administradores', p: [
+  'Si en las hojas vienen <b>dos papeles</b> (uno encima del otro o uno al lado del otro), «✨ Detectar instrumentos» las parte solo. También puedes partirlas tú con «✂ ¿Dos papeles en cada hoja?» o tocando una hoja → «Partir esta hoja».',
   '<b>Subir una obra:</b> Director → Obras → <b>＋ Nueva obra</b>. Pon el título, elige la <b>carpeta</b> (Procesiones, Pasodobles… o <b>＋ Nueva carpeta</b>) y pulsa <b>Guardar datos</b> → <b>Subir PDF</b> → <b>Detectar instrumentos</b>. Revisa los papeles, pulsa <b>Subir</b> y luego <b>Publicar</b>.',
   '¿Los papeles vienen ya separados, un PDF por instrumento? Usa <b>📁 Subir varios PDF a la vez</b> (o <b>📂 Subir una carpeta</b> en el ordenador): el instrumento se saca del nombre de cada archivo.',
   '<b>Manuscritos:</b> si no reconoce los nombres, endereza las páginas que estén de lado, busca dónde empieza cada papel y te pide el <b>listado de instrumentos en orden</b> (se puede pegar). Marca «Escribir el instrumento arriba» para que se lea bien.',
@@ -2714,6 +2717,7 @@ function detectarPapeles(texto) {
   res.familia = k;
   return res;
 }
+var ASIS = null;
 function asistente(o, archivo, opc) {
   var lector = new FileReader();
   cargando(true, 'Abriendo PDF…');
@@ -2721,15 +2725,86 @@ function asistente(o, archivo, opc) {
     var bytes = new Uint8Array(lector.result);
     pdfjsLib.getDocument({ data: bytes.slice(0) }).promise.then(function (pdf) {
       cargando(false);
-      var P = []; for (var i = 1; i <= pdf.numPages; i++) P.push({ n: i, inicio: i === 1, papeles: [], ignorar: false });
-      var S = { o: o, bytes: bytes, pdf: pdf, P: P, nombre: archivo.name };
+      var P = []; for (var i = 1; i <= pdf.numPages; i++) P.push({ n: i, src: i, mitad: 0, inicio: i === 1, papeles: [], ignorar: false });
+      var S = { o: o, bytes: bytes, pdf: pdf, P: P, nombre: archivo.name, partir: '' };
+      ASIS = S;
       pintarAsistente(S);
       miniaturas(S);
       if (opc) detectarCortes(S, false, opc.lista);     // manuscrito: directamente a cortes + lista
+
     }).catch(function () { cargando(false); toast('No se ha podido leer el PDF', 4000); });
   };
   lector.readAsArrayBuffer(archivo);
 }
+/* ---- Hojas con dos papeles: cada hoja del PDF se parte en dos «páginas» (arriba/abajo o izquierda/derecha) ---- */
+function hojaDe(S, n) { var p = S.P[n - 1] || {}; return { src: p.src || n, mitad: p.mitad || 0, corte: p.corte || '' }; }
+// Dibuja la página n del asistente (o su mitad). opt: { ancho } o { lado }, y fraccion = parte de arriba que hace falta
+function dibujarPag(S, n, opt) {
+  var h = hojaDe(S, n);
+  return S.pdf.getPage(h.src).then(function (pg) {
+    var v = pg.getViewport({ scale: 1 }), fw = h.mitad && h.corte === 'h' ? 0.5 : 1, fh = h.mitad && h.corte === 'v' ? 0.5 : 1;
+    var w = v.width * fw, hh = v.height * fh, e = opt.ancho ? opt.ancho / w : opt.lado / Math.max(w, hh);
+    var vp = pg.getViewport({ scale: e }), c = document.createElement('canvas');
+    c.width = Math.round(w * e); c.height = Math.round(hh * e * (opt.fraccion || 1));
+    var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+    var dx = h.mitad === 2 && h.corte === 'h' ? -w * e : 0, dy = h.mitad === 2 && h.corte === 'v' ? -hh * e : 0;
+    return conTiempo(pg.render({ canvasContext: x, viewport: vp, transform: [1, 0, 0, 1, dx, dy] }).promise, 25000).then(function () { return c; });
+  });
+}
+// Rehace la lista de páginas según cómo se corta cada hoja: S.modos[hoja] = 'v' (arriba/abajo), 'h' (izquierda/derecha) o '' (entera)
+function rehacerPaginas(S, aviso) {
+  var P = [], n = S.pdf.numPages, M = S.modos || {};
+  for (var i = 1; i <= n; i++) {
+    var m = M[i] || '';
+    if (m) { P.push({ n: P.length + 1, src: i, mitad: 1, corte: m, inicio: true, papeles: [], ignorar: false }); P.push({ n: P.length + 1, src: i, mitad: 2, corte: m, inicio: true, papeles: [], ignorar: false }); }
+    else P.push({ n: P.length + 1, src: i, mitad: 0, corte: '', inicio: i === 1, papeles: [], ignorar: false });
+  }
+  S.partir = Object.keys(M).some(function (k) { return M[k]; }) ? 'si' : '';
+  S.P = P; S.th = {}; S.textos = null; S.miniGiradas = false; S.cola = null;
+  pintarAsistente(S); miniaturas(S);
+  if (aviso) toast(aviso, 5500);
+}
+// Partir (o unir) una sola hoja sin perder lo ya marcado en las demás
+function partirUna(S, src, modo) {
+  var antes = S.P, nuevas = [];
+  S.modos = S.modos || {}; S.modos[src] = modo;
+  antes.forEach(function (p) {
+    if (p.src !== src) { nuevas.push(p); return; }
+    if (modo && !p.mitad) { nuevas.push(Object.assign({}, p, { mitad: 1, corte: modo, inicio: true })); nuevas.push({ src: src, mitad: 2, corte: modo, inicio: true, papeles: [], ignorar: false }); }
+    else if (!modo && p.mitad === 1) nuevas.push(Object.assign({}, p, { mitad: 0, corte: '' }));
+    else if (modo || p.mitad !== 2) nuevas.push(p);
+  });
+  nuevas.forEach(function (p, i) { p.n = i + 1; });
+  S.partir = Object.keys(S.modos).some(function (k) { return S.modos[k]; }) ? 'si' : '';
+  S.P = nuevas; S.th = {}; S.textos = null; S.cola = null;
+  pintarAsistente(S); miniaturas(S);
+}
+function partirHojas(S, modo, hojas) {
+  S.modos = {}; var n = S.pdf.numPages;
+  for (var i = 1; i <= n; i++) S.modos[i] = !modo ? '' : hojas ? (hojas.indexOf(i) > -1 ? modo : '') : modo;
+  var k = Object.keys(S.modos).filter(function (x) { return S.modos[x]; }).length;
+  rehacerPaginas(S, k ? 'Partidas en dos ' + k + (k === 1 ? ' hoja' : ' hojas') + ': ahora hay ' + S.P.length + ' páginas. Pulsa «✨ Detectar instrumentos».' : 'Una página por hoja');
+}
+function elegirPartir(S) {
+  var sug = S.sugHojas && S.sugHojas.length;
+  panel('<h3>¿Cuántos papeles hay en cada hoja?</h3><p class="s">Si en las hojas vienen dos instrumentos, la app las parte en dos y los separa. También puedes partir solo una hoja tocándola.</p>' +
+    (sug ? '<button class="opcion" data-pt="sug"><div class="ic">✨</div><div><b>Partir solo las que traen dos (' + S.sugHojas.length + ' hojas)</b><span>Hojas ' + resumenHojas(S.sugHojas) + ', ' + (S.sugerencia === 'h' ? 'uno al lado del otro' : 'uno encima del otro') + '</span></div></button>' : '') +
+    '<button class="opcion' + (!S.partir ? ' on' : '') + '" data-pt=""><div class="ic">▯</div><div><b>Uno por hoja</b><span>Lo normal</span></div></button>' +
+    '<button class="opcion" data-pt="v"><div class="ic">⬒</div><div><b>Todas: dos, uno encima del otro</b><span>Un papel en la mitad de arriba y otro en la de abajo</span></div></button>' +
+    '<button class="opcion" data-pt="h"><div class="ic">◫</div><div><b>Todas: dos, uno al lado del otro</b><span>Hoja apaisada con un papel a cada lado</span></div></button>');
+  $('panel').querySelectorAll('[data-pt]').forEach(function (b) { b.onclick = function () { cerrarPanel(); if (b.dataset.pt === 'sug') partirHojas(S, S.sugerencia, S.sugHojas); else partirHojas(S, b.dataset.pt); }; });
+}
+function resumenHojas(l) {
+  var out = [], a = null, b = null;
+  l.concat([null]).forEach(function (x) { if (a !== null && x === b + 1) { b = x; return; } if (a !== null) out.push(a === b ? a : a + '-' + b); a = b = x; });
+  return out.join(', ');
+}
+function filasBlancas(c) { var o = oscuro(c), s = 0; for (var y = 0; y < o.h; y++) { var f = 0; for (var x = 0; x < o.w; x++) f += o.m[y * o.w + x]; if (f / o.w < 0.004) s++; } return o.h ? s / o.h : 0; }
+function mitadCanvas(c, cual, modo) {
+  var d = document.createElement('canvas'), w = modo === 'h' ? Math.floor(c.width / 2) : c.width, h = modo === 'v' ? Math.floor(c.height / 2) : c.height;
+  d.width = w; d.height = h; d.getContext('2d').drawImage(c, cual === 2 && modo === 'h' ? -w : 0, cual === 2 && modo === 'v' ? -h : 0); return d;
+}
+
 function rangos(S) {
   var R = [], act = null;
   S.P.forEach(function (p) {
@@ -2742,12 +2817,14 @@ function pintarAsistente(S) {
   var R = rangos(S), sin = R.filter(function (r) { return !r.ignorar && !r.papeles.length; }).length, buenos = Object.keys(R.filter(function (r) { return !r.ignorar && r.papeles.length; }).reduce(function (o, r) { o[r.papeles.slice().sort().join('|')] = 1; return o; }, {})).length;
   var actual = null;
   $('dirCont').innerHTML = '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn linea" id="bCancelarA">‹ Cancelar</button><button class="btn oro" id="bOcr">✨ Detectar instrumentos</button><button class="btn linea" id="bOrden">🔢 Repartir por orden</button><button class="btn linea" id="bCortes">📐 Manuscrito: buscar cortes</button>' + (S.P.some(function (p) { return p.giro; }) ? '<button class="btn linea" id="bGirarTodas">🔄 Las veo al revés: girar todas</button>' : '') + '</div>' +
-    '<h2 class="sec">' + esc(S.o.titulo) + '<small>' + S.P.length + ' páginas</small></h2>' +
+    (S.sugHojas && S.sugHojas.length && !S.partir ? '<div class="sug-partir"><b>✂ ' + (S.sugHojas.length === S.pdf.numPages ? 'Parece que cada hoja trae dos papeles' : 'Las hojas ' + resumenHojas(S.sugHojas) + ' parecen traer dos papeles') + '</b> (' + (S.sugerencia === 'v' ? 'uno encima del otro' : 'uno al lado del otro') + ').<button class="btn oro" id="bSugPartir">Partirlas en dos</button></div>' : '') +
+    '<h2 class="sec">' + esc(S.o.titulo) + '<small>' + S.P.length + ' páginas' + (S.partir ? ' · hojas partidas' : '') + '</small></h2>' +
+    '<button class="btn linea" id="bPartir" style="margin:0 0 10px">✂ ' + (S.partir ? 'Hojas partidas en dos · cambiar' : '¿Dos papeles en cada hoja?') + '</button>' +
     '<p style="font-size:14px;color:var(--gris);margin:0 4px 6px;line-height:1.5">Toca la <b>primera página de cada papel</b> para decir de qué instrumento es. Las páginas siguientes se le suman solas. Marca como «Ignorar» portadas y anuncios.</p>' +
     '<div class="rejilla">' + S.P.map(function (p) {
       if (p.inicio || !actual) actual = p;
       var lab = p.inicio ? (p.ignorar ? 'Ignorar' : (p.papeles.join(', ') || 'Sin asignar')) : '';
-      return '<div class="pag' + (p.inicio ? ' inicio' : '') + (actual.ignorar ? ' ignorar' : '') + '" data-pag="' + p.n + '"><canvas id="th' + p.n + '"></canvas><span class="n">' + p.n + '</span>' +
+      return '<div class="pag' + (p.inicio ? ' inicio' : '') + (actual.ignorar ? ' ignorar' : '') + '" data-pag="' + p.n + '"><canvas id="th' + p.n + '"></canvas><span class="n">' + (p.mitad ? 'h' + p.src + (p.corte === 'v' ? (p.mitad === 1 ? '↑' : '↓') : (p.mitad === 1 ? '←' : '→')) : (S.partir ? 'h' + p.src : p.n)) + '</span>' +
         (p.inicio ? '<div class="lab' + (!p.ignorar && !p.papeles.length ? ' sin' : '') + '">' + esc(lab) + '</div>' : '<div class="cont">↳ sigue ' + esc(actual.ignorar ? 'ignorada' : (actual.papeles.join(', ') || 'sin asignar')) + '</div>') + '</div>';
     }).join('') + '</div>' +
     '<label class="estampar"><input type="checkbox" id="cEstA"' + (S.estampar ? ' checked' : '') + '><span><b>Escribir el instrumento arriba de cada página</b><br>Recomendado en manuscritos, donde el nombre no se lee bien.</span></label>' +
@@ -2755,6 +2832,8 @@ function pintarAsistente(S) {
   S.P.forEach(function (p) { if (S.th && S.th[p.n]) pintarMini(p.n, girarCanvas(S.th[p.n], p.giro)); });
   $('bCancelarA').onclick = function () { S.cancelado = true; editarObra(S.o.id); };
   $('bOcr').onclick = function () { ocr(S); };
+  $('bPartir').onclick = function () { elegirPartir(S); };
+  if ($('bSugPartir')) $('bSugPartir').onclick = function () { partirHojas(S, S.sugerencia, S.sugHojas); };
   $('bOrden').onclick = function () { repartirPorOrden(S); };
   $('bCortes').onclick = function () { detectarCortes(S, false); };
   if ($('bGirarTodas')) $('bGirarTodas').onclick = function () { S.P.forEach(function (p) { if (p.giro) p.giro = (p.giro + 180) % 360; }); pintarAsistente(S); };
@@ -2780,13 +2859,11 @@ function miniaturas(S) {
   function sig() {
     if (S.cancelado || i > S.P.length) return;
     var k = i++;
-    return enCola(S, function () { return conTiempo(S.pdf.getPage(k), 20000); }).then(function (pg) { return enCola(S, function () {
-      var v = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: 260 / v.width });
-      var c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
-      return conTiempo(pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise, 20000).then(function () {
-        S.th[k] = c; pintarMini(k, girarCanvas(c, (S.P[k - 1] || {}).giro));
-      });
-    }); }).then(sig, sig);
+    var P0 = S.P;
+    return enCola(S, function () { return conTiempo(dibujarPag(S, k, { ancho: 260 }), 30000); }).then(function (c) {
+      if (S.P !== P0) return;                                   // se han partido las hojas mientras tanto
+      S.th[k] = c; pintarMini(k, girarCanvas(c, (S.P[k - 1] || {}).giro));
+    }).then(function () { if (S.P === P0) return sig(); }, function () { if (S.P === P0) return sig(); });
   }
   sig();
 }
@@ -2799,6 +2876,9 @@ function menuPagina(S, n) {
       '<button class="opcion' + (p.inicio && !p.ignorar && !p.papeles.length ? ' on' : '') + '" data-m="empieza"><div class="ic">▸</div><div><b>Empieza un papel aquí</b><span>Aún sin decir de qué instrumento (luego «Repartir por orden»)</span></div></button>' +
       '<button class="opcion' + (p.inicio && p.ignorar ? ' on' : '') + '" data-m="ignorar"><div class="ic">⊘</div><div><b>Ignorar</b><span>Portada, anuncios, página en blanco…</span></div></button>' +
       '<button class="opcion" data-m="girar"><div class="ic">↻</div><div><b>Girar esta página</b><span>Si se ve de lado o al revés (un cuarto de vuelta cada vez)</span></div></button>' +
+      (p.mitad ? '<button class="opcion" data-m="unir"><div class="ic">▯</div><div><b>Esta hoja no va partida</b><span>Volver a dejar la hoja ' + p.src + ' entera</span></div></button>'
+        : '<button class="opcion" data-m="partirv"><div class="ic">⬒</div><div><b>Partir esta hoja: dos papeles, uno encima del otro</b><span>Arriba un instrumento y abajo otro</span></div></button>' +
+          '<button class="opcion" data-m="partirh"><div class="ic">◫</div><div><b>Partir esta hoja: dos papeles, uno al lado del otro</b><span>Un instrumento a cada lado</span></div></button>') +
       '<div class="grupo-papel" style="margin-top:16px">Empieza el papel de… (puedes marcar varios)</div>' +
       Object.keys(fam).map(function (f) {
         return '<div class="grupo-papel">' + esc(f) + '</div>' + fam[f].map(function (x) { var on = sel.indexOf(x) > -1; return '<button class="opcion' + (on ? ' on' : '') + '" data-pp="' + esc(x) + '"><div class="ic">' + (on ? '✓' : '♪') + '</div><div><b>' + esc(x) + '</b></div></button>'; }).join('');
@@ -2807,6 +2887,7 @@ function menuPagina(S, n) {
     $('panel').querySelectorAll('[data-pp]').forEach(function (b) { b.onclick = function () { var x = b.dataset.pp, i = sel.indexOf(x); if (i > -1) sel.splice(i, 1); else sel.push(x); var top = $('panel').scrollTop; pintar(); $('panel').scrollTop = top; }; });
     $('panel').querySelectorAll('[data-m]').forEach(function (b) { b.onclick = function () {
       if (b.dataset.m === 'girar') { p.giro = ((p.giro || 0) + 90) % 360; cerrarPanel(); pintarAsistente(S); return; }
+      if (/^partir|^unir/.test(b.dataset.m)) { cerrarPanel(); partirUna(S, p.src, b.dataset.m === 'unir' ? '' : b.dataset.m.slice(-1)); return; }
       if (b.dataset.m === 'sigue') { p.inicio = false; p.papeles = []; p.ignorar = false; }
       else if (b.dataset.m === 'empieza') { p.inicio = true; p.ignorar = false; p.papeles = []; }
       else { p.inicio = true; p.ignorar = true; p.papeles = []; }
@@ -2827,11 +2908,13 @@ function ocr(S) {
     return (w.setParameters ? w.setParameters({ tessedit_pageseg_mode: '11' }) : Promise.resolve()).then(function () { return w; }, function () { return w; });   // texto suelto: lee mejor el nombre del instrumento junto al título
   }).then(function (w) {
     var k = 0, t0 = Date.now(), saltadas = 0, ancho = window.innerWidth < 760 ? 1150 : 1600;   // en el móvil, imágenes más pequeñas (menos memoria)
-    S.textos = {};
+    S.textos = {}; S.segundo = {};
     function nuevoLector() { try { w.terminate(); } catch (e) {} return Tesseract.createWorker('spa').then(function (x) { w = x; return w.setParameters ? w.setParameters({ tessedit_pageseg_mode: '11' }).catch(function () {}) : null; }); }
     function sig() {
       if (k >= S.P.length || S.cancelado) return Promise.resolve(w.terminate()).catch(function () {}).then(function () {
+        var partidas = partirSegunTexto(S);
         var hallados = decidirPapeles(S);
+        if (partidas) toast('He visto ' + partidas + (partidas === 1 ? ' hoja que trae' : ' hojas que traen') + ' dos papeles y las he partido en dos', 5000);
         cargando(false);
         if (!hallados) return detectarCortes(S, true);    // no ha leído ningún instrumento: probablemente manuscrito
         pintarAsistente(S);
@@ -2840,16 +2923,51 @@ function ocr(S) {
       });
       var p = S.P[k++], seg = k > 3 ? Math.round((Date.now() - t0) / (k - 1) * (S.P.length - k + 1) / 1000) : 0;
       cargando(true, 'Leyendo página ' + p.n + ' de ' + S.P.length + (seg > 5 ? ' · quedan unos ' + (seg > 90 ? Math.round(seg / 60) + ' min' : seg + ' s') : '') + '…');
-      var trabajo = enCola(S, function () { return conTiempo(S.pdf.getPage(p.n).then(function (pg) {
-        var v = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: ancho / v.width });
-        var c = document.createElement('canvas'); c.width = vp.width; c.height = Math.round(vp.height * 0.24);
-        return pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise.then(function () { return c; });
-      }), 30000); }).then(function (c) { return conTiempo(w.recognize(c), 40000); });
+      // Hoja entera sin partir: además de arriba, se lee el centro (o el lado derecho si es apaisada) por si trae un segundo papel
+      var entera = !p.mitad && S.buscarDos !== false;
+      var trabajo = enCola(S, function () { return conTiempo(dibujarPag(S, p.n, { ancho: p.corte === 'h' ? Math.round(ancho * 0.75) : ancho, fraccion: p.corte === 'v' ? 0.4 : entera ? 0.66 : 0.24 }), 30000); }).then(function (c) {
+        if (!entera) return conTiempo(w.recognize(c), 40000).then(function (r) { S.textos[p.n] = r.data.text || ''; });
+        var apaisada = c.width > c.height / 0.66, H = c.height / 0.66;
+        var zonas = apaisada ? [[0, 0, c.width / 2, H * 0.24], [c.width / 2, 0, c.width / 2, H * 0.24]] : [[0, 0, c.width, H * 0.24], [0, H * 0.42, c.width, H * 0.22]];
+        function trozo(z, marca) { var d = document.createElement('canvas'); d.width = Math.round(z[2]); d.height = Math.round(z[3]); d.getContext('2d').drawImage(c, -z[0], -z[1]); if (c.dataset.pagina) d.dataset.pagina = c.dataset.pagina + (marca || ''); return d; }
+        // Solo se lee la segunda zona si hay sitio para otro papel (blanco en medio de la hoja, o columna libre si es apaisada): así no tarda el doble
+        var hueco = apaisada ? true : filasBlancas(trozo([0, H * 0.38, c.width, H * 0.24])) >= 0.15;
+        return conTiempo(w.recognize(trozo(zonas[0])), 40000).then(function (r) { S.textos[p.n] = r.data.text || ''; return hueco ? conTiempo(w.recognize(trozo(zonas[1], '-centro')), 40000) : null; })
+          .then(function (r) { if (r) { S.segundo = S.segundo || {}; S.segundo[p.n] = { texto: r.data.text || '', corte: apaisada ? 'h' : 'v' }; } });
+      });
       // Si una página se atasca, se salta y se sigue con la siguiente (no se queda pillado)
-      return trabajo.then(function (r) { S.textos[p.n] = r.data.text || ''; }, function () { S.textos[p.n] = ''; saltadas++; return nuevoLector(); }).then(sig);
+      return trabajo.then(function () {}, function () { if (S.textos[p.n] === undefined) S.textos[p.n] = ''; saltadas++; return nuevoLector(); }).then(sig);
     }
     return sig();
   }).catch(function () { cargando(false); toast('No se ha podido cargar el lector. Márcalos a mano.', 4500); });
+}
+// Tras leer: las hojas cuyo centro (o lado derecho) repite el título o trae un instrumento llevan dos papeles → se parten,
+// y el texto leído allí pasa a ser la cabecera de la segunda mitad
+function partirSegunTexto(S) {
+  var Sg = S.segundo || {}, T = S.textos || {};
+  function palabras(t) { return norm(t || '').toUpperCase().replace(/[^A-Z ]/g, ' ').split(/\s+/).filter(function (x) { return x.length >= 5; }); }
+  var tit = palabras(S.o && S.o.titulo);
+  var dos = S.P.filter(function (p) {
+    var g = Sg[p.n]; if (p.mitad || !g || !g.texto) return false;
+    var arriba = palabras(T[p.n]), centro = palabras(g.texto);
+    var repiteTitulo = centro.some(function (x) { return tit.indexOf(x) > -1 || (arriba.indexOf(x) > -1 && x.length >= 7); });
+    var instr = norm(g.texto).toUpperCase().split(/\n+/).some(function (l) { return l.replace(/[^A-Z ]/g, '').length >= 4 && detectarPapeles(l) !== null; });
+    var instrArriba = norm(T[p.n] || '').toUpperCase().split(/\n+/).some(function (l) { return detectarPapeles(l) !== null; });
+    return repiteTitulo && (instr || instrArriba);
+  });
+  if (!dos.length) return 0;
+  var nuevas = [], nt = {};
+  S.modos = S.modos || {};
+  S.P.forEach(function (p) {
+    if (dos.indexOf(p) < 0) { nuevas.push(p); nt[nuevas.length] = T[p.n]; return; }
+    var c = Sg[p.n].corte; S.modos[p.src] = c;
+    nuevas.push(Object.assign({}, p, { mitad: 1, corte: c, inicio: true })); nt[nuevas.length] = T[p.n];
+    nuevas.push({ src: p.src, mitad: 2, corte: c, inicio: true, papeles: [], ignorar: false }); nt[nuevas.length] = Sg[p.n].texto;
+  });
+  nuevas.forEach(function (p, i) { p.n = i + 1; });
+  S.P = nuevas; S.textos = nt; S.partir = 'si'; S.th = {}; S.cola = null; S.segundo = {};
+  miniaturas(S);
+  return dos.length;
 }
 // Con el texto de arriba de cada página decide dónde empieza cada papel y de qué instrumento es
 function lineasCabecera(texto) {
@@ -2876,7 +2994,9 @@ function decidirPapeles(S) {
     else if (p.n > 1) { p.inicio = false; p.papeles = []; p.ignorar = false; }
   });
   // lo de antes del primer instrumento reconocido (portada, anuncios, página de título) se ignora
-  if (primero > 1) S.P.forEach(function (q) { if (q.n < primero) { q.ignorar = true; q.inicio = q.n === 1; q.papeles = []; } });
+  if (primero > 1) S.P.forEach(function (q) { if (q.n < primero && !q.mitad) { q.ignorar = true; q.inicio = q.n === 1; q.papeles = []; } });
+  // Cada mitad de una hoja partida es siempre un papel distinto (aunque no se haya leído bien su nombre)
+  S.P.forEach(function (q) { if (q.mitad && !q.inicio) { q.inicio = true; q.ignorar = false; q.papeles = []; } else if (q.mitad && q.ignorar) q.ignorar = false; });
   return Object.keys(distintos).length;
 }
 
@@ -2937,12 +3057,21 @@ function elegirPapelPdf(V, it) {
   pintar();
 }
 // Escribe el nombre del instrumento arriba de cada página (grande en la primera)
+// Deja en la página solo la mitad que se ve arriba/abajo (modo 'v') o izquierda/derecha ('h'), teniendo en cuenta si la hoja viene girada
+function recortarMitad(pg, modo, mitad) {
+  var mb = pg.getMediaBox(), W = mb.width, H = mb.height, a = ((pg.getRotation().angle || 0) % 360 + 360) % 360;
+  // Qué eje del PDF se parte y si la 1ª mitad (arriba o izquierda, tal como se ve) son los valores pequeños
+  var T = { v: { 0: ['y', false], 90: ['x', true], 180: ['y', true], 270: ['x', false] }, h: { 0: ['x', true], 90: ['y', true], 180: ['x', false], 270: ['y', false] } }[modo][a] || ['y', false];
+  var bajo = (mitad === 1) === T[1], x = mb.x, y = mb.y, w = W, h = H;
+  if (T[0] === 'x') { w = W / 2; if (!bajo) x += W / 2; } else { h = H / 2; if (!bajo) y += H / 2; }
+  pg.setMediaBox(x, y, w, h); pg.setCropBox(x, y, w, h);
+}
 function estamparPapel(doc, texto) {
   return doc.embedFont(PDFLib.StandardFonts.HelveticaBold).then(function (font) {
     doc.getPages().forEach(function (pg, i) {
-      var W = pg.getWidth(), H = pg.getHeight(), a = ((pg.getRotation().angle || 0) % 360 + 360) % 360;
+      var mb = pg.getMediaBox(), W = mb.width, H = mb.height, a = ((pg.getRotation().angle || 0) % 360 + 360) % 360;
       var vw = a % 180 ? H : W, vh = a % 180 ? W : H;           // tamaño tal como se ve
-      function aPagina(vx, vy) { return a === 90 ? [W - vy, vx] : a === 180 ? [W - vx, H - vy] : a === 270 ? [vy, H - vx] : [vx, vy]; }
+      function aPagina(vx, vy) { var r = a === 90 ? [W - vy, vx] : a === 180 ? [W - vx, H - vy] : a === 270 ? [vy, H - vx] : [vx, vy]; return [r[0] + mb.x, r[1] + mb.y]; }
       var size = i ? 10 : 15, t = i ? texto + ' · pág. ' + (i + 1) : texto.toUpperCase();
       var tw = font.widthOfTextAtSize(t, size), vx = i ? vw - tw - 26 : (vw - tw) / 2, vy = vh - size - 12;
       var rot = PDFLib.degrees(a), r0 = aPagina(vx - 8, vy - 5), t0 = aPagina(vx, vy);
@@ -3030,11 +3159,7 @@ function tieneTitulo(c) {
 function cortesPorForma(S) {
   var k = 0, C = {}, M = {};
   function render(n) {
-    return enCola(S, function () { return S.pdf.getPage(n).then(function (pg) {
-      var v = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: 420 / Math.max(v.width, v.height) }), c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
-      var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
-      return conTiempo(pg.render({ canvasContext: x, viewport: vp }).promise, 25000).then(function () { return c; }, function () { return c; });
-    }); });
+    return enCola(S, function () { return dibujarPag(S, n, { lado: 420 }).catch(function () { var c = document.createElement('canvas'); c.width = 300; c.height = 420; var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 300, 420); return c; }); });
   }
   function sig() {
     if (k >= S.P.length) return Promise.resolve();
@@ -3147,9 +3272,14 @@ function subirRangos(S) {
       $('resumen').querySelector('div').firstChild.textContent = '';
       $('resumen').querySelector('b').textContent = 'Subiendo ' + (hechos + 1) + ' de ' + R.length;
       return PDFLib.PDFDocument.create().then(function (nuevo) {
-        var idx = r.pags.map(function (n) { return n - 1; });
-        return nuevo.copyPages(src, idx).then(function (pags) {
-          pags.forEach(function (pg, j) { var g = (S.P[idx[j]] || {}).giro || 0; if (g) pg.setRotation(PDFLib.degrees(((pg.getRotation().angle || 0) + g) % 360)); nuevo.addPage(pg); });
+        var idx = r.pags.map(function (n) { return n - 1; }), fuentes = idx.map(function (i) { return ((S.P[i] || {}).src || i + 1) - 1; });
+        return nuevo.copyPages(src, fuentes).then(function (pags) {
+          pags.forEach(function (pg, j) {
+            var vp = S.P[idx[j]] || {};
+            if (vp.mitad && vp.corte) recortarMitad(pg, vp.corte, vp.mitad);
+            var g = vp.giro || 0; if (g) pg.setRotation(PDFLib.degrees(((pg.getRotation().angle || 0) + g) % 360));
+            nuevo.addPage(pg);
+          });
           return S.estampar ? estamparPapel(nuevo, r.papeles.join(', ')) : null;
         }).then(function () { return nuevo.save(); });
       }).then(function (bytes) {
