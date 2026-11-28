@@ -1,6 +1,6 @@
 /* Atril · funcionamiento sin conexión */
-const VERSION = 'atril-v18';
-const BASE = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const VERSION = 'atril-v20';
+const BASE = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './badge-96.png'];
 const EXTERNOS = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
@@ -50,7 +50,7 @@ self.addEventListener('push', e => {
   try { const j = e.data.json(); d = j.data || j.notification || j; } catch (err) { d = { titulo: 'Atril', cuerpo: e.data ? e.data.text() : '' }; }
   const opciones = {
     body: d.cuerpo || '', tag: d.tag || 'atril', renotify: true, requireInteraction: true,
-    icon: 'icon-192.png', badge: 'icon-192.png', vibrate: [200, 100, 200, 100, 300], data: d
+    icon: 'icon-192.png', badge: 'badge-96.png', vibrate: [200, 100, 200, 100, 300], data: d
   };
   if (d.tipo === 'urgente') opciones.vibrate = [500, 200, 500, 200, 900];
   if (d.tipo === 'vienes' && d.programa) opciones.actions = [{ action: 'si', title: '✓ Sí, voy' }, { action: 'no', title: '✗ No puedo' }];
@@ -65,8 +65,8 @@ self.addEventListener('notificationclick', e => {
       method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ accion: 'responder', codigo: codigo, programa: d.programa, respuesta: respuesta })
     }).then(r => r.json()).then(j => self.registration.showNotification(j.ok ? (respuesta === 'Sí' ? '¡Apuntado! Cuentan contigo ✓' : 'Apuntado: no vas') : 'No se ha podido guardar', {
-      body: j.ok ? (respuesta === 'No' ? 'Si quieres, explica el motivo en Atril.' : '') : (j.error || 'Ábrelo en Atril'), tag: d.tag, icon: 'icon-192.png', data: d
-    })).catch(() => self.registration.showNotification('Sin conexión', { body: 'Contesta en Atril cuando tengas internet.', tag: d.tag, icon: 'icon-192.png', data: d }))));
+      body: j.ok ? (respuesta === 'No' ? 'Si quieres, explica el motivo en Atril.' : '') : (j.error || 'Ábrelo en Atril'), tag: d.tag, icon: 'icon-192.png', badge: 'badge-96.png', data: d
+    })).catch(() => self.registration.showNotification('Sin conexión', { body: 'Contesta en Atril cuando tengas internet.', tag: d.tag, icon: 'icon-192.png', badge: 'badge-96.png', data: d }))));
     return;
   }
   // Al abrir, la app enseña primero el contenido de la notificación

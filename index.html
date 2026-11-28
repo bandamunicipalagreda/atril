@@ -808,6 +808,7 @@ function sincronizar(primeraVez) {
     return guardado.put('datos', D).then(function () {
       cargando(false);
       if (primeraVez) entrarApp(); else pintarTodo();
+      if (r.avisoDatos) setTimeout(function () { firmarAvisoDatos(r.avisoDatos, r.avisoTutor); }, 600);
       sincronizarAnotTodas();
       return descargarMias();
     });
@@ -1168,6 +1169,52 @@ function textoPrivacidad() {
     '<p><b>Quién lo ve:</b> la dirección ve las respuestas y los correos (los motivos de no ir solo los ve el director y se borran 24 horas después de leerlos); la dirección y la junta, la lista de músicos y los móviles que se hayan puesto; tus anotaciones, solo tú.</p>' +
     '<p>Se guarda en la cuenta de Google de la banda. No se comparte con nadie de fuera ni se usa para publicidad.</p>' +
     '<p>Para consultar, corregir o borrar tus datos, díselo al director o a la junta directiva de la asociación.</p></div>';
+}
+// Recuadro para firmar con el dedo. Devuelve la firma recortada, en PNG
+function padFirma(c) {
+  var r = window.devicePixelRatio || 1, x, dib = false, hay = false;
+  function preparar() { c.width = c.clientWidth * r; c.height = c.clientHeight * r; x = c.getContext('2d'); x.scale(r, r); x.lineWidth = 2.6; x.lineCap = 'round'; x.lineJoin = 'round'; x.strokeStyle = '#1b2a4a'; hay = false; }
+  preparar();
+  function pos(e) { var b = c.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; }
+  c.addEventListener('pointerdown', function (e) { e.preventDefault(); dib = true; hay = true; var p = pos(e); x.beginPath(); x.moveTo(p[0], p[1]); x.lineTo(p[0] + .1, p[1] + .1); x.stroke(); });
+  c.addEventListener('pointermove', function (e) { if (!dib) return; e.preventDefault(); var p = pos(e); x.lineTo(p[0], p[1]); x.stroke(); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (t) { c.addEventListener(t, function () { dib = false; }); });
+  return {
+    hay: function () { return hay; },
+    borrar: function () { x.clearRect(0, 0, c.width, c.height); hay = false; },
+    png: function () {
+      var d = x.getImageData(0, 0, c.width, c.height).data, w = c.width, h = c.height, x0 = w, y0 = h, x1 = 0, y1 = 0;
+      for (var yy = 0; yy < h; yy += 2) for (var xx = 0; xx < w; xx += 2) if (d[(yy * w + xx) * 4 + 3] > 20) { if (xx < x0) x0 = xx; if (xx > x1) x1 = xx; if (yy < y0) y0 = yy; if (yy > y1) y1 = yy; }
+      if (x1 <= x0) return c.toDataURL('image/png');
+      var m = 12, o = document.createElement('canvas'); o.width = Math.min(w, x1 - x0 + 2 * m); o.height = Math.min(h, y1 - y0 + 2 * m);
+      o.getContext('2d').drawImage(c, Math.max(0, x0 - m), Math.max(0, y0 - m), o.width, o.height, 0, 0, o.width, o.height);
+      return o.toDataURL('image/png');
+    }
+  };
+}
+// Aviso de protección de datos de la banda (lo manda A tempo): hay que firmarlo para seguir
+function firmarAvisoDatos(html, tutor) {
+  if ($('bFirmaDatos') && !$('velo').classList.contains('oculto')) return;
+  if (!$('velo').classList.contains('oculto')) return setTimeout(function () { firmarAvisoDatos(html, tutor); }, 1500);   // espera a que se cierre otro aviso
+  var pila = (D && D.usuario) ? esc(String(D.usuario.nombre).split(' ')[0]) : '';
+  panel('<div class="priv"><h3>Aviso de protección de datos</h3><p style="background:#fbf6e6;border:1px solid #ece0b8;border-radius:12px;padding:10px 12px">' +
+    (tutor ? '<b>Este aviso lo tiene que firmar ' + esc(tutor) + '</b> (padre, madre o tutor de ' + pila + '). ' + pila + ', pásale el móvil, por favor. Solo se hace una vez.'
+      : 'La banda necesita que leas y firmes este aviso' + (pila ? ', ' + pila : '') + '. Solo se hace una vez.') + '</p>' + html + '</div>' +
+    '<label style="display:flex;gap:10px;align-items:flex-start;margin:14px 2px;font-size:15px;cursor:pointer"><input type="checkbox" id="chkDatos" style="width:22px;height:22px;flex:none;margin:0"> ' + (tutor ? 'Soy su padre, madre o tutor, he leído este aviso y estoy conforme' : 'He leído este aviso y estoy conforme') + '</label>' +
+    '<p style="margin:14px 2px 6px;font-size:14px;color:#666">' + (tutor ? 'Firma del padre, madre o tutor' : 'Tu firma') + ', con el dedo: <a id="borrarFirmaD" style="float:right;text-decoration:underline;cursor:pointer">Borrar</a></p><canvas id="lienzoDatos" style="width:100%;height:170px;background:#fff;border:2px dashed #c9b46a;border-radius:14px;touch-action:none;display:block"></canvas>' +
+    '<input id="nomDatos" placeholder="' + (tutor ? 'Nombre y apellidos del padre, madre o tutor' : 'Escribe tu nombre y apellidos') + '" autocomplete="off" style="margin-top:12px;width:100%;font-size:17px;padding:13px;border:1px solid var(--linea,#ddd);border-radius:12px">' +
+    '<p id="errDatos" style="color:#a33;font-size:14px;min-height:1em;margin:8px 2px"></p>' +
+    '<button class="btn negro ancho" id="bFirmaDatos">Firmar</button>', false);
+  var pad = padFirma($('lienzoDatos'));
+  $('borrarFirmaD').onclick = pad.borrar;
+  $('bFirmaDatos').onclick = function () {
+    var b = this;
+    if (!$('chkDatos').checked) return ($('errDatos').textContent = 'Marca la casilla de que estás conforme.');
+    if (!pad.hay()) return ($('errDatos').textContent = 'Firma con el dedo en el recuadro.');
+    b.disabled = true; b.textContent = 'Firmando…';
+    api('firmarAviso', { nombre: $('nomDatos').value, png: pad.png() }).then(function () { cerrarPanel(); toast('Firmado ✓ Gracias', 3500); })
+      .catch(function (e) { b.disabled = false; b.textContent = 'Firmar'; $('errDatos').textContent = (e && e.message) || 'No se ha podido firmar. Prueba otra vez.'; });
+  };
 }
 function avisoPrivacidad(primeraVez) {
   return new Promise(function (fin) {
@@ -1534,7 +1581,7 @@ function pintarPerfil() {
   $('bPriv').onclick = function () { avisoPrivacidad(false); };
   if ($('pProbarAvisos')) $('pProbarAvisos').onclick = function () {
     navigator.serviceWorker.ready.then(function (reg) {
-      return reg.showNotification('Prueba de Atril', { body: 'Si ves esto, los avisos funcionan en este aparato. Tócalo para abrirlo.', tag: 'prueba', icon: 'icon-192.png', badge: 'icon-192.png', vibrate: [200, 100, 200],
+      return reg.showNotification('Prueba de Atril', { body: 'Si ves esto, los avisos funcionan en este aparato. Tócalo para abrirlo.', tag: 'prueba', icon: 'icon-192.png', badge: 'badge-96.png', vibrate: [200, 100, 200],
         data: { titulo: 'Prueba de Atril', cuerpo: 'Así se ven los avisos al tocarlos: primero el mensaje, en grande.', ir: '' } });
     }).then(function () { toast('Aviso de prueba enviado: mira arriba en el móvil', 4000); })
       .catch(function () { toast('El móvil no deja mostrar avisos: revisa los permisos de notificaciones de Atril/Chrome', 6000); });
@@ -2637,11 +2684,16 @@ function abrirJunta() {
 /* ---- Obras ---- */
 function dirObras() {
   var l = A.obras.slice().sort(function (a, b) { return a.titulo.localeCompare(b.titulo, 'es'); });
-  $('dirCont').innerHTML = '<div style="margin-top:16px"><button class="btn oro ancho" id="bNuevaObra">＋ Nueva obra</button></div><div class="lista">' + (l.map(function (o) {
+  $('dirCont').innerHTML = '<div style="margin-top:16px"><button class="btn oro ancho" id="bNuevaObra">＋ Nueva obra</button>' +
+    (puedeCarpeta() ? (IMP ? '<button class="btn linea ancho" id="bSeguirImp" style="margin-top:6px">📥 Seguir con la importación (' + impQuedan() + ' por subir)</button>' : '') +
+      '<label class="btn linea ancho" style="margin-top:6px;cursor:pointer">📥 Importar un archivo completo de partituras<input type="file" webkitdirectory multiple id="fImp" style="display:none"></label>' : '') +
+    '</div><div class="lista">' + (l.map(function (o) {
     return '<div class="obra" data-editar="' + o.id + '"><div class="icobra">♪</div><div class="info"><div class="t">' + esc(o.titulo) + '</div><div class="s">' +
       '<span class="pillita ' + (o.publicada ? 'ok' : 'oro') + '">' + (o.publicada ? 'Publicada' : 'Borrador') + '</span>' + o.partes.length + ' papeles</div></div><div class="flecha">›</div></div>';
   }).join('') || '<div class="vacio" style="border:0">Aún no hay obras. Empieza con «Nueva obra».</div>') + '</div>';
   $('bNuevaObra').onclick = function () { editarObra(null); };
+  if ($('fImp')) $('fImp').onchange = function () { if (this.files.length) importarArchivo(this.files); };
+  if ($('bSeguirImp')) $('bSeguirImp').onclick = function () { pintarImport(); };
   $('dirCont').querySelectorAll('[data-editar]').forEach(function (b) { b.onclick = function () { editarObra(b.dataset.editar); }; });
 }
 function editarObra(id) {
@@ -2766,7 +2818,7 @@ var INSTRUMENTOS = [
   ['guion', /\bGUION\b|DIRECTOR|FULL\s*SCORE|CONDUCTOR|PARTITURA\s*GENERAL|\bSCORE\b/],
   ['flautin', /FLAUTIN|PICCOLO|OTTAVINO/],
   ['clbajo', /CLARINETE?S?\s*BAJO|BASS\s*CLARINET|CLARINETTO\s*BASSO/],
-  ['requinto', /REQUINTO|\bE\s*B\s*CLARINET|\bMI\s*B\s*CLARINET/],
+  ['requinto', /REQUINTO|\bE\s*B\s*CLARINET|\bMI\s*B\s*CLARINET|(^|\s)E\W{1,2}\s*CLARINET/],
   ['clpral', /CLARINETE?S?\s*(PRINCIPAL|PRAL)|(SOLO|PRINCIPAL)\s*(B\s*B\s*)?CLARINET/],
   ['clarinete', /CLARINET/],
   ['fagot', /FAGOT|BASSOON/],
@@ -2797,7 +2849,8 @@ function normInstr(texto) {
     .replace(/C[I1L]AR[I1L]NET/g, 'CLARINET').replace(/A[LIT1]{1,2}TO/g, 'ALTO').replace(/TROMB[O0]N/g, 'TROMBON').replace(/FL[I1]SCORNO/g, 'FLISCORNO')
     .replace(/\b1\s*(ST|ER|O|A)\b/g, ' 1 ').replace(/\b2\s*(ND|O|A)\b/g, ' 2 ').replace(/\b3\s*(RD|ER|O|A)\b/g, ' 3 ')
     .replace(/\bPRIMER[OA]?S?\b/g, ' 1 ').replace(/\bSEGUND[OA]S?\b/g, ' 2 ').replace(/\bTERCER[OA]?S?\b/g, ' 3 ')
-    .replace(/(\d)\s*\.\s*/g, '$1 ');
+    .replace(/(\d)\s*\.\s*/g, '$1 ')
+    .replace(/\b(HI|IIL|LII|IIT|TII|1II|II1|I1I|111|IIl)\b/g, 'III').replace(/\b(TI|IT|LL|IL|LI|1I|I1|11)\b/g, 'II');   // II / III mal leídos por el lector
 }
 // Devuelve null (ningún instrumento), [] (es el comienzo de un papel, pero no sé de cuál: «Sin asignar») o la lista de papeles
 function detectarPapeles(texto) {
@@ -2852,7 +2905,8 @@ function asistente(o, archivo, opc) {
       ASIS = S;
       pintarAsistente(S);
       miniaturas(S);
-      if (opc) detectarCortes(S, false, opc.lista);     // manuscrito: directamente a cortes + lista
+      if (opc && opc.auto) setTimeout(function () { if (ASIS === S && !S.cancelado) ocr(S); }, 1200);   // importación: se lee solo
+      else if (opc) detectarCortes(S, false, opc.lista);     // manuscrito: directamente a cortes + lista
 
     }).catch(function () { cargando(false); toast('No se ha podido leer el PDF', 4000); });
   };
@@ -2953,7 +3007,7 @@ function pintarAsistente(S) {
     '<label class="estampar"><input type="checkbox" id="cRecA"' + (S.recortar !== false ? ' checked' : '') + '><span><b>Recortar los márgenes en blanco</b><br>Los papeles que ocupan media hoja (marchas…) llenarán la pantalla al girar el móvil.</span></label>' +
     '<div class="resumen" id="resumen"><div><b>' + buenos + '</b> papeles' + (sin ? ' · <span style="color:#f0a493">' + sin + ' sin asignar</span>' : '') + '<div class="barra-prog oculto" id="prog"><i></i></div></div><button class="btn oro" id="bSubirA"' + (buenos && !sin ? '' : ' style="opacity:.55"') + '>Subir ' + buenos + '</button></div>';
   S.P.forEach(function (p) { if (S.th && S.th[p.n]) pintarMini(p.n, girarCanvas(S.th[p.n], p.giro)); });
-  $('bCancelarA').onclick = function () { S.cancelado = true; editarObra(S.o.id); };
+  $('bCancelarA').onclick = function () { S.cancelado = true; finSubida(S.o.id, false); };
   $('bOcr').onclick = function () { ocr(S); };
   $('bPartir').onclick = function () { elegirPartir(S); };
   if ($('bSugPartir')) $('bSugPartir').onclick = function () { partirHojas(S, S.sugerencia, S.sugHojas); };
@@ -2977,6 +3031,28 @@ function pintarAsistente(S) {
 function conTiempo(pr, ms) { return new Promise(function (ok, ko) { var t = setTimeout(function () { ko(new Error('tiempo')); }, ms); pr.then(function (x) { clearTimeout(t); ok(x); }, function (e) { clearTimeout(t); ko(e); }); }); }
 function enCola(S, fn) { var r = (S.cola || Promise.resolve()).then(fn, fn); S.cola = r.catch(function () {}); return r; }
 function pintarMini(n, c) { var dst = $('th' + n); if (!dst) return; dst.width = c.width; dst.height = c.height; dst.style.aspectRatio = c.width + ' / ' + c.height; dst.getContext('2d').drawImage(c, 0, 0); }
+// Hoja escaneada de lado: los pentagramas van en vertical (se mira en franjas estrechas por si la hoja está algo torcida)
+function deLado(c, umbral) {
+  umbral = umbral || 220;
+  try {
+    var w = c.width, h = c.height, d = c.getContext('2d').getImageData(0, 0, w, h).data, K = 8;
+    function puntua(ancho, alto, px) {
+      var s = 0;
+      for (var i = 0; i < K; i++) { var x0 = Math.floor(i * ancho / K), x1 = Math.floor((i + 1) * ancho / K), filas = 0;
+        for (var y = 0; y < alto; y++) { var n = 0; for (var x = x0; x < x1; x++) if (px(x, y)) n++; if (n > (x1 - x0) * 0.6) filas++; }
+        s += filas / alto; }
+      return s / K;
+    }
+    function osc(x, y) { var j = (y * w + x) * 4; return d[j] * 0.3 + d[j + 1] * 0.59 + d[j + 2] * 0.11 < umbral; }
+    var hz = puntua(w, h, osc), vt = puntua(h, w, function (x, y) { return osc(y, x); });
+    deLado.ult = [hz, vt];
+    return vt > hz * 2.5 && vt > 0.01;
+  } catch (e) { return false; }
+}
+function avisoGiro(S) {
+  clearTimeout(S.tGiro);
+  S.tGiro = setTimeout(function () { if (ASIS === S) { pintarAsistente(S); toast('He enderezado ' + S.girados + (S.girados === 1 ? ' hoja que venía' : ' hojas que venían') + ' de lado. Si alguna queda boca abajo, tócala → Girar.', 6000); } }, 1500);
+}
 function miniaturas(S) {
   S.th = S.th || {};
   var i = 1;
@@ -2986,7 +3062,9 @@ function miniaturas(S) {
     var P0 = S.P;
     return enCola(S, function () { return conTiempo(dibujarPag(S, k, { ancho: 260 }), 30000); }).then(function (c) {
       if (S.P !== P0) return;                                   // se han partido las hojas mientras tanto
-      S.th[k] = c; pintarMini(k, girarCanvas(c, (S.P[k - 1] || {}).giro));
+      var pk = S.P[k - 1] || {};
+      if (S.autoGiro !== false && !pk.mitad && pk.giro === undefined && deLado(c)) { pk.giro = 90; S.girados = (S.girados || 0) + 1; avisoGiro(S); }
+      S.th[k] = c; pintarMini(k, girarCanvas(c, pk.giro));
     }).then(function () { if (S.P === P0) return sig(); }, function () { if (S.P === P0) return sig(); });
   }
   sig();
@@ -3096,29 +3174,32 @@ function ocr(S) {
     if (window.Tesseract) return Promise.resolve();
     return new Promise(function (ok, ko) { var s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
   }
+  function nuevoLector() {
+    return Tesseract.createWorker('spa').then(function (w) {   // texto suelto: lee mejor el nombre del instrumento junto al título
+      return (w.setParameters ? w.setParameters({ tessedit_pageseg_mode: '11' }) : Promise.resolve()).then(function () { return w; }, function () { return w; });
+    });
+  }
+  // En el ordenador se leen varias páginas a la vez (en el móvil, una: menos memoria)
+  var pc = window.innerWidth >= 760 && window.matchMedia && matchMedia('(pointer:fine)').matches, N = Math.min(S.paralelo || (pc ? 3 : 1), S.P.length);
+  var ancho = pc ? 1600 : 1150;
   cargando(true, 'Preparando el lector…');
-  cargarTess().then(function () { return Tesseract.createWorker('spa'); }).then(function (w) {
-    return (w.setParameters ? w.setParameters({ tessedit_pageseg_mode: '11' }) : Promise.resolve()).then(function () { return w; }, function () { return w; });   // texto suelto: lee mejor el nombre del instrumento junto al título
-  }).then(function (w) {
-    var k = 0, t0 = Date.now(), saltadas = 0, ancho = window.innerWidth < 760 ? 1150 : 1600;   // en el móvil, imágenes más pequeñas (menos memoria)
+  cargarTess().then(function () { var L = []; for (var i = 0; i < N; i++) L.push(nuevoLector()); return Promise.all(L); }).then(function (lectores) {
+    var k = 0, hechas = 0, t0 = Date.now(), saltadas = 0;
     S.textos = {}; S.segundo = {};
-    function nuevoLector() { try { w.terminate(); } catch (e) {} return Tesseract.createWorker('spa').then(function (x) { w = x; return w.setParameters ? w.setParameters({ tessedit_pageseg_mode: '11' }).catch(function () {}) : null; }); }
-    function sig() {
-      if (k >= S.P.length || S.cancelado) return Promise.resolve(w.terminate()).catch(function () {}).then(function () {
-        var partidas = partirSegunTexto(S);
-        var hallados = decidirPapeles(S);
-        if (partidas) toast('He visto ' + partidas + (partidas === 1 ? ' hoja que trae' : ' hojas que traen') + ' dos papeles y las he partido en dos', 5000);
-        cargando(false);
-        if (!hallados) return detectarCortes(S, true);    // no ha leído ningún instrumento: probablemente manuscrito
-        pintarAsistente(S);
-        var sin = S.P.filter(function (p) { return p.inicio && !p.ignorar && !p.papeles.length; }).length;
-        toast(hallados ? 'Detectados ' + hallados + ' papeles' + (sin ? ' · ' + sin + ' sin asignar: tócalos o usa «Repartir por orden»' : '. Revisa y sube.') + (saltadas ? ' (' + saltadas + ' páginas no se pudieron leer)' : '') : 'No he reconocido instrumentos. Usa «Repartir por orden» o márcalos a mano.', 6000);
+    function aviso() {
+      var seg = hechas > 3 ? Math.round((Date.now() - t0) / hechas * (S.P.length - hechas) / 1000) : 0;
+      cargando(true, 'Leyendo páginas: ' + hechas + ' de ' + S.P.length + (seg > 5 ? ' · quedan unos ' + (seg > 90 ? Math.round(seg / 60) + ' min' : seg + ' s') : '') + '…');
+    }
+    function leer(p, w) {
+      // Hoja girada: se dibuja entera, se endereza y se lee la parte de arriba
+      if (p.giro) return enCola(S, function () { return conTiempo(dibujarPag(S, p.n, { ancho: Math.round(ancho * 0.75) }), 30000); }).then(function (c0) {
+        var c = girarCanvas(c0, p.giro), d = document.createElement('canvas'); d.width = c.width; d.height = Math.round(c.height * 0.24);
+        d.getContext('2d').drawImage(c, 0, 0); if (c0.dataset.pagina) d.dataset.pagina = c0.dataset.pagina;
+        return conTiempo(w.recognize(d), 40000).then(function (r) { S.textos[p.n] = r.data.text || ''; });
       });
-      var p = S.P[k++], seg = k > 3 ? Math.round((Date.now() - t0) / (k - 1) * (S.P.length - k + 1) / 1000) : 0;
-      cargando(true, 'Leyendo página ' + p.n + ' de ' + S.P.length + (seg > 5 ? ' · quedan unos ' + (seg > 90 ? Math.round(seg / 60) + ' min' : seg + ' s') : '') + '…');
       // Hoja entera sin partir: además de arriba, se lee el centro (o el lado derecho si es apaisada) por si trae un segundo papel
       var entera = !p.mitad && S.buscarDos !== false;
-      var trabajo = enCola(S, function () { return conTiempo(dibujarPag(S, p.n, { ancho: p.corte === 'h' ? Math.round(ancho * 0.75) : ancho, fraccion: p.corte === 'v' ? 0.4 : entera ? 0.66 : 0.24 }), 30000); }).then(function (c) {
+      return enCola(S, function () { return conTiempo(dibujarPag(S, p.n, { ancho: p.corte === 'h' ? Math.round(ancho * 0.75) : ancho, fraccion: p.corte === 'v' ? 0.4 : entera ? 0.66 : 0.24 }), 30000); }).then(function (c) {
         if (!entera) return conTiempo(w.recognize(c), 40000).then(function (r) { S.textos[p.n] = r.data.text || ''; });
         var apaisada = c.width > c.height / 0.66, H = c.height / 0.66;
         var zonas = apaisada ? [[0, 0, c.width / 2, H * 0.24], [c.width / 2, 0, c.width / 2, H * 0.24]] : [[0, 0, c.width, H * 0.24], [0, H * 0.42, c.width, H * 0.22]];
@@ -3128,11 +3209,82 @@ function ocr(S) {
         return conTiempo(w.recognize(trozo(zonas[0])), 40000).then(function (r) { S.textos[p.n] = r.data.text || ''; return hueco ? conTiempo(w.recognize(trozo(zonas[1], '-centro')), 40000) : null; })
           .then(function (r) { if (r) { S.segundo = S.segundo || {}; S.segundo[p.n] = { texto: r.data.text || '', corte: apaisada ? 'h' : 'v' }; } });
       });
-      // Si una página se atasca, se salta y se sigue con la siguiente (no se queda pillado)
-      return trabajo.then(function () {}, function () { if (S.textos[p.n] === undefined) S.textos[p.n] = ''; saltadas++; return nuevoLector(); }).then(sig);
     }
-    return sig();
+    // Cada lector va cogiendo la siguiente página libre. Si una página se atasca, se salta y ese lector se cambia por uno nuevo
+    function hilo(i) {
+      if (k >= S.P.length || S.cancelado) return Promise.resolve();
+      var p = S.P[k++]; aviso();
+      return leer(p, lectores[i]).then(function () {}, function () {
+        if (S.textos[p.n] === undefined) S.textos[p.n] = ''; saltadas++;
+        try { lectores[i].terminate(); } catch (e) {}
+        return nuevoLector().then(function (w) { lectores[i] = w; });
+      }).then(function () { hechas++; return hilo(i); });
+    }
+    return Promise.all(lectores.map(function (w, i) { return hilo(i); })).then(function () {
+      lectores.forEach(function (w) { try { w.terminate(); } catch (e) {} });
+      if (S.cancelado) return;
+      return lectorGoogle(S);
+    }).then(function () {
+      if (S.cancelado) return cargando(false);
+      var partidas = partirSegunTexto(S);
+      var hallados = decidirPapeles(S);
+      if (partidas) toast('He visto ' + partidas + (partidas === 1 ? ' hoja que trae' : ' hojas que traen') + ' dos papeles y las he partido en dos', 5000);
+      cargando(false);
+      if (!hallados) return detectarCortes(S, true);    // no ha leído ningún instrumento: probablemente manuscrito
+      pintarAsistente(S);
+      var sin = S.P.filter(function (p) { return p.inicio && !p.ignorar && !p.papeles.length; }).length;
+      toast(hallados ? 'Detectados ' + hallados + ' papeles' + (sin ? ' · ' + sin + ' sin asignar: tócalos o usa «Repartir por orden»' : '. Revisa y sube.') + (saltadas ? ' (' + saltadas + ' páginas no se pudieron leer)' : '') : 'No he reconocido instrumentos. Usa «Repartir por orden» o márcalos a mano.', 6000);
+    });
   }).catch(function () { cargando(false); toast('No se ha podido cargar el lector. Márcalos a mano.', 4500); });
+}
+// Segunda opinión: las hojas donde el lector de Atril no ha visto ningún instrumento se mandan al lector de Google
+// (el de Drive, gratis y mejor con escaneos viejos). Se lee solo la parte de arriba. Si falla, se sigue sin él.
+var MAX_GOOGLE = 60;
+function lectorGoogle(S) {
+  if (!navigator.onLine || S.sinGoogle) return Promise.resolve();
+  var dudosas = S.P.filter(function (p) { return !p.mitad && S.textos[p.n] !== undefined && detectarPapeles(S.textos[p.n]) === null && !aprendido(S.textos[p.n]); }).slice(0, MAX_GOOGLE);
+  if (!dudosas.length) return Promise.resolve();
+  var k = 0, hechas = 0, roto = false;
+  function una() {
+    if (roto || S.cancelado || k >= dudosas.length) return Promise.resolve();
+    var p = dudosas[k++];
+    cargando(true, 'Repasando con el lector de Google: ' + hechas + ' de ' + dudosas.length + '…');
+    return enCola(S, function () { return conTiempo(dibujarPag(S, p.n, { ancho: 1400, fraccion: p.giro ? 1 : 0.24 }), 30000); }).then(function (c) {
+      if (p.giro) { var g = girarCanvas(c, p.giro), d = document.createElement('canvas'); d.width = g.width; d.height = Math.round(g.height * 0.24); d.getContext('2d').drawImage(g, 0, 0); c = d; }
+      return conTiempo(api('leerTexto', { base64: c.toDataURL('image/jpeg', 0.85).split(',')[1] }), 45000);
+    }).then(function (r) { if (r && r.texto) S.textos[p.n] = r.texto + '\n' + (S.textos[p.n] || ''); },
+      function (e) { if (/desconocida|NO_ADMIN|Solo la direcci|no ha respondido/i.test((e && e.message) || '')) roto = true; })   // motor antiguo o Google no responde: no se insiste
+      .then(function () { hechas++; return una(); });
+  }
+  return Promise.all([una(), una(), una()]);
+}
+// Lo que Atril aprende de tus correcciones (en este ordenador): una línea de la cabecera → sus papeles
+function lineaClave(l) { return norm(l).toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+function leerAprendido() { try { return JSON.parse(localStorage.getItem('atril_aprendido') || '{}'); } catch (e) { return {}; } }
+function aprendido(texto) {
+  var M = leerAprendido(), L = String(texto || '').split(/\n+/);
+  for (var i = 0; i < L.length; i++) { var k = lineaClave(L[i]); if (k.length >= 5 && M[k]) { var v = M[k].p.filter(function (x) { return A.papeles.some(function (y) { return y.papel === x; }); }); if (v.length) return v; } }
+  return null;
+}
+function aprender(S) {
+  if (!S.textos) return;
+  var M = leerAprendido(), cuenta = {}, tit = lineaClave(S.o && S.o.titulo), nuevos = 0;
+  Object.keys(S.textos).forEach(function (n) { var vistas = {}; String(S.textos[n] || '').split(/\n+/).forEach(function (l) { var k = lineaClave(l); if (k && !vistas[k]) { vistas[k] = 1; cuenta[k] = (cuenta[k] || 0) + 1; } }); });
+  rangos(S).filter(function (r) { return !r.ignorar && r.papeles.length; }).forEach(function (r) {
+    var t = S.textos[r.desde]; if (!t) return;
+    var auto = detectarPapeles(t);
+    if (auto && auto.slice().sort().join() === r.papeles.slice().sort().join()) return;   // ya lo sabía
+    String(t).split(/\n+/).slice(0, 12).forEach(function (l) {
+      var k = lineaClave(l);
+      if (k.length < 5 || k.length > 60 || cuenta[k] > 1 || (tit.length >= 4 && k.indexOf(tit) > -1)) return;   // líneas que solo están en esa hoja
+      var pal = (norm(l).toUpperCase().match(/[A-Z]{4,}/g) || []).filter(function (w) { return /[AEIOU]/.test(w) && /[^AEIOU]/.test(w) && !/(.)\1\1/.test(w); });
+      if (!pal.length) return;   // ruido del lector, no palabras
+      M[k] = { p: r.papeles.slice(), t: Date.now() }; nuevos++;
+    });
+  });
+  if (!nuevos) return;
+  var ks = Object.keys(M); if (ks.length > 800) ks.sort(function (a, b) { return M[a].t - M[b].t; }).slice(0, ks.length - 800).forEach(function (k) { delete M[k]; });
+  try { localStorage.setItem('atril_aprendido', JSON.stringify(M)); } catch (e) {}
 }
 // Tras leer: las hojas cuyo centro (o lado derecho) repite el título o trae un instrumento llevan dos papeles → se parten,
 // y el texto leído allí pasa a ser la cabecera de la segunda mitad
@@ -3146,6 +3298,7 @@ function partirSegunTexto(S) {
     var repiteTitulo = centro.some(function (x) { return tit.indexOf(x) > -1 || (arriba.indexOf(x) > -1 && x.length >= 7); });
     var instr = norm(g.texto).toUpperCase().split(/\n+/).some(function (l) { return l.replace(/[^A-Z ]/g, '').length >= 4 && detectarPapeles(l) !== null; });
     var instrArriba = norm(T[p.n] || '').toUpperCase().split(/\n+/).some(function (l) { return detectarPapeles(l) !== null; });
+    if (g.corte === 'h') return tit.length && centro.some(function (x) { return tit.indexOf(x) > -1; }) && arriba.some(function (x) { return tit.indexOf(x) > -1; }) && instr;
     return repiteTitulo && (instr || instrArriba);
   });
   if (!dos.length) return 0;
@@ -3167,17 +3320,28 @@ function lineasCabecera(texto) {
   return norm(texto || '').toUpperCase().split(/\n+/).map(function (l) { return l.replace(/[^A-Z ]/g, ' ').replace(/\s+/g, ' ').trim(); })
     .filter(function (l) { return l.replace(/ /g, '').length >= 8 && detectarPapeles(l) === null; });
 }
+// «Piccolo - Mar i Bel» arriba del todo: cabecera corrida de la 2ª hoja de un papel, no el comienzo de otro
+function deContinuacion(texto, titulo) {
+  var t = norm(titulo || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); if (t.length < 4) return false;
+  var l = (norm(texto || '').toUpperCase().split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean)[0]) || '';
+  var m = /^(.{3,40}?)\s[-–—]\s(.+)$/.exec(l) || /^(.+?)\s[-–—]\s(.{3,40})$/.exec(l);
+  if (!m) return false;
+  var a = m[1].replace(/[^A-Z0-9]/g, ''), b = m[2].replace(/[^A-Z0-9]/g, '').replace(/1/g, 'I');
+  return (b.indexOf(t.replace(/1/g, 'I')) > -1 && detectarPapeles(m[1]) !== null) || (a.replace(/1/g, 'I').indexOf(t.replace(/1/g, 'I')) > -1 && detectarPapeles(m[2]) !== null);
+}
 function decidirPapeles(S) {
   var T = S.textos || {}, N = S.P.length, cuenta = {};
   // Líneas que se repiten arriba en varias páginas (el título de la obra, el arreglista…): marcan dónde empieza cada papel
-  S.P.forEach(function (p) { var vistas = {}; lineasCabecera(T[p.n]).forEach(function (l) { if (!vistas[l]) { vistas[l] = 1; cuenta[l] = (cuenta[l] || 0) + 1; } }); });
+  S.P.forEach(function (p) { var vistas = {}; lineasCabecera(T[p.n]).slice(0, 6).forEach(function (l) { if (!vistas[l]) { vistas[l] = 1; cuenta[l] = (cuenta[l] || 0) + 1; } }); });
   var cab = Object.keys(cuenta).filter(function (l) { return cuenta[l] >= 3 && cuenta[l] <= Math.max(3, N * 0.85); });
   var clave = norm(S.o.titulo).toUpperCase().split(/[^A-Z0-9]+/).sort(function (a, b) { return b.length - a.length; })[0] || '';
   if (clave.length < 4) clave = '';
   var ultimo = null, ultimaFam = null, distintos = {}, primero = 0;
   S.P.forEach(function (p) {
     var texto = T[p.n] || '', pp = detectarPapeles(texto);
-    var lin = lineasCabecera(texto), esCabecera = lin.some(function (l) { return cab.indexOf(l) > -1; }) || (clave && norm(texto).toUpperCase().indexOf(clave) > -1);
+    if (!pp || !pp.length) { var ap = aprendido(texto); if (ap) { pp = ap.slice(); pp.familia = 'ap:' + ap.join('|'); } }
+    var lin = lineasCabecera(texto).slice(0, 6), esCabecera = lin.some(function (l) { return cab.indexOf(l) > -1; }) || (clave && norm(texto).toUpperCase().indexOf(clave) > -1);
+    if (deContinuacion(texto, S.o.titulo)) esCabecera = false;
     if (pp) {
       var comparte = pp.length ? ultimo && pp.some(function (x) { return ultimo.indexOf(x) > -1; }) : ultimaFam && pp.familia === ultimaFam;
       if (comparte && !esCabecera && p.n > 1) { p.inicio = false; p.papeles = []; p.ignorar = false; }
@@ -3191,6 +3355,97 @@ function decidirPapeles(S) {
   // Cada mitad de una hoja partida es siempre un papel distinto (aunque no se haya leído bien su nombre)
   S.P.forEach(function (q) { if (q.mitad && !q.inicio) { q.inicio = true; q.ignorar = false; q.papeles = []; } else if (q.mitad && q.ignorar) q.ignorar = false; });
   return Object.keys(distintos).length;
+}
+
+/* ---- Importar un archivo completo (una carpeta con todas las partituras, desde el ordenador) ----
+   Carpetas numeradas («1. Pasodobles») = géneros; dentro, cada PDF suelto o cada subcarpeta = una obra.
+   PDF o carpetas sueltas en la raíz = «Obras de concierto». Cada obra pasa por el asistente de siempre para repasarla. */
+var IMP = null;
+function impQuedan() { var n = 0; if (IMP) IMP.grupos.forEach(function (g) { g.obras.forEach(function (o) { if (o.marcada && o.estado !== 'hecha') n++; }); }); return n; }
+function tituloLimpio(t) {
+  t = String(t).replace(/\.pdf$/i, '').replace(/[_]+/g, ' ').replace(/\((partes?|partituras?|particellas?)\)/ig, ' ')
+    .replace(/\b(partes|partituras?|particellas)\b/ig, ' ').replace(/^\s*\d{1,3}\s*[-.)]\s+/, '').replace(/\s+/g, ' ').trim();
+  if (t.length > 3 && t === t.toUpperCase()) t = t.toLowerCase().replace(/(^|[\s(])(\S)/g, function (m, a, b) { return a + b.toUpperCase(); });
+  return t || 'Sin título';
+}
+function generoDe(carpeta) {
+  var g = String(carpeta).replace(/^\s*\d{1,3}\s*[-.)]\s*/, '').replace(/^partituras?\s+(de\s+)?/i, '').trim();
+  var lista = (A.carpetas || []).concat(['Procesiones', 'Pasodobles', 'Marchas', 'Villancicos', 'Obras de concierto', 'Himnos']);
+  var n = norm(g), igual = lista.filter(function (c) { return norm(c) === n; })[0]; if (igual) return igual;
+  var dentro = lista.filter(function (c) { var k = norm(c).replace(/s$/, ''); return k.length >= 5 && n.indexOf(k) > -1; })[0]; if (dentro) return dentro;
+  if (/navidad|villancic/.test(n)) return lista.filter(function (c) { return /villancic/.test(norm(c)); })[0] || 'Villancicos';
+  return g ? g.charAt(0).toUpperCase() + g.slice(1).toLowerCase() : 'Obras de concierto';
+}
+function importarArchivo(files) {
+  var L = [].slice.call(files).filter(function (f) { return /\.pdf$/i.test(f.name) && !/(^|\/)\./.test(f.webkitRelativePath || ''); });
+  if (!L.length) return toast('En esa carpeta no hay ningún PDF', 4000);
+  var porObra = {}, orden = [];
+  L.forEach(function (f) {
+    var t = (f.webkitRelativePath || f.name).split('/').slice(1);   // sin la carpeta elegida
+    var gen, obra;
+    var esGenero = t.length > 1 && (/^\s*\d{1,3}\s*[-.)]/.test(t[0]) || t.length > 2);
+    if (t.length === 1) { gen = 'Obras de concierto'; obra = t[0]; }
+    else if (!esGenero) { gen = 'Obras de concierto'; obra = t[0] + '/'; }
+    else { gen = generoDe(t[0]); obra = t.length === 2 ? t[1] : t[1] + '/'; }
+    var k = gen + '|' + obra;
+    if (!porObra[k]) { porObra[k] = { genero: gen, titulo: tituloLimpio(obra.replace(/\/$/, '')), files: [], marcada: true, estado: 'pendiente' }; orden.push(k); }
+    porObra[k].files.push(f);
+  });
+  var ya = {}; A.obras.forEach(function (o) { ya[norm(o.titulo).replace(/[^a-z0-9]/g, '')] = o.id; });
+  var grupos = [], porGen = {};
+  orden.forEach(function (k) {
+    var o = porObra[k], id = ya[norm(o.titulo).replace(/[^a-z0-9]/g, '')];
+    if (id) { o.estado = 'ya'; o.marcada = false; o.id = id; }
+    o.files.sort(function (a, b) { return (a.webkitRelativePath || a.name).localeCompare(b.webkitRelativePath || b.name, 'es', { numeric: true }); });
+    if (!porGen[o.genero]) { porGen[o.genero] = { genero: o.genero, obras: [] }; grupos.push(porGen[o.genero]); }
+    porGen[o.genero].obras.push(o);
+  });
+  grupos.forEach(function (g) { g.obras.sort(function (a, b) { return a.titulo.localeCompare(b.titulo, 'es'); }); });
+  IMP = { grupos: grupos, actual: null };
+  pintarImport();
+}
+function pintarImport() {
+  var total = 0, hechas = 0, ya = 0;
+  IMP.grupos.forEach(function (g) { g.obras.forEach(function (o) { total++; if (o.estado === 'hecha') hechas++; if (o.estado === 'ya') ya++; }); });
+  var gi = 0;
+  $('dirCont').innerHTML = '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn linea" id="bImpVolver">‹ Obras</button></div>' +
+    '<h2 class="sec">Importar partituras<small>' + total + ' obras · ' + hechas + ' subidas' + (ya ? ' · ' + ya + ' ya estaban' : '') + '</small></h2>' +
+    '<p style="margin:0 0 10px;font-size:14px;color:var(--suave,#666)">Revisa el nombre de cada carpeta y de cada obra (puedes cambiarlos). Luego pulsa <b>Siguiente obra</b>: se abre, Atril la lee y la trocea solo, repasas lo que salga en rojo y pulsas <b>Subir</b>. Al terminar vuelves aquí. Puedes dejarlo y seguir otro día.</p>' +
+    IMP.grupos.map(function (g) {
+      var k = gi++;
+      return '<div class="tarjeta" style="margin:10px 0;padding:10px 12px"><label style="display:flex;gap:8px;align-items:center"><span style="white-space:nowrap">📁 Carpeta:</span><input data-gen="' + k + '" value="' + esc(g.genero) + '" style="flex:1;padding:8px 10px;border:1px solid var(--linea);border-radius:10px;background:#fff;min-width:0;font-weight:600"></label>' +
+        g.obras.map(function (o, j) {
+          var st = o.estado === 'hecha' ? '<span class="pillita ok">Subida ✓</span>' : o.estado === 'ya' ? '<span class="pillita">Ya estaba</span>' : '';
+          return '<div style="display:flex;gap:8px;align-items:center;margin-top:8px">' +
+            (o.estado === 'hecha' ? '<span style="width:20px">✓</span>' : '<input type="checkbox" data-marca="' + k + ':' + j + '"' + (o.marcada ? ' checked' : '') + ' style="width:20px;height:20px">') +
+            '<input data-tit="' + k + ':' + j + '" value="' + esc(o.titulo) + '" style="flex:1;padding:8px 10px;border:1px solid var(--linea);border-radius:10px;background:#fff;min-width:0;"' + (o.estado === 'hecha' ? ' disabled' : '') + '>' +
+            '<small style="white-space:nowrap;opacity:.7">' + o.files.length + ' PDF</small>' + st + '</div>';
+        }).join('') + '</div>';
+    }).join('') +
+    '<div class="resumen"><div style="flex:1"><b>' + impQuedan() + '</b> por subir</div><button class="btn oro" id="bImpSig"' + (impQuedan() ? '' : ' disabled') + '>Siguiente obra ›</button></div>';
+  $('bImpVolver').onclick = function () { dirObras(); };
+  $('dirCont').querySelectorAll('[data-gen]').forEach(function (x) { x.onchange = function () { var g = IMP.grupos[+x.dataset.gen]; g.genero = x.value.trim() || g.genero; g.obras.forEach(function (o) { o.genero = g.genero; }); }; });
+  function ob(v) { var a = v.split(':'); return IMP.grupos[+a[0]].obras[+a[1]]; }
+  $('dirCont').querySelectorAll('[data-tit]').forEach(function (x) { x.onchange = function () { ob(x.dataset.tit).titulo = x.value.trim() || ob(x.dataset.tit).titulo; }; });
+  $('dirCont').querySelectorAll('[data-marca]').forEach(function (x) { x.onchange = function () { ob(x.dataset.marca).marcada = x.checked; pintarImport(); }; });
+  $('bImpSig').onclick = function () { impSiguiente(); };
+}
+function impSiguiente() {
+  var o = null; IMP.grupos.some(function (g) { return g.obras.some(function (x) { if (x.marcada && x.estado !== 'hecha') { o = x; return true; } }); });
+  if (!o) return toast('No queda ninguna obra marcada por subir');
+  cargando(true, 'Preparando «' + o.titulo + '»…');
+  var paso = o.id && o.estado !== 'ya' ? Promise.resolve({ id: o.id }) : api('guardarObra', { obra: { id: o.estado === 'ya' ? o.id : '', titulo: o.titulo, genero: o.genero, videos: [], tempos: [] } });
+  paso.then(function (r) { o.id = r.id; return cargarAdmin(); }).then(function () {
+    cargando(false);
+    var obra = A.obras.filter(function (x) { return x.id === o.id; })[0];
+    if (!obra) return toast('No encuentro la obra recién creada', 4000);
+    IMP.actual = o;
+    if (o.files.length === 1) asistente(obra, o.files[0], { auto: true }); else variosPdf(obra, o.files);
+  }).catch(function (e) { cargando(false); toast(e.message, 4500); });
+}
+function finSubida(id, ok) {
+  if (IMP && IMP.actual && IMP.actual.id === id) { if (ok) IMP.actual.estado = 'hecha'; IMP.actual = null; return pintarImport(); }
+  editarObra(id);
 }
 
 /* ---- Varios PDF (uno por instrumento): el instrumento sale del nombre del archivo ---- */
@@ -3223,7 +3478,7 @@ function pintarVarios(V) {
     }).join('') +
     '<label class="estampar"><input type="checkbox" id="cEstV"' + (V.estampar ? ' checked' : '') + '><span><b>Escribir el instrumento arriba de cada página</b><br>Útil si en el original no se lee bien (manuscritos).</span></label>' +
     '<div class="resumen" id="resumen"><div><b>' + ok.length + '</b> papeles' + (sin.length ? ' · <span style="color:#f0a493">' + sin.length + ' sin instrumento</span>' : '') + '<div class="barra-prog oculto" id="prog"><i></i></div></div><button class="btn oro" id="bSubirV"' + (ok.length && !sin.length ? '' : ' style="opacity:.55"') + '>Subir ' + ok.length + '</button></div>';
-  $('bCancelarV').onclick = function () { editarObra(V.o.id); };
+  $('bCancelarV').onclick = function () { finSubida(V.o.id, false); };
   $('cEstV').onchange = function () { V.estampar = this.checked; };
   $('dirCont').querySelectorAll('[data-vp]').forEach(function (b) { b.onclick = function () { elegirPapelPdf(V, V.items[+b.dataset.vp]); }; });
   $('bSubirV').onclick = function () {
@@ -3307,7 +3562,7 @@ function subirVarios(V) {
   $('bSubirV').setAttribute('disabled', ''); $('prog').classList.remove('oculto');
   cargarPdfLib().then(function () {
     function sig() {
-      if (hechos >= grupos.length) return cargarAdmin().then(function () { toast('Subidos ' + grupos.length + ' papeles ✓'); editarObra(V.o.id); });
+      if (hechos >= grupos.length) return cargarAdmin().then(function () { toast('Subidos ' + grupos.length + ' papeles ✓'); finSubida(V.o.id, true); });
       var g = grupos[hechos];
       $('resumen').querySelector('b').textContent = 'Subiendo ' + (hechos + 1) + ' de ' + grupos.length;
       var nuevo, paginas = 0;
@@ -3325,7 +3580,7 @@ function subirVarios(V) {
     return sig();
   }).catch(function (e) {
     toast('Error al subir: ' + (e.message === 'Failed to fetch' ? 'sin conexión' : e.message) + '. Se subieron ' + hechos + ' de ' + grupos.length + '.', 6000);
-    cargarAdmin().then(function () { editarObra(V.o.id); });
+    cargarAdmin().then(function () { finSubida(V.o.id, false); });
   });
 }
 
@@ -3472,6 +3727,7 @@ function cargarPdfLib() {
   return new Promise(function (ok, ko) { var s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js'; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
 }
 function subirRangos(S) {
+  try { aprender(S); } catch (e) {}
   // si un mismo papel aparece en varios trozos del PDF (p. ej. trombón en clave de fa y de sol), se sube todo junto
   var R = [], porPapel = {};
   rangos(S).filter(function (r) { return !r.ignorar && r.papeles.length; }).forEach(function (r) {
@@ -3483,7 +3739,7 @@ function subirRangos(S) {
   cargarPdfLib().then(function () { return PDFLib.PDFDocument.load(S.bytes, { ignoreEncryption: true }); }).then(function (src) {
     function sig() {
       if (hechos >= R.length) {
-        return cargarAdmin().then(function () { toast('Subidos ' + R.length + ' papeles ✓'); editarObra(S.o.id); });
+        return cargarAdmin().then(function () { toast('Subidos ' + R.length + ' papeles ✓'); finSubida(S.o.id, true); });
       }
       var r = R[hechos];
       $('resumen').querySelector('div').firstChild.textContent = '';
@@ -3511,7 +3767,7 @@ function subirRangos(S) {
     return sig();
   }).catch(function (e) {
     toast('Error al subir: ' + (e.message === 'Failed to fetch' ? 'sin conexión' : e.message) + '. Se subieron ' + hechos + ' de ' + R.length + '.', 6000);
-    cargarAdmin().then(function () { editarObra(S.o.id); });
+    cargarAdmin().then(function () { finSubida(S.o.id, false); });
   });
 }
 
